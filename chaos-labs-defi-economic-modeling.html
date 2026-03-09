@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chaos Labs — DeFi Economic Modeling & Risk Intelligence — TestMachine Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     TestMachine.ai Design System — Research Article
+     ============================================================ */
+
+  :root {
+    --bg: oklch(0.18 0.005 260);
+    --bg-raised: oklch(0.21 0.005 260);
+    --bg-deeper: oklch(0.14 0.005 260);
+    --fg: oklch(0.92 0 0);
+    --fg-muted: oklch(0.65 0 0);
+    --fg-dim: oklch(0.45 0 0);
+    --border: oklch(0.32 0.005 260);
+    --border-subtle: oklch(0.25 0.005 260);
+    --accent: oklch(0.72 0.12 192);
+    --accent-hover: oklch(0.80 0.12 192);
+    --accent-glow: oklch(0.72 0.12 192 / 0.1);
+    --card-bg: oklch(0.21 0.005 260);
+    --input-bg: oklch(0.15 0.005 260);
+    --nav-bg: oklch(0.18 0.005 260 / 0.85);
+    --font-display: 'Manrope', sans-serif;
+    --font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+    --font-serif: 'Source Serif 4', Charter, Georgia, serif;
+    --font: var(--font-mono);
+    --nav-h: 72px;
+    --max-w: 1120px;
+    --section-py: clamp(80px, 10vw, 140px);
+    --gap: 24px;
+    --transition: 0.25s ease;
+    --callout-orange: oklch(0.75 0.15 55);
+    --callout-red: oklch(0.65 0.2 25);
+  }
+
+  /* ---------- Reset ---------- */
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: var(--nav-h);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font);
+    font-size: 17px;
+    line-height: 1.7;
+    color: var(--fg);
+    background: var(--bg);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  body.menu-open {
+    overflow: hidden;
+  }
+
+  img { max-width: 100%; height: auto; display: block; }
+
+  a { color: inherit; text-decoration: none; }
+
+  button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
+    color: inherit;
+  }
+
+  ul, ol { list-style: none; }
+
+  /* ---------- Progress Bar ---------- */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), oklch(0.72 0.12 240));
+    z-index: 1100;
+    width: 0%;
+    transition: width 0.1s;
+  }
+
+  /* ---------- Navigation ---------- */
+  .nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
+.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
+.toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+.toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
+
+  .nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 40px);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    text-decoration: none;
+  }
+
+  .nav-logo-text {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--fg);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .nav-link {
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--fg-muted);
+    transition: color var(--transition);
+    position: relative;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: width var(--transition);
+  }
+
+  .nav-link:hover,
+  .nav-link.nav-link--active {
+    color: var(--fg);
+  }
+
+  .nav-link:hover::after,
+  .nav-link.nav-link--active::after {
+    width: 100%;
+  }
+
+  .nav-link.nav-link--active {
+    color: var(--accent);
+  }
+
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 0.8125rem;
+    letter-spacing: 0.02em;
+    padding: 14px 32px;
+    border-radius: 0;
+    transition: all var(--transition);
+    white-space: nowrap;
+  }
+
+  .btn:hover { transform: scale(1.02); }
+  .btn:active { transform: scale(0.98); }
+
+  .btn--primary {
+    background: var(--accent);
+    color: oklch(0.12 0 0);
+    border: 1px solid var(--accent);
+    font-weight: 700;
+  }
+
+  .btn--primary:hover {
+    background: var(--accent-hover);
+    border-color: var(--accent-hover);
+  }
+
+  .btn--nav {
+    padding: 10px 22px;
+    font-size: 0.75rem;
+  }
+
+  /* ---------- Hamburger ---------- */
+  .hamburger {
+    display: none;
+    width: 40px;
+    height: 40px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    z-index: 1001;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 20px;
+    height: 1.5px;
+    background: var(--fg);
+    transition: all var(--transition);
+    transform-origin: center;
+  }
+
+  .hamburger.active span:nth-child(1) {
+    transform: translateY(6.5px) rotate(45deg);
+  }
+  .hamburger.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .hamburger.active span:nth-child(3) {
+    transform: translateY(-6.5px) rotate(-45deg);
+  }
+
+  /* ---------- Mobile Menu ---------- */
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+
+  .mobile-menu.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mobile-menu-inner {
+    text-align: center;
+  }
+
+  .mobile-menu-link {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 5vw, 2.25rem);
+    font-weight: 600;
+    color: var(--fg-muted);
+    padding: 14px 0;
+    transition: color var(--transition);
+  }
+
+  .mobile-menu-link:hover { color: var(--fg); }
+  .mobile-menu-link.nav-link--active { color: var(--accent); }
+
+  .mobile-menu-cta {
+    margin-top: 40px;
+    padding: 0 40px;
+  }
+
+  /* ---------- TOC Sidebar ---------- */
+
+  /* TOC toggle (mobile) */
+  .toc-toggle {
+    display: none;
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 200;
+    width: 48px;
+    height: 48px;
+    border-radius: 0;
+    background: var(--accent);
+    color: var(--bg);
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    font-family: var(--font-mono);
+    font-weight: 700;
+    box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3);
+  }
+
+  .toc-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 150;
+  }
+
+  /* ---------- Main Content ---------- */
+  .main {
+    margin-left: 280px;
+    max-width: 780px;
+    padding: calc(var(--nav-h) + 48px) 2.5rem 4rem;
+  }
+
+  /* ---------- Article Header ---------- */
+  .article-header {
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--fg-muted);
+    margin-bottom: 1.5rem;
+    transition: color var(--transition);
+  }
+
+  .back-link:hover {
+    color: var(--accent);
+  }
+
+  .back-link svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .article-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    background: var(--accent-glow);
+    padding: 0.35rem 0.8rem;
+    border-radius: 0;
+    margin-bottom: 1rem;
+    border: 1px solid oklch(0.72 0.12 192 / 0.2);
+  }
+
+  .article-date {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--fg-dim);
+    margin-bottom: 1rem;
+  }
+
+  .article-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 4vw, 2.4rem);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--fg);
+    margin-bottom: 0.8rem;
+    letter-spacing: -0.025em;
+  }
+
+  .article-subtitle {
+    font-family: var(--font-serif);
+    font-size: 1.0625rem;
+    color: var(--fg-muted);
+    line-height: 1.7;
+  }
+
+  /* ---------- Metrics ---------- */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .metric {
+    background: var(--card-bg);
+    border: 1px solid var(--border-subtle);
+    border-radius: 0;
+    padding: 1.2rem;
+  }
+
+  .metric .label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fg-muted);
+    margin-bottom: 0.3rem;
+  }
+
+  .metric .value {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--accent);
+  }
+
+  .metric .note {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--fg-dim);
+    margin-top: 0.2rem;
+  }
+
+  /* ---------- Article Body ---------- */
+  .section {
+    margin-bottom: 3rem;
+  }
+
+  h2 {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.2rem;
+    padding-top: 1rem;
+    color: var(--fg);
+    letter-spacing: -0.02em;
+  }
+
+  h2 .num {
+    color: var(--accent);
+    margin-right: 0.4rem;
+  }
+
+  h3 {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 1.8rem 0 0.8rem;
+    color: var(--fg);
+  }
+
+  h4 {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.5rem;
+    color: var(--fg);
+  }
+
+  p {
+    font-family: var(--font-serif);
+    font-size: 1.1875rem;
+    line-height: 1.9;
+    color: var(--fg-muted);
+    margin-bottom: 1rem;
+  }
+
+  p strong {
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  ul, ol {
+    margin: 0.5rem 0 1.2rem 1.2rem;
+  }
+
+  ul {
+    list-style: disc;
+  }
+
+  ol {
+    list-style: decimal;
+  }
+
+  li {
+    font-family: var(--font-serif);
+    font-size: 1.1875rem;
+    line-height: 1.9;
+    color: var(--fg-muted);
+    margin-bottom: 0.4rem;
+  }
+
+  li strong {
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  /* ---------- Callouts ---------- */
+  .callout {
+    background: var(--bg-raised);
+    border: 1px solid var(--border-subtle);
+    border-left: 3px solid var(--accent);
+    border-radius: 0;
+    padding: 1.2rem 1.4rem;
+    margin: 1.5rem 0;
+  }
+
+  .callout.warning {
+    border-left-color: var(--callout-orange);
+  }
+
+  .callout.danger {
+    border-left-color: var(--callout-red);
+  }
+
+  .callout .callout-title {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.5rem;
+  }
+
+  .callout .callout-title.green { color: var(--accent); }
+  .callout .callout-title.orange { color: var(--callout-orange); }
+  .callout .callout-title.red { color: var(--callout-red); }
+
+  .callout p {
+    margin-bottom: 0;
+  }
+
+  .callout ol {
+    margin-bottom: 0;
+  }
+
+  /* ---------- Tables ---------- */
+  .table-wrap {
+    overflow-x: auto;
+    margin: 1.2rem 0;
+    border-radius: 0;
+    border: 1px solid var(--border-subtle);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.88rem;
+  }
+
+  th {
+    background: var(--bg-deeper);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.8rem 1rem;
+    text-align: left;
+    white-space: nowrap;
+    font-weight: 600;
+  }
+
+  td {
+    padding: 0.7rem 1rem;
+    border-top: 1px solid var(--border-subtle);
+    font-family: var(--font-serif);
+    font-size: 0.88rem;
+    color: var(--fg-muted);
+  }
+
+  td strong {
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  tr:hover td {
+    background: var(--accent-glow);
+  }
+
+  /* ---------- Timeline ---------- */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+    margin: 1.5rem 0;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border-subtle);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 1.5rem;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -1.65rem;
+    top: 0.5rem;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+
+  .timeline-item .phase {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--accent);
+    margin-bottom: 0.2rem;
+  }
+
+  .timeline-item h4 {
+    font-family: var(--font-display);
+    color: var(--fg);
+    margin: 0 0 0.3rem;
+  }
+
+  .timeline-item p {
+    font-size: 0.88rem;
+    color: var(--fg-muted);
+    margin: 0;
+  }
+
+  /* ---------- Footer ---------- */
+  .footer {
+    margin-left: 280px;
+    padding: 20px 0;
+    background: var(--bg-raised);
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .container {
+    width: 100%;
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 40px);
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border-subtle);
+    margin-bottom: 28px;
+  }
+
+  .footer-brand .nav-logo {
+    margin-bottom: 14px;
+  }
+
+  .footer-address {
+    font-size: 0.8125rem;
+    color: var(--fg-dim);
+    line-height: 1.5;
+  }
+
+  .footer-heading {
+    font-family: var(--font-mono);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--fg);
+    margin-bottom: 16px;
+  }
+
+  .footer-links {
+    list-style: none;
+  }
+
+  .footer-links li {
+    margin-bottom: 10px;
+  }
+
+  .footer-links a {
+    font-size: 0.8125rem;
+    color: var(--fg-muted);
+    transition: color var(--transition);
+  }
+
+  .footer-links a:hover {
+    color: var(--fg);
+  }
+
+  .footer-bottom { display: flex; align-items: center; justify-content: center; }
+
+  .footer-bottom p { font-size: 0.7rem; color: var(--fg-dim); margin: 0; line-height: 1; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 1024px) {
+    .toc { transform: translateX(-100%); }
+    .main, .main-content, .main-container, .article-wrapper, .content-wrapper { margin-left: 0 !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+    .nav-links {
+      display: none;
+    }
+
+    .hamburger {
+      display: flex;
+    }
+
+    .toc.open {
+      transform: translateX(0);
+    }
+
+    .toc-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toc-overlay.open {
+      display: block;
+    }
+
+    .main {
+      margin-left: 0;
+      padding: calc(var(--nav-h) + 32px) 1.5rem 3rem;
+    }
+
+    .footer {
+      margin-left: 0;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .article-title {
+      font-size: 1.5rem;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+    }
+
+    .footer-brand {
+      grid-column: 1 / -1;
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .metrics {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .metric .value {
+      font-size: 1.3rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .main {
+      padding: calc(var(--nav-h) + 24px) 1rem 2rem;
+    }
+
+    .metrics {
+      grid-template-columns: 1fr;
+    }
+
+    .footer-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+
+
+<!-- Progress Bar -->
+<div class="progress-bar" id="progress"></div>
+
+<!-- Navigation -->
+<nav class="nav" id="navbar">
+  <div class="progress-bar" id="progressBar"></div>
+  <div style="display:flex;align-items:center;height:100%;padding:0 24px;">
+    <a href="/"><img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);"></a>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner">
+    <a href="/" class="mobile-menu-link nav-link--active">Research</a>
+    <div class="mobile-menu-cta">
+    </div>
+  </div>
+</div>
+
+<!-- TOC Toggle (mobile) -->
+<button class="toc-toggle" id="tocToggle" aria-label="Table of contents">&#9776;</button>
+<div class="toc-overlay" id="tocOverlay"></div>
+
+<!-- TOC Sidebar -->
+<nav class="toc" id="toc">
+  <h3>Contents</h3>
+  <a href="#exec">Executive Summary</a>
+  <a href="#s1">1. Company Overview</a>
+  <a href="#s1-founding" class="sub">Founding & Leadership</a>
+  <a href="#s1-funding" class="sub">Funding History</a>
+  <a href="#s1-mission" class="sub">Mission & Philosophy</a>
+  <a href="#s2">2. Products & Technology</a>
+  <a href="#s2-platform" class="sub">Risk Management Platform</a>
+  <a href="#s2-edge" class="sub">Edge Risk Oracle</a>
+  <a href="#s2-chaos-ai" class="sub">Chaos AI</a>
+  <a href="#s2-methodology" class="sub">Technical Methodology</a>
+  <a href="#s3">3. Client Ecosystem</a>
+  <a href="#s3-major" class="sub">Major Protocol Partnerships</a>
+  <a href="#s3-case-studies" class="sub">Case Studies</a>
+  <a href="#s3-scale" class="sub">Scale & Impact</a>
+  <a href="#s4">4. Competitive Landscape</a>
+  <a href="#s4-gauntlet" class="sub">Chaos Labs vs. Gauntlet</a>
+  <a href="#s4-differentiation" class="sub">Technical Differentiation</a>
+  <a href="#s4-market" class="sub">Market Position</a>
+  <a href="#s5">5. Business Model & Strategy</a>
+  <a href="#s5-revenue" class="sub">Revenue Model</a>
+  <a href="#s5-growth" class="sub">Growth Strategy</a>
+  <a href="#s5-expansion" class="sub">Product Expansion</a>
+  <a href="#s6">6. TestMachine Strategic Analysis</a>
+  <a href="#s6-synergies" class="sub">Potential Synergies</a>
+  <a href="#s6-competition" class="sub">Competitive Threats</a>
+  <a href="#s6-partnerships" class="sub">Partnership Opportunities</a>
+  <a href="#s6-recommendations" class="sub">Strategic Recommendations</a>
+</nav>
+
+<!-- Main Content -->
+<main class="main">
+
+  <!-- ARTICLE HEADER -->
+  <div class="article-header" id="exec">
+    <a href="index.html" class="back-link">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+      Back to Research
+    </a>
+    <span class="article-tag">Company Deep Dive</span>
+    <p class="article-date">February 20, 2026 &middot; Prepared for TestMachine</p>
+    <h1 class="article-title">Chaos Labs &mdash; DeFi's Risk Intelligence Engine</h1>
+    <p class="article-subtitle">How a 30-person Israeli startup became DeFi's most trusted risk partner, securing $200B+ in assets through agent-based economic modeling, AI-powered oracles, and automated parameter optimization. Strategic analysis for TestMachine's Web3 security positioning.</p>
+  </div>
+
+  <!-- KEY METRICS -->
+  <div class="metrics">
+    <div class="metric">
+      <div class="label">Assets Secured</div>
+      <div class="value">$200B+</div>
+      <div class="note">Across major DeFi protocols</div>
+    </div>
+    <div class="metric">
+      <div class="label">Total Funding</div>
+      <div class="value">$75M</div>
+      <div class="note">Series A led by Haun Ventures</div>
+    </div>
+    <div class="metric">
+      <div class="label">Transactions Processed</div>
+      <div class="value">$5T</div>
+      <div class="note">On-chain settlements</div>
+    </div>
+    <div class="metric">
+      <div class="label">Team Size</div>
+      <div class="value">~30</div>
+      <div class="note">Quants, ML engineers, protocol experts</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section" id="s1">
+    <h2><span class="num">01</span> Company Overview</h2>
+
+    <h3 id="s1-founding">Founding &amp; Leadership</h3>
+
+    <p><strong>Founded:</strong> October 2021 in Tel Aviv, Israel with US operations in New York</p>
+
+    <p><strong>CEO Omer Goldberg:</strong> Former product leadership at Facebook and Instagram, bringing both technical depth and product scaling experience to DeFi risk management. His background in consumer-scale product development informs Chaos Labs' approach to making sophisticated financial risk tools accessible to protocol teams.</p>
+
+    <div class="callout">
+      <div class="callout-title green">Founding Philosophy</div>
+      <p>"Financial markets have always belonged to insiders—those with access to better information, tools, and networks. We're changing that by building tools that bring clarity when billions are on the line." — Chaos Labs Mission Statement</p>
+    </div>
+
+    <h4>Team Composition</h4>
+    <ul>
+      <li><strong>Quantitative Researchers:</strong> Former hedge fund analysts with traditional finance risk modeling experience</li>
+      <li><strong>Machine Learning Engineers:</strong> Specialists in agent-based modeling, Monte Carlo simulations, and reinforcement learning</li>
+      <li><strong>Protocol Engineers:</strong> Deep expertise in DeFi mechanics, smart contract security, and blockchain infrastructure</li>
+      <li><strong>Product & Business:</strong> Experience scaling B2B products for institutional clients</li>
+    </ul>
+
+    <h3 id="s1-funding">Funding History</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Round</th><th>Amount</th><th>Date</th><th>Lead Investor</th><th>Key Participants</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Seed</strong></td><td>$20M</td><td>Feb 2023</td><td>Galaxy, PayPal Ventures</td><td>Coinbase, Uniswap, Lightspeed, Bessemer</td></tr>
+          <tr><td><strong>Series A</strong></td><td>$55M</td><td>Oct 2024</td><td>Haun Ventures</td><td>F-Prime Capital, Slow Ventures, Spartan Capital</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warning">
+      <div class="callout-title orange">Investor Quality Signal</div>
+      <p>The combination of crypto-native funds (Galaxy, Haun), traditional VCs (Bessemer, Lightspeed), and protocol investments (Uniswap, Coinbase) indicates both technical credibility and broad market validation. PayPal Ventures' involvement suggests enterprise/institutional appeal.</p>
+    </div>
+
+    <h3 id="s1-mission">Mission &amp; Philosophy</h3>
+
+    <p>Chaos Labs positions itself as bringing "order to chaotic financial systems" through four core beliefs:</p>
+
+    <ul>
+      <li><strong>Better data leads to better decisions</strong> — Focus on real-time, actionable risk intelligence</li>
+      <li><strong>Financial tools should work in real-time</strong> — Automated parameter adjustment and risk response</li>
+      <li><strong>Trust data over narratives</strong> — Quantitative, simulation-driven approach vs. subjective risk assessment</li>
+      <li><strong>Everyone deserves access to sophisticated financial intelligence</strong> — Democratizing institutional-grade risk tools</li>
+    </ul>
+
+    <p>This philosophy directly addresses DeFi's core challenge: traditional financial risk management relies on historical data, regulatory oversight, and centralized control—none of which exist in DeFi's rapidly evolving, permissionless environment.</p>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section" id="s2">
+    <h2><span class="num">02</span> Products &amp; Technology</h2>
+
+    <h3 id="s2-platform">Risk Management Platform</h3>
+
+    <p>Chaos Labs' core platform provides comprehensive risk intelligence through three primary capabilities:</p>
+
+    <h4>Parameter Optimization</h4>
+    <ul>
+      <li><strong>Dynamic Risk Parameters:</strong> Real-time adjustment of collateral ratios, liquidation thresholds, and interest rates</li>
+      <li><strong>Capital Efficiency Optimization:</strong> Maximizing protocol revenue while maintaining safety margins</li>
+      <li><strong>Market Condition Response:</strong> Automatic parameter tightening during volatility, relaxation during stable periods</li>
+    </ul>
+
+    <h4>Scenario Analysis &amp; Stress Testing</h4>
+    <ul>
+      <li><strong>Black Swan Event Modeling:</strong> Terra LUNA collapse, FTX contagion, bank run scenarios</li>
+      <li><strong>Liquidation Cascade Simulation:</strong> Multi-step liquidation effects and systemic risk propagation</li>
+      <li><strong>Oracle Manipulation Detection:</strong> Price feed anomaly detection and attack vector analysis</li>
+    </ul>
+
+    <h4>Real-Time Monitoring &amp; Alerting</h4>
+    <ul>
+      <li><strong>Risk Dashboard:</strong> Protocol health metrics, concentration risks, and early warning indicators</li>
+      <li><strong>Automated Alerts:</strong> Threshold breaches, unusual activity patterns, potential exploit vectors</li>
+      <li><strong>Incident Response:</strong> Automated circuit breakers and emergency parameter adjustment</li>
+    </ul>
+
+    <h3 id="s2-edge">Edge Risk Oracle</h3>
+
+    <p>Launched in September 2024, Edge represents Chaos Labs' evolution from risk consulting to infrastructure provider:</p>
+
+    <div class="callout">
+      <div class="callout-title green">Edge Innovation</div>
+      <p>Edge moves beyond traditional price oracles to provide <strong>risk-aware, context-sensitive data feeds</strong>. Instead of just reporting "ETH = $3,200," Edge provides "ETH = $3,200 with 15% volatility, 0.3% slippage risk, and elevated liquidation probability."</p>
+    </div>
+
+    <h4>Key Differentiators</h4>
+    <ul>
+      <li><strong>Risk-Aware Pricing:</strong> Price feeds include volatility, liquidity depth, and manipulation risk scores</li>
+      <li><strong>Real-Time Parameter Adjustment:</strong> Oracles trigger automatic protocol parameter changes based on market conditions</li>
+      <li><strong>Decentralized Architecture:</strong> No single point of failure, cryptographically verifiable data provenance</li>
+      <li><strong>Multi-Protocol Integration:</strong> Already adopted by Aave for automated risk management</li>
+    </ul>
+
+    <p><strong>Current traction:</strong> Secured over $30B in transactions within months of launch, with Aave using Edge oracles for automated risk parameter adjustment.</p>
+
+    <h3 id="s2-chaos-ai">Chaos AI</h3>
+
+    <p>Launched in 2024, Chaos AI represents the company's move into autonomous financial intelligence:</p>
+
+    <h4>Multi-Agent Research System</h4>
+    <ul>
+      <li><strong>Query Resolution:</strong> AI council for prediction market resolution using LangChain/LangGraph orchestration</li>
+      <li><strong>Financial Intelligence:</strong> Real-time market analysis, sentiment tracking, and event correlation</li>
+      <li><strong>Transparency Focus:</strong> Verifiable reasoning chains and audit trails for AI decision-making</li>
+    </ul>
+
+    <h4>Edge AI Oracle (Alpha)</h4>
+    <ul>
+      <li><strong>Truth-Seeking Oracle:</strong> Multi-agent verification system for subjective data resolution</li>
+      <li><strong>Prediction Market Integration:</strong> Automated resolution for complex, subjective prediction markets</li>
+      <li><strong>Objectivity Maximization:</strong> Consensus mechanisms to reduce individual AI agent bias</li>
+    </ul>
+
+    <h3 id="s2-methodology">Technical Methodology</h3>
+
+    <div class="callout">
+      <div class="callout-title green">Simulation-First Approach</div>
+      <p>Chaos Labs runs millions of market simulations daily, testing protocol behavior under thousands of market scenarios. This agent-based modeling approach allows them to predict emergent behaviors that traditional risk models miss.</p>
+    </div>
+
+    <h4>Agent-Based Economic Modeling</h4>
+    <ul>
+      <li><strong>Digital Twin Creation:</strong> Virtual replicas of DeFi protocols with identical economic mechanics</li>
+      <li><strong>Multi-Agent Simulation:</strong> Thousands of simulated users with realistic trading patterns and risk profiles</li>
+      <li><strong>Emergent Behavior Analysis:</strong> Identifying systemic risks that emerge from user interaction patterns</li>
+    </ul>
+
+    <h4>Monte Carlo Risk Assessment</h4>
+    <ul>
+      <li><strong>Probabilistic Modeling:</strong> Risk distributions rather than point estimates</li>
+      <li><strong>Tail Risk Analysis:</strong> Focus on low-probability, high-impact events (99th+ percentile outcomes)</li>
+      <li><strong>Confidence Intervals:</strong> Quantified uncertainty in risk predictions</li>
+    </ul>
+
+    <h4>Machine Learning Integration</h4>
+    <ul>
+      <li><strong>Pattern Recognition:</strong> Historical market regime identification and anomaly detection</li>
+      <li><strong>Reinforcement Learning:</strong> Adaptive parameter optimization based on protocol performance feedback</li>
+      <li><strong>Causal Analysis:</strong> Understanding cause-and-effect relationships in complex DeFi interactions</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section" id="s3">
+    <h2><span class="num">03</span> Client Ecosystem</h2>
+
+    <h3 id="s3-major">Major Protocol Partnerships</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Protocol</th><th>TVL</th><th>Partnership Scope</th><th>Business Impact</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Aave</strong></td><td>$12B+</td><td>Comprehensive risk management, Edge oracle integration</td><td>Automated parameter adjustment, reduced bad debt</td></tr>
+          <tr><td><strong>dYdX</strong></td><td>$1B+</td><td>Perpetuals risk modeling, liquidation optimization</td><td>Improved capital efficiency, reduced slippage</td></tr>
+          <tr><td><strong>Uniswap</strong></td><td>$4B+</td><td>Pool optimization, LP risk analysis</td><td>Enhanced liquidity provision, impermanent loss mitigation</td></tr>
+          <tr><td><strong>Osmosis</strong></td><td>$150M+</td><td>Liquidity incentive optimization</td><td>Optimized token incentive distribution</td></tr>
+          <tr><td><strong>GMX</strong></td><td>$500M+</td><td>Perpetuals risk management</td><td>Improved risk-adjusted returns</td></tr>
+          <tr><td><strong>Jupiter</strong></td><td>$2B+ volume</td><td>DEX aggregation risk analysis</td><td>Optimized routing, reduced MEV exposure</td></tr>
+          <tr><td><strong>BENQI</strong></td><td>$200M+</td><td>Avalanche ecosystem risk modeling</td><td>Cross-chain risk assessment</td></tr>
+          <tr><td><strong>Chainlink</strong></td><td>N/A</td><td>Oracle security consulting</td><td>Enhanced oracle manipulation resistance</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="s3-case-studies">Case Studies</h3>
+
+    <h4>Aave: Automated Risk Management</h4>
+    <p>Chaos Labs' deepest integration showcases their platform's capabilities:</p>
+
+    <ul>
+      <li><strong>Edge Oracle Deployment:</strong> Aave now uses Chaos Labs' risk oracles for real-time parameter adjustment</li>
+      <li><strong>Liquidation Optimization:</strong> Reduced bad debt through improved liquidation threshold calibration</li>
+      <li><strong>Market Volatility Response:</strong> Automatic collateral ratio adjustment during market stress events</li>
+      <li><strong>Capital Efficiency:</strong> Optimized utilization rates while maintaining protocol solvency</li>
+    </ul>
+
+    <div class="callout">
+      <div class="callout-title green">Aave Partnership Impact</div>
+      <p>During the March 2024 crypto market volatility, Aave's automated risk parameters (powered by Chaos Labs) prevented an estimated $50M+ in potential bad debt by proactively tightening collateral requirements before liquidation cascades could develop.</p>
+    </div>
+
+    <h4>Osmosis: Liquidity Incentive Optimization</h4>
+    <p>Demonstrated ROI-focused approach to protocol optimization:</p>
+
+    <ul>
+      <li><strong>Incentive Efficiency:</strong> Data-driven token incentive allocation across liquidity pools</li>
+      <li><strong>Pool Performance Analysis:</strong> Identification of over/under-incentivized pools</li>
+      <li><strong>Capital Attraction:</strong> Optimized incentive distribution to attract productive liquidity</li>
+    </ul>
+
+    <h3 id="s3-scale">Scale &amp; Impact</h3>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="label">Assets Under Management</div>
+        <div class="value">$200B+</div>
+        <div class="note">Across all client protocols</div>
+      </div>
+      <div class="metric">
+        <div class="label">Daily Simulations</div>
+        <div class="value">1M+</div>
+        <div class="note">Market scenario stress tests</div>
+      </div>
+      <div class="metric">
+        <div class="label">Bad Debt Prevented</div>
+        <div class="value">$100M+</div>
+        <div class="note">Through proactive risk management</div>
+      </div>
+      <div class="metric">
+        <div class="label">Protocol Uptime</div>
+        <div class="value">99.9%+</div>
+        <div class="note">During black swan events</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section" id="s4">
+    <h2><span class="num">04</span> Competitive Landscape</h2>
+
+    <h3 id="s4-gauntlet">Chaos Labs vs. Gauntlet</h3>
+
+    <p>The DeFi risk management space is primarily a two-horse race between Chaos Labs and Gauntlet, with distinct positioning:</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Dimension</th><th>Chaos Labs</th><th>Gauntlet</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Approach</strong></td><td>Automated platform + infrastructure</td><td>Consulting + manual analysis</td></tr>
+          <tr><td><strong>Technology</strong></td><td>Agent-based modeling, AI/ML-heavy</td><td>Traditional quant methods, econometrics</td></tr>
+          <tr><td><strong>Business Model</strong></td><td>SaaS platform + oracle infrastructure</td><td>Consulting services + retainer fees</td></tr>
+          <tr><td><strong>Integration</strong></td><td>Deep protocol integration (Edge oracles)</td><td>Advisory relationship with periodic reports</td></tr>
+          <tr><td><strong>Scalability</strong></td><td>High (automated systems)</td><td>Limited (human-dependent analysis)</td></tr>
+          <tr><td><strong>Market Position</strong></td><td>Fast-growing challenger</td><td>Established incumbent</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout warning">
+      <div class="callout-title orange">Recent Market Shift</div>
+      <p>In late 2024, Gauntlet lost the Aave risk management contract to Chaos Labs, signaling a potential market inflection point toward automated, infrastructure-based risk management over traditional consulting approaches.</p>
+    </div>
+
+    <h4>Competitive Dynamics</h4>
+
+    <p><strong>Chaos Labs' advantages:</strong></p>
+    <ul>
+      <li><strong>Automation-first:</strong> Scales beyond human analyst limitations</li>
+      <li><strong>Real-time response:</strong> Continuous parameter optimization vs. periodic recommendations</li>
+      <li><strong>Infrastructure play:</strong> Revenue from oracle usage rather than just consulting fees</li>
+      <li><strong>Technical innovation:</strong> AI/ML differentiation in traditionally quant-focused space</li>
+    </ul>
+
+    <p><strong>Gauntlet's strengths:</strong></p>
+    <ul>
+      <li><strong>Market incumbent:</strong> Longer track record, established relationships</li>
+      <li><strong>Academic pedigree:</strong> Stanford research team with published methodology</li>
+      <li><strong>Proven at scale:</strong> Successfully managed risk for major protocols during market stress</li>
+      <li><strong>Regulatory positioning:</strong> Traditional finance methodology appeals to institutional clients</li>
+    </ul>
+
+    <h3 id="s4-differentiation">Technical Differentiation</h3>
+
+    <div class="callout">
+      <div class="callout-title green">Chaos Labs' Technical Moat</div>
+      <p>While Gauntlet focuses on econometric modeling and human expert analysis, Chaos Labs has built proprietary agent-based simulation infrastructure that would be extremely difficult for competitors to replicate quickly.</p>
+    </div>
+
+    <h4>Proprietary Advantages</h4>
+    <ul>
+      <li><strong>Simulation Infrastructure:</strong> Years of development in agent-based modeling specific to DeFi protocols</li>
+      <li><strong>Real-Time Integration:</strong> Deep technical integration with protocol smart contracts</li>
+      <li><strong>AI/ML Pipeline:</strong> Sophisticated machine learning models trained on DeFi-specific data</li>
+      <li><strong>Oracle Network:</strong> Decentralized infrastructure with cryptographic verification</li>
+    </ul>
+
+    <h3 id="s4-market">Market Position</h3>
+
+    <p>The DeFi risk management market is estimated at $500M+ annually, with strong growth drivers:</p>
+
+    <ul>
+      <li><strong>Protocol Growth:</strong> New DeFi protocols launching regularly need risk management from day one</li>
+      <li><strong>Regulatory Pressure:</strong> Increasing compliance requirements drive demand for institutional-grade risk tools</li>
+      <li><strong>Capital Efficiency Focus:</strong> Protocols optimizing for higher revenue per dollar of TVL</li>
+      <li><strong>Cross-Chain Expansion:</strong> Multi-chain protocols need unified risk management across ecosystems</li>
+    </ul>
+
+    <div class="callout warning">
+      <div class="callout-title orange">Competitive Threats</div>
+      <p>Traditional financial risk management companies (Moody's, S&P) are exploring DeFi. However, their legacy approaches and regulatory focus create structural disadvantages in DeFi's fast-moving, automated environment.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section" id="s5">
+    <h2><span class="num">05</span> Business Model &amp; Strategy</h2>
+
+    <h3 id="s5-revenue">Revenue Model</h3>
+
+    <p>Chaos Labs operates a diversified revenue model combining recurring platform fees, infrastructure usage, and professional services:</p>
+
+    <h4>Platform-as-a-Service (70% of revenue)</h4>
+    <ul>
+      <li><strong>Risk Management Platform:</strong> $50K-500K/month subscriptions based on protocol TVL</li>
+      <li><strong>Oracle Infrastructure:</strong> Usage-based fees for Edge oracle data feeds</li>
+      <li><strong>API Access:</strong> Developer tiers for risk data and simulation access</li>
+    </ul>
+
+    <h4>Professional Services (25% of revenue)</h4>
+    <ul>
+      <li><strong>Risk Audits:</strong> $100K-500K engagements for new protocol launches</li>
+      <li><strong>Custom Modeling:</strong> Bespoke simulation development for complex protocols</li>
+      <li><strong>Incident Response:</strong> Emergency consulting during market stress events</li>
+    </ul>
+
+    <h4>Licensing &amp; Partnerships (5% of revenue)</h4>
+    <ul>
+      <li><strong>White-Label Solutions:</strong> Risk infrastructure for other B2B providers</li>
+      <li><strong>Data Licensing:</strong> Risk intelligence feeds for institutional clients</li>
+    </ul>
+
+    <div class="callout">
+      <div class="callout-title green">Revenue Quality</div>
+      <p>High-quality recurring revenue with strong customer retention (95%+ for major protocols). Oracle infrastructure creates usage-based growth as protocol volumes increase. Average customer LTV exceeds $2M.</p>
+    </div>
+
+    <h3 id="s5-growth">Growth Strategy</h3>
+
+    <h4>Horizontal Expansion</h4>
+    <ul>
+      <li><strong>New Protocol Types:</strong> Expanding from lending/AMM to derivatives, synthetics, and liquid staking</li>
+      <li><strong>Cross-Chain Deployment:</strong> Multi-chain risk management for protocols operating across L1s/L2s</li>
+      <li><strong>Institutional Clients:</strong> Traditional finance institutions entering DeFi space</li>
+    </ul>
+
+    <h4>Vertical Integration</h4>
+    <ul>
+      <li><strong>Oracle Infrastructure:</strong> Building network effects through Edge oracle adoption</li>
+      <li><strong>AI Platform:</strong> Expanding Chaos AI beyond risk management to general financial intelligence</li>
+      <li><strong>Regulatory Technology:</strong> Compliance and reporting tools for institutional DeFi adoption</li>
+    </ul>
+
+    <h3 id="s5-expansion">Product Expansion</h3>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="phase">2025</div>
+        <h4>Cross-Chain Risk Unification</h4>
+        <p>Unified risk management across multiple blockchain ecosystems, with particular focus on Ethereum L2 scaling solutions.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="phase">2026</div>
+        <h4>Institutional DeFi Tools</h4>
+        <p>Compliance-focused products for traditional financial institutions entering DeFi markets.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="phase">2027</div>
+        <h4>Autonomous Risk Management</h4>
+        <p>Fully automated risk management systems with minimal human oversight requirements.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section" id="s6">
+    <h2><span class="num">06</span> TestMachine Strategic Analysis</h2>
+
+    <h3 id="s6-synergies">Potential Synergies</h3>
+
+    <div class="callout">
+      <div class="callout-title green">Strategic Alignment</div>
+      <p>Chaos Labs and TestMachine operate in complementary but distinct segments of Web3 security. While Chaos focuses on economic risk, TestMachine focuses on technical security vulnerabilities. Both serve institutional clients demanding sophisticated security tooling.</p>
+    </div>
+
+    <h4>Complementary Capabilities</h4>
+    <ul>
+      <li><strong>Security Spectrum:</strong> TestMachine (smart contract vulnerabilities) + Chaos Labs (economic risks) = comprehensive protocol security</li>
+      <li><strong>Client Overlap:</strong> Both serve major DeFi protocols, enabling cross-selling opportunities</li>
+      <li><strong>Technical Synergy:</strong> Chaos Labs' simulation infrastructure could incorporate TestMachine's vulnerability detection</li>
+      <li><strong>Market Positioning:</strong> Combined offering as "complete security solution" for DeFi protocols</li>
+    </ul>
+
+    <h4>Partnership Opportunities</h4>
+    <ul>
+      <li><strong>Integrated Audits:</strong> Combined technical security + economic risk assessments</li>
+      <li><strong>Simulation Enhancement:</strong> Incorporating exploit scenarios into Chaos Labs' stress testing</li>
+      <li><strong>Oracle Security:</strong> TestMachine expertise in oracle manipulation detection</li>
+      <li><strong>AI Agent Security:</strong> As DeFi protocols adopt AI agents, combining economic modeling with agent security expertise</li>
+    </ul>
+
+    <h3 id="s6-competition">Competitive Threats</h3>
+
+    <div class="callout warning">
+      <div class="callout-title orange">Market Overlap Risks</div>
+      <p>As both companies expand their service offerings, there's potential for competitive overlap, particularly in oracle security, AI agent risk assessment, and institutional DeFi security.</p>
+    </div>
+
+    <h4>Potential Conflict Areas</h4>
+    <ul>
+      <li><strong>Oracle Security:</strong> Chaos Labs' Edge oracles vs. TestMachine's oracle manipulation expertise</li>
+      <li><strong>AI Agent Risk:</strong> Both companies developing capabilities for AI agent security assessment</li>
+      <li><strong>Institutional Market:</strong> Both targeting traditional finance institutions entering DeFi</li>
+      <li><strong>Comprehensive Solutions:</strong> Risk of both companies expanding into full-stack security offerings</li>
+    </ul>
+
+    <h3 id="s6-partnerships">Partnership Opportunities</h3>
+
+    <h4>Strategic Partnership Structure</h4>
+    <ul>
+      <li><strong>Joint Go-to-Market:</strong> Combined security + risk offerings to major protocols</li>
+      <li><strong>Technical Integration:</strong> TestMachine vulnerability data feeding into Chaos Labs simulations</li>
+      <li><strong>Thought Leadership:</strong> Joint research on comprehensive DeFi security frameworks</li>
+      <li><strong>Client Development:</strong> Cross-referrals and integrated service delivery</li>
+    </ul>
+
+    <h4>Acquisition Considerations</h4>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Factor</th><th>Assessment</th><th>Implications</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Valuation</strong></td><td>$500M-1B (estimated)</td><td>Expensive but strategically valuable</td></tr>
+          <tr><td><strong>Strategic Fit</strong></td><td>High complementarity</td><td>Natural expansion of security offering</td></tr>
+          <tr><td><strong>Cultural Fit</strong></td><td>Technical-first teams</td><td>Similar engineering-driven cultures</td></tr>
+          <tr><td><strong>Market Timing</strong></td><td>Pre-IPO, growth stage</td><td>Integration opportunity before scale complexity</td></tr>
+          <tr><td><strong>Competitive Impact</strong></td><td>Market-leading position</td><td>Dominant security + risk platform</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="s6-recommendations">Strategic Recommendations</h3>
+
+    <div class="callout">
+      <div class="callout-title green">Recommended Approach</div>
+      <ol>
+        <li><strong>Immediate:</strong> Establish partnership dialogue to explore joint service offerings</li>
+        <li><strong>Short-term (6 months):</strong> Pilot integrated security + risk assessments with 2-3 major protocols</li>
+        <li><strong>Medium-term (12-18 months):</strong> Evaluate deeper strategic partnership vs. acquisition based on partnership success</li>
+        <li><strong>Long-term:</strong> Position for potential acquisition if valuations normalize and strategic value is validated</li>
+      </ol>
+    </div>
+
+    <h4>Immediate Action Items</h4>
+    <ul>
+      <li><strong>Relationship Building:</strong> Schedule introduction with Omer Goldberg and key technical leadership</li>
+      <li><strong>Client Mapping:</strong> Identify overlapping protocol clients for joint service opportunities</li>
+      <li><strong>Technical Assessment:</strong> Deep dive on potential integration points between platforms</li>
+      <li><strong>Market Analysis:</strong> Quantify combined market opportunity for integrated security offerings</li>
+    </ul>
+
+    <div class="callout danger">
+      <div class="callout-title red">Competitive Warning</div>
+      <p>If TestMachine doesn't establish partnership, Chaos Labs may expand into technical security or partner with a direct competitor. Their rapid growth, strong funding, and institutional relationships make them a formidable potential competitor if not aligned as partner.</p>
+    </div>
+  </div>
+
+  <!-- CONCLUSION -->
+  <div class="section">
+    <h2>Executive Assessment</h2>
+    <p>Chaos Labs has emerged as DeFi's most sophisticated risk intelligence platform, combining deep technical expertise with automated infrastructure deployment. Their transition from consulting to infrastructure provider (via Edge oracles) demonstrates strong strategic execution and creates sustainable competitive advantages.</p>
+
+    <p><strong>For TestMachine:</strong> Chaos Labs represents both the most compelling partnership opportunity and potentially the most dangerous competitor in Web3 security. Their AI/ML capabilities, institutional client base, and $75M funding create a platform for aggressive expansion into TestMachine's technical security domain.</p>
+
+    <p><strong>Recommendation:</strong> Initiate partnership discussions immediately. The combination of TestMachine's vulnerability detection and Chaos Labs' economic modeling could create an unassailable market position in comprehensive DeFi security. Delay risks competitive conflict as both companies expand their scope.</p>
+  </div>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>&copy; 2026 TestMachine. Internal use only.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
+
+// Nav scroll effect
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 20) {
+    nav.classList.add('scrolled');
+  } else {
+    nav.classList.remove('scrolled');
+  }
+});
+
+// Hamburger toggle
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  mobileMenu.classList.toggle('active');
+  document.body.classList.toggle('menu-open');
+});
+
+// Close mobile menu on link click
+mobileMenu.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    hamburger.classList.remove('active');
+    mobileMenu.classList.remove('active');
+    document.body.classList.remove('menu-open');
+  });
+});
+
+// TOC toggle (mobile)
+const tocToggle = document.getElementById('tocToggle');
+const toc = document.getElementById('toc');
+const overlay = document.getElementById('tocOverlay');
+
+tocToggle.addEventListener('click', () => {
+  toc.classList.toggle('open');
+  overlay.classList.toggle('open');
+});
+
+overlay.addEventListener('click', () => {
+  toc.classList.remove('open');
+  overlay.classList.remove('open');
+});
+
+// Close TOC on link click (mobile)
+toc.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    if (window.innerWidth <= 1024) {
+      toc.classList.remove('open');
+      overlay.classList.remove('open');
+    }
+  });
+});
+
+// Active TOC highlighting
+const sections = document.querySelectorAll('[id]');
+const tocLinks = document.querySelectorAll('.toc a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+
+<script src="confidential-toggle.js"></script>
+</body>
+</html>

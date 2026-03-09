@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Hsu Response Strategy — TestMachine Board Crisis Plan — March 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+<style>
+/* ---------- Custom Properties ---------- */
+:root {
+  --bg:            oklch(0.18 0.005 260);
+  --bg-raised:     oklch(0.21 0.005 260);
+  --bg-deeper:     oklch(0.14 0.005 260);
+  --fg:            oklch(0.92 0 0);
+  --fg-muted:      oklch(0.65 0 0);
+  --fg-dim:        oklch(0.45 0 0);
+  --border:        oklch(0.32 0.005 260);
+  --border-subtle: oklch(0.25 0.005 260);
+  --accent:        oklch(0.72 0.12 192);
+  --accent-hover:  oklch(0.80 0.12 192);
+  --accent-glow:   oklch(0.72 0.12 192 / 0.1);
+  --card-bg:       oklch(0.21 0.005 260);
+  --input-bg:      oklch(0.15 0.005 260);
+  --nav-bg:        oklch(0.18 0.005 260 / 0.85);
+
+  --font-display: 'Manrope', sans-serif;
+  --font-mono:    'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --font:         var(--font-mono);
+  --font-serif:   'Source Serif 4', Charter, Georgia, serif;
+
+  --nav-h:       72px;
+  --max-w:       1120px;
+  --section-py:  clamp(80px, 10vw, 140px);
+  --gap:         24px;
+  --transition:  0.25s ease;
+
+  --callout-orange: oklch(0.75 0.15 55);
+  --callout-red:    oklch(0.65 0.2 25);
+  --callout-green:  oklch(0.65 0.15 140);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-h);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+button { border: none; background: none; cursor: pointer; font-family: var(--font-mono); color: inherit; }
+ul { list-style: none; }
+input, textarea, select { font-family: inherit; font-size: inherit; }
+
+/* ---------- Layout ---------- */
+.container {
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+/* ---------- Progress Bar ---------- */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), oklch(0.72 0.10 230));
+  z-index: 1100;
+  width: 0%;
+  transition: width 0.1s;
+}
+
+/* ---------- Navigation ---------- */
+.nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
+.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
+.toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+.toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width var(--transition);
+}
+
+.nav-link:hover,
+.nav-link.nav-link--active {
+  color: var(--fg);
+}
+
+.nav-link:hover::after,
+.nav-link.nav-link--active::after {
+  width: 100%;
+}
+
+.nav-link.nav-link--active {
+  color: var(--accent);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  padding: 14px 32px;
+  border-radius: 0;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.btn:hover { transform: scale(1.02); }
+.btn:active { transform: scale(0.98); }
+
+.btn--primary {
+  background: var(--accent);
+  color: oklch(0.12 0 0);
+  border: 1px solid var(--accent);
+  font-weight: 700;
+}
+
+.btn--primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn--nav {
+  padding: 10px 22px;
+  font-size: 0.75rem;
+}
+
+/* ---------- Hamburger ---------- */
+.hamburger {
+  display: none;
+  width: 40px;
+  height: 40px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  z-index: 1001;
+}
+
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--fg);
+  transition: all var(--transition);
+  transform-origin: center;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* ---------- Mobile Menu ---------- */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-menu-inner {
+  text-align: center;
+}
+
+.mobile-menu-link {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  font-weight: 600;
+  color: var(--fg-muted);
+  padding: 14px 0;
+  transition: color var(--transition);
+}
+
+.mobile-menu-link:hover {
+  color: var(--fg);
+}
+
+.mobile-menu-link.nav-link--active {
+  color: var(--accent);
+}
+
+.mobile-menu-cta {
+  margin-top: 40px;
+  padding: 0 40px;
+}
+
+/* ---------- TOC Sidebar ---------- */
+
+/* TOC Toggle Button (mobile) */
+.toc-toggle {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 200;
+  width: 48px;
+  height: 48px;
+  border-radius: 0;
+  background: var(--accent);
+  color: oklch(0.12 0 0);
+  border: none;
+  font-size: 1.2rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3);
+}
+
+/* TOC Overlay (mobile) */
+.toc-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: oklch(0 0 0 / 0.6);
+  z-index: 109;
+}
+
+.toc-overlay.open {
+  display: block;
+}
+
+/* ---------- Main Content ---------- */
+.main {
+  margin-left: 280px;
+  min-height: 100vh;
+}
+
+.main-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px) 4rem;
+}
+
+/* ---------- Article Header ---------- */
+.article-header {
+  padding-top: calc(var(--nav-h) + 32px);
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 3rem;
+}
+
+.back-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  margin-bottom: 1.5rem;
+  transition: color var(--transition);
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+.article-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-muted);
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  margin-bottom: 1rem;
+}
+
+.article-date {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  margin-bottom: 1rem;
+}
+
+.article-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin-bottom: 1rem;
+}
+
+.article-subtitle {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  color: var(--fg-muted);
+  line-height: 1.6;
+}
+
+/* ---------- Hero Stats ---------- */
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.hero-stat {
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  padding: 1.2rem;
+  text-align: center;
+  transition: border-color var(--transition), transform var(--transition);
+}
+
+.hero-stat:hover {
+  border-color: var(--border);
+  transform: translateY(-2px);
+}
+
+.hero-stat .value {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.hero-stat .label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hero-stat.critical .value {
+  color: var(--callout-red);
+}
+
+.hero-stat.warning .value {
+  color: var(--callout-orange);
+}
+
+.hero-stat.positive .value {
+  color: var(--callout-green);
+}
+
+/* ---------- Article Body ---------- */
+.article-body {
+  font-family: var(--font-serif);
+}
+
+.article-body .section {
+  margin: 3rem 0;
+  padding: 0 0 2rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.article-body .section:last-child {
+  border-bottom: none;
+}
+
+.article-body p {
+  font-family: var(--font-serif);
+  font-size: 1.1875rem;
+  line-height: 1.9;
+  color: var(--fg-muted);
+  margin-bottom: 1.5em;
+}
+
+.article-body h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 700;
+  color: var(--fg);
+  margin-top: 2.5em;
+  margin-bottom: 1rem;
+  line-height: 1.25;
+}
+
+.article-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-top: 2em;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.article-body h4 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-top: 1.5em;
+  margin-bottom: 0.5rem;
+}
+
+.article-body strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.article-body ul,
+.article-body ol {
+  margin-bottom: 1.5em;
+  padding-left: 1.5em;
+}
+
+.article-body ul {
+  list-style: disc;
+}
+
+.article-body ol {
+  list-style: decimal;
+}
+
+.article-body li {
+  font-family: var(--font-serif);
+  font-size: 1.1875rem;
+  line-height: 1.9;
+  color: var(--fg-muted);
+  margin-bottom: 0.5rem;
+}
+
+.article-body a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--transition);
+}
+
+.article-body a:hover {
+  color: var(--accent-hover);
+}
+
+/* ---------- Callout / Highlight Boxes ---------- */
+.highlight {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  border-left: 3px solid var(--accent);
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.highlight strong:first-child {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.highlight.warning {
+  border-left-color: var(--callout-orange);
+}
+
+.highlight.warning strong:first-child {
+  color: var(--callout-orange);
+}
+
+.highlight.danger {
+  border-left-color: var(--callout-red);
+}
+
+.highlight.danger strong:first-child {
+  color: var(--callout-red);
+}
+
+.highlight.success {
+  border-left-color: var(--callout-green);
+}
+
+.highlight.success strong:first-child {
+  color: var(--callout-green);
+}
+
+/* ---------- Code ---------- */
+code {
+  background: var(--bg-deeper);
+  padding: 0.15rem 0.4rem;
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+
+pre {
+  background: var(--bg-deeper);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 1.2rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: var(--fg);
+}
+
+/* ---------- Tables ---------- */
+.table-container {
+  overflow-x: auto;
+  margin: 2rem 0;
+  border: 1px solid var(--border);
+  border-radius: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: var(--bg-deeper);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  padding: 0.7rem 1rem;
+  text-align: left;
+}
+
+td {
+  padding: 0.7rem 1rem;
+  border-top: 1px solid var(--border-subtle);
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  color: var(--fg-muted);
+}
+
+tbody tr:hover td {
+  background: var(--accent-glow);
+}
+
+/* Strategy table */
+.strategy-table .critical { color: var(--callout-red); font-weight: 600; }
+.strategy-table .warning { color: var(--callout-orange); font-weight: 600; }
+.strategy-table .success { color: var(--callout-green); font-weight: 600; }
+.strategy-table .muted { color: var(--fg-dim); }
+
+/* ---------- Action Items ---------- */
+.action-items {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.action-item {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-left: 4px solid var(--accent);
+  padding: 1.2rem;
+}
+
+.action-item.urgent {
+  border-left-color: var(--callout-red);
+}
+
+.action-item.important {
+  border-left-color: var(--callout-orange);
+}
+
+.action-item h4 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 0.5rem;
+}
+
+.action-item p {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  margin: 0;
+}
+
+.action-item .meta {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--fg-dim);
+  margin-top: 0.5rem;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  padding: 20px 0;
+  background: var(--bg-raised);
+  border-top: 1px solid var(--border-subtle);
+  margin-left: 280px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 28px;
+}
+
+.footer-brand .nav-logo {
+  margin-bottom: 14px;
+}
+
+.footer-address {
+  font-size: 0.8125rem;
+  color: var(--fg-dim);
+  line-height: 1.5;
+}
+
+.footer-heading {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--fg);
+  margin-bottom: 16px;
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+}
+
+.footer-links a:hover {
+  color: var(--fg);
+}
+
+.footer-bottom { display: flex; align-items: center; justify-content: center; }
+
+.footer-bottom p { font-size: 0.7rem; color: var(--fg-dim); margin: 0; line-height: 1; }
+
+/* ---------- Focus & Selection ---------- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: oklch(0.72 0.12 192 / 0.25);
+}
+
+/* ---------- Responsive: Tablet (1024px) ---------- */
+@media (max-width: 1024px) {
+    .toc { transform: translateX(-100%); }
+    .main, .main-content, .main-container, .article-wrapper, .content-wrapper { margin-left: 0 !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .nav-links {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .toc.open {
+    transform: translateX(0);
+  }
+
+  .toc-toggle {
+    display: block;
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .footer {
+    margin-left: 0;
+  }
+}
+
+/* ---------- Responsive: Mobile (768px) ---------- */
+@media (max-width: 768px) {
+  .main-container {
+    padding: 0 1rem 3rem;
+  }
+
+  .article-title {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+  }
+
+  .hero-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .article-header {
+    padding-top: calc(var(--nav-h) + 20px);
+  }
+
+  .action-items {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .hamburger {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+
+<body>
+
+  <div class="progress-bar" id="progress-bar"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="navbar">
+  <div class="progress-bar" id="progressBar"></div>
+  <div style="display:flex;align-items:center;height:100%;padding:0 24px;">
+    <a href="/"><img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);"></a>
+  </div>
+</nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-inner">
+      <a href="/" class="mobile-menu-link nav-link--active">Research</a>
+      <div class="mobile-menu-cta">
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC Toggle (mobile) -->
+  <button class="toc-toggle" id="toc-toggle" aria-label="Toggle table of contents">&#9776;</button>
+  <div class="toc-overlay" id="toc-overlay"></div>
+
+  <!-- TOC Sidebar -->
+  <nav class="toc" id="toc">
+    <h3>Contents</h3>
+    <ul>
+      <li><a href="#executive-summary">Executive Summary</a></li>
+      <li><a href="#concern-1-pipeline">Concern 1: Pipeline Coverage</a></li>
+      <li><a href="#concern-2-segments">Concern 2: Segment Strategy</a></li>
+      <li><a href="#concern-3-plan-vs-actual">Concern 3: Plan vs. Actuals</a></li>
+      <li><a href="#concern-4-bear-case">Concern 4: Avoid Bear Case</a></li>
+      <li><a href="#board-deck-updates">Board Deck Updates</a></li>
+      <li><a href="#revenue-model-updates">Revenue Model Updates</a></li>
+      <li><a href="#communication-strategy">Communication Strategy</a></li>
+      <li><a href="#action-items">Action Items (48h)</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="main-container">
+
+      <!-- Article Header -->
+      <header class="article-header">
+        <a href="index.html" class="back-link">&larr; Back to Research</a>
+        <span class="article-tag">Strategic Response</span>
+        <span class="article-date">March 2, 2026</span>
+        <h1 class="article-title">Paul Hsu Response Strategy</h1>
+        <p class="article-subtitle">
+          Board Crisis Management — Addressing Decasonic's concerns about pipeline coverage, 
+          segment focus, and execution to avoid bear case scenario
+        </p>
+
+        <div class="hero-stats">
+          <div class="hero-stat critical">
+            <div class="value">Below</div>
+            <div class="label">Bear Case Trajectory</div>
+          </div>
+          <div class="hero-stat warning">
+            <div class="value">$300K</div>
+            <div class="label">Cash Shortfall (Bear)</div>
+          </div>
+          <div class="hero-stat">
+            <div class="value">Wed 1:15PM</div>
+            <div class="label">Critical Meeting</div>
+          </div>
+          <div class="hero-stat positive">
+            <div class="value">48 Hours</div>
+            <div class="label">Response Window</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Article Body -->
+      <div class="article-body">
+
+        <section class="section" id="executive-summary">
+          <h2>Executive Summary</h2>
+
+          <p>
+            Paul Hsu's feedback represents a <strong>constructive intervention</strong>, not an attack. His tone is concerned but supportive—he wants TestMachine to succeed and is providing the harsh truth needed to course-correct before it's too late.
+          </p>
+
+          <div class="highlight danger">
+            <strong>Core Issue:</strong> TestMachine's current trajectory appears to be tracking below the bear case in the revenue model. Paul can't determine actual pipeline coverage from the board materials, and the marketing/sales metrics suggest significant gaps in execution.
+          </div>
+
+          <h3>Paul's Message, Translated</h3>
+          <ul>
+            <li><strong>"I can't tell what's real"</strong> — Board deck lacks concrete pipeline data with named accounts and probabilities</li>
+            <li><strong>"We seem afraid to confront reality"</strong> — The team is avoiding difficult conversations about what's working vs. what isn't</li>
+            <li><strong>"There is no appetite for raising capital"</strong> — Fix execution with current resources or accept the consequences</li>
+            <li><strong>"Small auditors" concern</strong> — Skeptical about pursuing low-value, low-adoption segments</li>
+          </ul>
+
+          <h3>Strategic Response Framework</h3>
+          <p>
+            Our response must be <strong>proactive, not defensive</strong>. Paul is testing whether leadership can:
+          </p>
+          <ol>
+            <li>Face reality honestly (brutal self-assessment)</li>
+            <li>Make hard decisions quickly (segment prioritization)</li>
+            <li>Execute with precision (named accounts, concrete timelines)</li>
+            <li>Bridge the gap to break-even without additional capital</li>
+          </ol>
+
+          <div class="highlight success">
+            <strong>Time Is an Asset:</strong> We have 48 hours before the Wednesday meeting and a full week before the board update. Use this window to demonstrate the leadership Paul wants to see.
+          </div>
+
+        </section>
+
+        <section class="section" id="concern-1-pipeline">
+          <h2>Concern 1: Current Pipeline (Probability Adjusted)</h2>
+
+          <p>
+            Paul's primary concern is pipeline transparency. He can't determine from the board deck what the actual (vs modeled) pipeline coverage is based on named accounts. The current materials show revenue projections without backing pipeline data.
+          </p>
+
+          <h3>The Gap Analysis</h3>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Scenario</th>
+                  <th>Q4 2026 Target</th>
+                  <th>Required Pipeline</th>
+                  <th>Current Pipeline</th>
+                  <th>Coverage Gap</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Bull Case</td>
+                  <td>$120K MRR</td>
+                  <td>$360K (3x rule)</td>
+                  <td class="warning">[TBD]</td>
+                  <td class="critical">Unknown</td>
+                </tr>
+                <tr>
+                  <td>Base Case</td>
+                  <td>$80K MRR</td>
+                  <td>$240K (3x rule)</td>
+                  <td class="warning">[TBD]</td>
+                  <td class="critical">Unknown</td>
+                </tr>
+                <tr class="critical">
+                  <td>Bear Case</td>
+                  <td>$50K MRR</td>
+                  <td>$150K (3x rule)</td>
+                  <td class="warning">[TBD]</td>
+                  <td class="critical">Gap suggests below bear</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Required Pipeline Audit</h3>
+          <p>
+            Create a comprehensive pipeline table with every prospect, their stage, probability, expected annual contract value (ACV), and realistic timeline.
+          </p>
+
+          <h4>Named Account Pipeline Template</h4>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Account</th>
+                  <th>Segment</th>
+                  <th>Stage</th>
+                  <th>Probability</th>
+                  <th>ACV</th>
+                  <th>Timeline</th>
+                  <th>Weighted Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Coinbase</strong></td>
+                  <td>Exchange</td>
+                  <td>Expansion</td>
+                  <td class="success">90%</td>
+                  <td>$240K</td>
+                  <td>Q2 2026</td>
+                  <td class="success">$216K</td>
+                </tr>
+                <tr>
+                  <td><strong>Kraken</strong></td>
+                  <td>Exchange</td>
+                  <td>Evaluation</td>
+                  <td class="warning">70%</td>
+                  <td>$180K</td>
+                  <td>Q2 2026</td>
+                  <td class="warning">$126K</td>
+                </tr>
+                <tr class="muted">
+                  <td>[Client Name 3]</td>
+                  <td>[Segment]</td>
+                  <td>[Stage]</td>
+                  <td>[%]</td>
+                  <td>[ACV]</td>
+                  <td>[Timeline]</td>
+                  <td>[Weighted]</td>
+                </tr>
+                <tr class="muted">
+                  <td colspan="6"><strong>Total Pipeline (Weighted)</strong></td>
+                  <td class="warning"><strong>[TBD]</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="highlight warning">
+            <strong>Critical Action:</strong> This pipeline analysis must be completed and sent to Paul BEFORE the Wednesday meeting. It's the foundation for every other discussion.
+          </div>
+
+          <h3>Pipeline Coverage Recommendations</h3>
+
+          <ol>
+            <li><strong>Brutally Honest Assessment:</strong> If pipeline is thin, acknowledge it explicitly. Paul expects honesty, not optimism.</li>
+            <li><strong>Named Account Focus:</strong> Every prospect needs a name, decision-maker contact, and specific next step.</li>
+            <li><strong>Stage Definitions:</strong> Clear criteria for each sales stage with historical conversion rates.</li>
+            <li><strong>Probability Calibration:</strong> Conservative estimates based on actual conversion data, not hopes.</li>
+            <li><strong>Timeline Realism:</strong> Factor in decision-making cycles, especially for enterprise accounts.</li>
+          </ol>
+
+        </section>
+
+        <section class="section" id="concern-2-segments">
+          <h2>Concern 2: Product Roadmap & GTM per Segment</h2>
+
+          <p>
+            Paul specifically called out concerns about ramping up on "small auditors" which he sees as a low-value segment with minimal market adoption probability. This reflects a deeper strategic question: are we spreading too thin across seven segments?
+          </p>
+
+          <h3>Segment Prioritization Matrix</h3>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Segment</th>
+                  <th>Revenue Potential</th>
+                  <th>Conversion Probability</th>
+                  <th>Product Readiness</th>
+                  <th>Priority Score</th>
+                  <th>Recommendation</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Coinbase (Anchor)</strong></td>
+                  <td class="success">High ($240K)</td>
+                  <td class="success">90%</td>
+                  <td class="success">Production</td>
+                  <td class="success">9.5/10</td>
+                  <td class="success">Execute & Expand</td>
+                </tr>
+                <tr>
+                  <td><strong>Exchanges</strong></td>
+                  <td class="success">High ($150-300K)</td>
+                  <td class="warning">60%</td>
+                  <td class="success">Ready</td>
+                  <td class="success">8.5/10</td>
+                  <td class="success">Primary Focus</td>
+                </tr>
+                <tr>
+                  <td><strong>RWA/Tokenization</strong></td>
+                  <td class="success">Very High ($500K+)</td>
+                  <td class="warning">50%</td>
+                  <td class="warning">Design Phase</td>
+                  <td class="warning">7.5/10</td>
+                  <td class="warning">Strategic Investment</td>
+                </tr>
+                <tr>
+                  <td><strong>DeFi Monitoring</strong></td>
+                  <td class="warning">Medium ($100K)</td>
+                  <td class="warning">60%</td>
+                  <td class="warning">Development</td>
+                  <td class="warning">6.5/10</td>
+                  <td class="warning">Secondary</td>
+                </tr>
+                <tr>
+                  <td><strong>Large Auditors</strong></td>
+                  <td class="success">High ($200K+)</td>
+                  <td class="critical">30%</td>
+                  <td class="warning">Platform</td>
+                  <td class="critical">5.5/10</td>
+                  <td class="critical">Deprioritize</td>
+                </tr>
+                <tr class="critical">
+                  <td><strong>Small Auditors</strong></td>
+                  <td class="critical">Low ($30K)</td>
+                  <td class="critical">40%</td>
+                  <td class="warning">Q2 Launch</td>
+                  <td class="critical">4.0/10</td>
+                  <td class="critical">Paul's Concern ↓</td>
+                </tr>
+                <tr>
+                  <td><strong>Agentic AI</strong></td>
+                  <td class="success">Very High ($1M+)</td>
+                  <td class="critical">20%</td>
+                  <td class="critical">Research</td>
+                  <td class="warning">6.0/10</td>
+                  <td class="warning">Long-term Option</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Paul's "Small Auditors" Concern — A Deep Dive</h3>
+
+          <p>
+            Paul's skepticism about the small auditor segment is well-founded. Analysis shows:
+          </p>
+
+          <ul>
+            <li><strong>Low ACV:</strong> Target ACVs of $30-60K vs. $200K+ for exchanges</li>
+            <li><strong>High CAC:</strong> Smaller firms require more hand-holding, increasing acquisition costs</li>
+            <li><strong>Market Saturation:</strong> 200+ small audit firms, most struggling with pricing pressure</li>
+            <li><strong>Technology Adoption:</strong> Conservative buyers, slow to adopt new tools</li>
+            <li><strong>Churn Risk:</strong> Higher volatility, seasonal revenue patterns</li>
+          </ul>
+
+          <div class="highlight danger">
+            <strong>Paul's Point:</strong> Instead of building a platform for 50 small auditors at $30K each ($1.5M), why not focus on 3 exchanges at $300K each ($900K) with higher probability and faster closes?
+          </div>
+
+          <h3>Segment Strategy Recommendations</h3>
+
+          <h4>Immediate Focus (Next 6 Months)</h4>
+          <ol>
+            <li><strong>Double Down on Exchanges:</strong> Kraken close, 2-3 additional prospects identified and qualified</li>
+            <li><strong>Coinbase Expansion:</strong> Additional chains, new product modules, increase ACV to $300K+</li>
+            <li><strong>RWA/Tokenization Pilot:</strong> One major client to validate product-market fit</li>
+          </ol>
+
+          <h4>Pause or Pivot</h4>
+          <ol>
+            <li><strong>Small Auditors:</strong> Pause platform development, focus on 2-3 strategic partnerships instead of 50 small clients</li>
+            <li><strong>Large Auditor Enterprise:</strong> Reassess based on actual engagement levels (CertiK, Trail of Bits responses)</li>
+          </ol>
+
+          <h4>Long-term Options</h4>
+          <ol>
+            <li><strong>Agentic AI:</strong> Research phase only, position for future market development</li>
+            <li><strong>DeFi Monitoring:</strong> Build MVP, test with 1-2 protocols</li>
+          </ol>
+
+        </section>
+
+        <section class="section" id="concern-3-plan-vs-actual">
+          <h2>Concern 3: Original Approved Board Plan Comparison</h2>
+
+          <p>
+            Paul wants to understand what re-forecasting has occurred and what factors led to changes vs. the plan from a few months ago. His specific quote: <strong>"What has gone well, what still needs improvement? We seem to be afraid to confront our reality."</strong>
+          </p>
+
+          <h3>Plan vs. Actuals Analysis</h3>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Original Plan (Q4 2025)</th>
+                  <th>Current Forecast (Q1 2026)</th>
+                  <th>Delta</th>
+                  <th>Root Cause</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Q1 2026 MRR</td>
+                  <td class="warning">[TBD - Original Target]</td>
+                  <td>$42-70K</td>
+                  <td class="critical">[TBD - Gap]</td>
+                  <td>Coinbase expansion slower than expected</td>
+                </tr>
+                <tr>
+                  <td>Q4 2026 Target</td>
+                  <td class="warning">[TBD - Original]</td>
+                  <td>$80K (Base Case)</td>
+                  <td class="critical">[TBD - Gap]</td>
+                  <td>Pipeline development delays</td>
+                </tr>
+                <tr>
+                  <td>New Client Closes</td>
+                  <td class="warning">[TBD - Planned]</td>
+                  <td>1 (Kraken pending)</td>
+                  <td class="critical">[TBD - Behind]</td>
+                  <td>Enterprise sales cycle longer than modeled</td>
+                </tr>
+                <tr>
+                  <td>Product Launches</td>
+                  <td>7 segments by Q4</td>
+                  <td>3 segments production-ready</td>
+                  <td class="critical">-4 segments</td>
+                  <td>Resource allocation spread too thin</td>
+                </tr>
+                <tr>
+                  <td>Cash Runway</td>
+                  <td class="warning">[TBD - Original]</td>
+                  <td>Break-even Q1 2027</td>
+                  <td class="critical">Extended timeline</td>
+                  <td>Revenue ramp slower, costs higher</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="highlight warning">
+            <strong>Data Gap:</strong> We need the original board-approved plan from Q4 2025 to complete this analysis. This should be the first item retrieved for the Wednesday presentation.
+          </div>
+
+          <h3>Honest Self-Assessment</h3>
+
+          <h4>What Has Gone Well</h4>
+          <ul>
+            <li><strong>Coinbase Relationship:</strong> Strong anchor client, production deployment, expanding usage</li>
+            <li><strong>Product Quality:</strong> Zero false positives, high-quality technical deliverables</li>
+            <li><strong>Kraken Momentum:</strong> Positive meeting, clear buying signals, technical validation</li>
+            <li><strong>Technology Differentiation:</strong> RL agent approach provides unique competitive advantage</li>
+            <li><strong>Team Execution:</strong> Shipping quality products, meeting technical milestones</li>
+          </ul>
+
+          <h4>What Still Needs Improvement</h4>
+          <ul>
+            <li><strong>Sales Execution:</strong> Pipeline development slower than projected, conversion rates below assumptions</li>
+            <li><strong>Market Focus:</strong> Spreading resources across 7 segments instead of doubling down on proven segments</li>
+            <li><strong>Revenue Predictability:</strong> Heavy reliance on single anchor client, need diversification</li>
+            <li><strong>Go-to-Market:</strong> Limited marketing engine, mostly dependent on direct outreach</li>
+            <li><strong>Pipeline Transparency:</strong> Board materials lack concrete pipeline data with named accounts</li>
+          </ul>
+
+          <h4>Root Cause Analysis</h4>
+
+          <div class="highlight">
+            <strong>Primary Issue:</strong> Classic startup challenge — strong product-market fit with anchor client, but struggling to replicate success across broader market. The team excels at building great technology but hasn't yet mastered scalable go-to-market execution.
+          </div>
+
+          <ol>
+            <li><strong>Resource Allocation:</strong> Trying to build 7 different products for 7 different markets simultaneously</li>
+            <li><strong>Sales Process:</strong> Lacks systematic approach to pipeline development and conversion</li>
+            <li><strong>Market Timing:</strong> Some segments (small auditors) may not be ready for premium security tooling</li>
+            <li><strong>Competitive Positioning:</strong> Not clearly differentiated vs. established players in some segments</li>
+          </ol>
+
+        </section>
+
+        <section class="section" id="concern-4-bear-case">
+          <h2>Concern 4: Execution Items to Avoid Bear Case</h2>
+
+          <p>
+            Paul noted a $300K+ cash shortfall in the bear case scenario and suggested rationalizing costs while upgrading deployment of AI agents in execution. His key message: <strong>"There is no appetite for raising $700K+ additional capital."</strong>
+          </p>
+
+          <h3>Bear Case Scenario Analysis</h3>
+
+          <p>
+            Based on the revenue model, the bear case assumes approximately $50K MRR exit rate by Q4 2026, which creates a significant cash flow gap before reaching break-even.
+          </p>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Bear Case Impact</th>
+                  <th>Mitigation Strategy</th>
+                  <th>Timeline</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Revenue Shortfall</td>
+                  <td class="critical">$300K cash gap</td>
+                  <td>Accelerate exchange deals, Coinbase expansion</td>
+                  <td>Q2 2026</td>
+                </tr>
+                <tr>
+                  <td>Cost Structure</td>
+                  <td class="warning">$165K monthly burn</td>
+                  <td>Rationalize non-essential expenses, focus hiring</td>
+                  <td>Immediate</td>
+                </tr>
+                <tr>
+                  <td>Runway Extension</td>
+                  <td class="critical">12-15 months</td>
+                  <td>Bridge gap with specific deals, cost reduction</td>
+                  <td>Q2-Q3 2026</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Bear Case Avoidance Plan</h3>
+
+          <h4>1. Revenue Acceleration (Target: +$30K MRR by Q3)</h4>
+
+          <div class="action-items">
+            <div class="action-item urgent">
+              <h4>Kraken Deal Close</h4>
+              <p>Priority #1: Convert evaluation to contract. Target ACV: $180K ($15K/month). Timeline: Q2 2026.</p>
+              <div class="meta">Owner: Sales Lead | Impact: $15K MRR | Probability: 70%</div>
+            </div>
+
+            <div class="action-item urgent">
+              <h4>Coinbase Expansion</h4>
+              <p>Add 2 additional chains to existing contract. Target expansion: $20K/month additional MRR.</p>
+              <div class="meta">Owner: Customer Success | Impact: $20K MRR | Probability: 90%</div>
+            </div>
+
+            <div class="action-item important">
+              <h4>Exchange Pipeline Development</h4>
+              <p>Identify and qualify 3 additional exchange prospects beyond Kraken. Focus on mid-tier exchanges with clear security needs.</p>
+              <div class="meta">Owner: Sales Lead | Impact: $10-30K MRR | Timeline: Q3 2026</div>
+            </div>
+          </div>
+
+          <h4>2. Cost Rationalization (Target: -$20K Monthly Burn)</h4>
+
+          <div class="action-items">
+            <div class="action-item important">
+              <h4>Hiring Freeze</h4>
+              <p>Pause non-essential hires planned for Q2. Focus on execution with current team until revenue targets are met.</p>
+              <div class="meta">Impact: -$15K/month saved | Timeline: Immediate</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Tool & Vendor Audit</h4>
+              <p>Review all SaaS subscriptions, cloud costs, and vendor contracts. Eliminate redundancies and negotiate better terms.</p>
+              <div class="meta">Impact: -$5K/month saved | Timeline: 2 weeks</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Office & Travel Optimization</h4>
+              <p>Reduce discretionary spending on travel, events, and office expenses until revenue trajectory improves.</p>
+              <div class="meta">Impact: -$3K/month saved | Timeline: Immediate</div>
+            </div>
+          </div>
+
+          <h4>3. AI Agent Deployment Upgrade</h4>
+
+          <p>
+            Paul's suggestion about upgrading AI agent deployment is meta-commentary: TestMachine builds security AI but should use AI internally for execution efficiency.
+          </p>
+
+          <div class="action-items">
+            <div class="action-item">
+              <h4>Sales Process Automation</h4>
+              <p>Deploy AI agents for lead qualification, prospect research, and follow-up automation to increase sales efficiency.</p>
+              <div class="meta">Impact: 2x pipeline velocity | Timeline: 4 weeks</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Customer Success Automation</h4>
+              <p>AI-driven monitoring for client health, expansion opportunities, and proactive support.</p>
+              <div class="meta">Impact: Reduce churn risk, identify upsells | Timeline: 6 weeks</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Market Intelligence</h4>
+              <p>AI-powered competitive analysis, prospect identification, and market research to optimize targeting.</p>
+              <div class="meta">Impact: Better prospect qualification | Timeline: 4 weeks</div>
+            </div>
+          </div>
+
+          <h4>Bear Case Bridge Calculation</h4>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th>Monthly Impact</th>
+                  <th>Quarterly Impact</th>
+                  <th>Bridge Contribution</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Kraken Close</td>
+                  <td class="success">+$15K MRR</td>
+                  <td class="success">+$45K</td>
+                  <td class="success">$135K annual</td>
+                </tr>
+                <tr>
+                  <td>Coinbase Expansion</td>
+                  <td class="success">+$20K MRR</td>
+                  <td class="success">+$60K</td>
+                  <td class="success">$240K annual</td>
+                </tr>
+                <tr>
+                  <td>Cost Rationalization</td>
+                  <td class="warning">-$20K burn</td>
+                  <td class="warning">-$60K</td>
+                  <td class="warning">$240K annual</td>
+                </tr>
+                <tr class="success">
+                  <td><strong>Total Bridge</strong></td>
+                  <td class="success"><strong>+$55K monthly</strong></td>
+                  <td class="success"><strong>+$165K quarterly</strong></td>
+                  <td class="success"><strong>$615K annual</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="highlight success">
+            <strong>Bridge Analysis:</strong> These three actions alone can close the $300K bear case gap and extend runway by 12+ months without additional capital.
+          </div>
+
+        </section>
+
+        <section class="section" id="board-deck-updates">
+          <h2>Board Deck Update Recommendations</h2>
+
+          <p>
+            The current board deck needs significant updates to address Paul's transparency concerns and provide the concrete data he's requesting.
+          </p>
+
+          <h3>Critical Additions</h3>
+
+          <h4>New Slide: "Named Account Pipeline"</h4>
+          <ul>
+            <li>Full table of every prospect with name, stage, probability, ACV, timeline</li>
+            <li>Pipeline coverage ratio for each scenario (bull/base/bear)</li>
+            <li>Historical conversion rates by stage</li>
+            <li>Weighted pipeline value and coverage analysis</li>
+          </ul>
+
+          <h4>New Slide: "Plan vs. Actuals"</h4>
+          <ul>
+            <li>Side-by-side comparison of original Q4 2025 plan vs. current forecast</li>
+            <li>Delta analysis with specific root causes</li>
+            <li>What worked, what didn't, lessons learned</li>
+            <li>Adjusted assumptions and rationale</li>
+          </ul>
+
+          <h4>Updated Slide: "Execution Roadmap"</h4>
+          <ul>
+            <li>Specific milestones with owners and dates</li>
+            <li>Bear case avoidance plan with concrete actions</li>
+            <li>Pipeline development strategy with named targets</li>
+            <li>Cost optimization initiatives and timeline</li>
+          </ul>
+
+          <h3>Segment Strategy Revision</h3>
+
+          <h4>Refocus the "Seven Segments" Narrative</h4>
+          <p>
+            Address Paul's "small auditors" concern by restructuring the segment strategy around priority levels:
+          </p>
+
+          <ol>
+            <li><strong>Tier 1 (Execute Now):</strong> Coinbase expansion, Exchange sales</li>
+            <li><strong>Tier 2 (Strategic Pilots):</strong> RWA/Tokenization, DeFi monitoring</li>
+            <li><strong>Tier 3 (Future Options):</strong> Agentic AI, Enterprise auditors</li>
+            <li><strong>Tier 4 (Deprioritized):</strong> Small auditor platform</li>
+          </ol>
+
+          <h3>Visual and Messaging Updates</h3>
+
+          <h4>Replace Aspirational Metrics with Reality</h4>
+          <ul>
+            <li>Remove projections that can't be backed by named pipeline</li>
+            <li>Add confidence intervals to all forecasts</li>
+            <li>Highlight proven revenue (Coinbase) vs. projected revenue</li>
+            <li>Include downside scenarios and mitigation plans</li>
+          </ul>
+
+          <h4>Add "Reality Check" Slides</h4>
+          <ul>
+            <li>Honest assessment of current trajectory vs. plan</li>
+            <li>Specific risks and mitigation strategies</li>
+            <li>What needs to change for success</li>
+            <li>Request for board support and guidance</li>
+          </ul>
+
+        </section>
+
+        <section class="section" id="revenue-model-updates">
+          <h2>Revenue Model Update Recommendations</h2>
+
+          <p>
+            The interactive revenue model needs updates to address Paul's concerns about transparency and provide clearer visibility into the gap between current trajectory and scenarios.
+          </p>
+
+          <h3>Add Actuals Overlay</h3>
+          <ul>
+            <li>Historical actuals data showing actual vs. modeled performance</li>
+            <li>Month-by-month tracking of revenue, costs, and cash flow</li>
+            <li>Variance analysis highlighting where model assumptions were wrong</li>
+            <li>Updated assumptions based on actual performance data</li>
+          </ul>
+
+          <h3>Pipeline-Driven Scenarios</h3>
+          <ul>
+            <li>Link each scenario to specific named accounts and probabilities</li>
+            <li>Show pipeline coverage requirements for each scenario</li>
+            <li>Dynamic updates based on pipeline changes</li>
+            <li>Clear visualization of current trajectory vs. scenarios</li>
+          </ul>
+
+          <h3>Enhanced Scenario Analysis</h3>
+
+          <h4>Current Trajectory Scenario</h4>
+          <ul>
+            <li>New scenario based on actual pipeline and conversion rates</li>
+            <li>Conservative assumptions reflecting current execution capability</li>
+            <li>Show the "do nothing" path to make the gap clear</li>
+          </ul>
+
+          <h4>Scenario Probability Weights</h4>
+          <ul>
+            <li>Bull Case: 15% probability (requires perfect execution)</li>
+            <li>Base Case: 35% probability (requires improved execution)</li>
+            <li>Bear Case: 40% probability (current trajectory)</li>
+            <li>Current Trajectory: 10% probability (if no changes made)</li>
+          </ul>
+
+          <h3>Bear Case Mitigation Module</h3>
+          <ul>
+            <li>Interactive tool showing impact of specific actions</li>
+            <li>Cost reduction levers and revenue acceleration options</li>
+            <li>Real-time bridge calculation to show path to break-even</li>
+            <li>Sensitivity analysis for key variables</li>
+          </ul>
+
+        </section>
+
+        <section class="section" id="communication-strategy">
+          <h2>Communication Strategy for Wednesday Meeting</h2>
+
+          <p>
+            The Wednesday meeting with Paul Hsu (1:15-1:45 PM EST) is crucial. The conversation must be <strong>proactive, not defensive</strong>, and demonstrate the leadership qualities Paul is testing.
+          </p>
+
+          <h3>Meeting Framework</h3>
+
+          <h4>Opening (5 minutes): Acknowledge and Appreciate</h4>
+          <ul>
+            <li>"Thank you for the direct feedback—this is exactly what we need"</li>
+            <li>"You're right: we were avoiding some hard truths about our execution"</li>
+            <li>"We've spent the last 48 hours doing the pipeline analysis you requested"</li>
+          </ul>
+
+          <h4>Core Content (20 minutes): Pipeline Reality Check</h4>
+          <ol>
+            <li><strong>Pipeline Analysis (5 min):</strong> Present the complete named account pipeline with probabilities</li>
+            <li><strong>Segment Refocus (5 min):</strong> Address small auditor concerns, show revised prioritization</li>
+            <li><strong>Plan vs. Actuals (5 min):</strong> Honest assessment of what went wrong and why</li>
+            <li><strong>Bear Case Bridge (5 min):</strong> Concrete actions to close the $300K gap</li>
+          </ol>
+
+          <h4>Closing (5 minutes): Commitment and Next Steps</h4>
+          <ul>
+            <li>Specific commitments with dates and owners</li>
+            <li>Request for continued guidance and support</li>
+            <li>Next check-in schedule and success metrics</li>
+          </ul>
+
+          <h3>Key Messages to Land</h3>
+
+          <h4>Message 1: "We See the Reality"</h4>
+          <p>
+            "You're absolutely right that we were below the bear case trajectory. Here's exactly what that looks like in numbers, and here's why it happened."
+          </p>
+
+          <h4>Message 2: "We're Making Hard Decisions"</h4>
+          <p>
+            "We're pulling back from the small auditor segment you flagged. We're focusing on exchanges and Coinbase expansion where we have proven traction."
+          </p>
+
+          <h4>Message 3: "We Have a Specific Plan"</h4>
+          <p>
+            "Here are the three actions that close the $300K gap: Kraken close, Coinbase expansion, cost rationalization. Each has a name, date, and owner."
+          </p>
+
+          <h4>Message 4: "We Need Your Continued Support"</h4>
+          <p>
+            "This course correction is exactly what we needed. We'd like to check in with you monthly as we execute this plan."
+          </p>
+
+          <h3>What to Send in Advance</h3>
+
+          <h4>Pipeline One-Pager (Send Tuesday EOD)</h4>
+          <ul>
+            <li>Complete named account pipeline table</li>
+            <li>Coverage analysis for each scenario</li>
+            <li>Gap identification and mitigation plan</li>
+            <li>Key assumptions and probabilities</li>
+          </ul>
+
+          <h4>Bear Case Bridge Analysis (Send Tuesday EOD)</h4>
+          <ul>
+            <li>Detailed calculation showing how to close the $300K gap</li>
+            <li>Timeline and ownership for each action</li>
+            <li>Milestones and success metrics</li>
+          </ul>
+
+          <h3>What NOT to Do</h3>
+          <ul>
+            <li><strong>Don't be defensive:</strong> Paul's feedback is accurate and helpful</li>
+            <li><strong>Don't make excuses:</strong> Focus on solutions, not problems</li>
+            <li><strong>Don't oversell:</strong> Conservative estimates are better than optimistic projections</li>
+            <li><strong>Don't ask for more time:</strong> The urgency is real, execution must start immediately</li>
+          </ul>
+
+        </section>
+
+        <section class="section" id="action-items">
+          <h2>Tactical Action Items (Next 48 Hours)</h2>
+
+          <p>
+            Specific actions to complete before the Tuesday board update and Wednesday Paul meeting. Each item has clear ownership and deadlines.
+          </p>
+
+          <div class="action-items">
+            <div class="action-item urgent">
+              <h4>1. Complete Pipeline Analysis</h4>
+              <p>Build comprehensive named account pipeline with every prospect, stage, probability, ACV, and timeline. Include coverage analysis for each scenario.</p>
+              <div class="meta">Owner: Sales Lead | Deadline: Monday 6 PM EST | Deliverable: Pipeline spreadsheet + analysis</div>
+            </div>
+
+            <div class="action-item urgent">
+              <h4>2. Retrieve Original Board Plan</h4>
+              <p>Find the original Q4 2025 board-approved plan and revenue projections. Create detailed plan vs. actuals comparison with root cause analysis.</p>
+              <div class="meta">Owner: CEO | Deadline: Monday 8 PM EST | Deliverable: Plan comparison table</div>
+            </div>
+
+            <div class="action-item urgent">
+              <h4>3. Create Bear Case Bridge Analysis</h4>
+              <p>Detail the three-action plan to close the $300K gap: Kraken deal, Coinbase expansion, cost rationalization. Include timeline and success metrics.</p>
+              <div class="meta">Owner: CFO + Sales Lead | Deadline: Tuesday 10 AM EST | Deliverable: Bridge calculation + action plan</div>
+            </div>
+
+            <div class="action-item urgent">
+              <h4>4. Prepare Paul Hsu Pre-Read Materials</h4>
+              <p>Create the pipeline one-pager and bear case bridge analysis to send before Wednesday meeting. Focus on transparency and concrete data.</p>
+              <div class="meta">Owner: CEO | Deadline: Tuesday 5 PM EST | Deliverable: 2-page pre-read document</div>
+            </div>
+
+            <div class="action-item important">
+              <h4>5. Update Board Deck</h4>
+              <p>Add pipeline slide, plan vs. actuals comparison, and revised segment strategy addressing Paul's small auditor concerns.</p>
+              <div class="meta">Owner: CEO + Team | Deadline: Tuesday 8 AM EST | Deliverable: Updated board presentation</div>
+            </div>
+
+            <div class="action-item important">
+              <h4>6. Accelerate Kraken Deal</h4>
+              <p>Contact Kraken team to schedule follow-up workshop and begin contract negotiation process. Target signed LOI within 2 weeks.</p>
+              <div class="meta">Owner: Sales Lead | Deadline: Monday EOD | Deliverable: Scheduled next meeting + proposal</div>
+            </div>
+
+            <div class="action-item important">
+              <h4>7. Initiate Cost Rationalization</h4>
+              <p>Begin hiring freeze, vendor audit, and expense reduction. Target $20K monthly burn reduction within 30 days.</p>
+              <div class="meta">Owner: CFO | Deadline: Tuesday EOD | Deliverable: Cost reduction plan + immediate actions</div>
+            </div>
+
+            <div class="action-item">
+              <h4>8. Update Revenue Model</h4>
+              <p>Add actuals overlay, current trajectory scenario, and pipeline-driven forecasting to the interactive revenue model.</p>
+              <div class="meta">Owner: Technical Lead | Deadline: Wednesday 10 AM EST | Deliverable: Updated model with new scenarios</div>
+            </div>
+
+            <div class="action-item">
+              <h4>9. Coinbase Expansion Outreach</h4>
+              <p>Contact Coinbase counterpart to discuss adding 2 additional chains to existing contract. Target $20K MRR expansion.</p>
+              <div class="meta">Owner: Customer Success | Deadline: Tuesday EOD | Deliverable: Expansion proposal + timeline</div>
+            </div>
+
+            <div class="action-item">
+              <h4>10. Segment Strategy Documentation</h4>
+              <p>Document the revised segment prioritization strategy addressing Paul's concerns. Create new positioning around Tier 1/2/3 segments.</p>
+              <div class="meta">Owner: Product Lead | Deadline: Tuesday 3 PM EST | Deliverable: Strategy document + rationale</div>
+            </div>
+          </div>
+
+          <h3>Success Metrics</h3>
+
+          <p>
+            Clear indicators that this strategy is working:
+          </p>
+
+          <h4>Immediate (48 hours)</h4>
+          <ul>
+            <li>Complete pipeline transparency with named accounts</li>
+            <li>Paul Hsu pre-read materials delivered on time</li>
+            <li>Board deck updated with concrete data</li>
+            <li>Kraken follow-up meeting scheduled</li>
+          </ul>
+
+          <h4>Short-term (30 days)</h4>
+          <ul>
+            <li>Kraken LOI signed</li>
+            <li>Coinbase expansion initiated</li>
+            <li>$20K monthly burn reduction achieved</li>
+            <li>Pipeline coverage ratio improved</li>
+          </ul>
+
+          <h4>Medium-term (90 days)</h4>
+          <ul>
+            <li>+$35K MRR added (Kraken + Coinbase expansion)</li>
+            <li>Bear case gap closed</li>
+            <li>3 additional exchange prospects qualified</li>
+            <li>Revised runway: 18+ months</li>
+          </ul>
+
+          <div class="highlight success">
+            <strong>The Ultimate Success Metric:</strong> Paul Hsu's next investor update says "TestMachine leadership team demonstrated the maturity and execution capability required for market leadership."
+          </div>
+
+        </section>
+
+      </div><!-- /.article-body -->
+    </div><!-- /.main-container -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 TestMachine. Internal use only.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Progress bar
+    function updateProgressBar() {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('progress-bar').style.width = scrolled + '%';
+    }
+
+    // Nav scroll handler
+    const nav = document.getElementById('navbar');
+    function handleNavScroll() {
+      if (window.scrollY > 10) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    }
+
+    // Active section highlighting
+    function highlightActiveSection() {
+      const sections = document.querySelectorAll('.section');
+      const navLinks = document.querySelectorAll('.toc a');
+
+      let currentSection = '';
+      sections.forEach(function(section) {
+        const sectionTop = section.getBoundingClientRect().top;
+        const sectionHeight = section.offsetHeight;
+        if (sectionTop <= 100 && sectionTop + sectionHeight > 100) {
+          currentSection = section.id;
+        }
+      });
+
+      navLinks.forEach(function(link) {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + currentSection) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', function() {
+      updateProgressBar();
+      handleNavScroll();
+      highlightActiveSection();
+    });
+
+    // Hamburger toggle
+    var hamburger = document.getElementById('hamburger');
+    var mobileMenu = document.getElementById('mobile-menu');
+    if (hamburger) {
+      hamburger.addEventListener('click', function() {
+        hamburger.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+        document.body.classList.toggle('menu-open');
+      });
+    }
+
+    // Mobile TOC toggle
+    document.getElementById('toc-toggle').onclick = function() {
+      var toc = document.getElementById('toc');
+      var overlay = document.getElementById('toc-overlay');
+      toc.classList.toggle('open');
+      overlay.classList.toggle('open');
+    };
+
+    document.getElementById('toc-overlay').onclick = function() {
+      var toc = document.getElementById('toc');
+      var overlay = document.getElementById('toc-overlay');
+      toc.classList.remove('open');
+      overlay.classList.remove('open');
+    };
+
+    // Smooth scrolling for TOC links
+    document.querySelectorAll('.toc a').forEach(function(anchor) {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        var targetId = this.getAttribute('href').substring(1);
+        var targetSection = document.getElementById(targetId);
+
+        if (targetSection) {
+          targetSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+
+        // Close mobile TOC
+        var toc = document.getElementById('toc');
+        var overlay = document.getElementById('toc-overlay');
+        toc.classList.remove('open');
+        overlay.classList.remove('open');
+      });
+    });
+
+    // Initialize
+    updateProgressBar();
+    handleNavScroll();
+  </script>
+</body>
+</html>

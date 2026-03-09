@@ -1,0 +1,1656 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic Security — Sandbox Isolation Technologies & Frameworks — TestMachine Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+<style>
+/* ---------- Custom Properties ---------- */
+:root {
+  --bg:            oklch(0.18 0.005 260);
+  --bg-raised:     oklch(0.21 0.005 260);
+  --bg-deeper:     oklch(0.14 0.005 260);
+  --fg:            oklch(0.92 0 0);
+  --fg-muted:      oklch(0.65 0 0);
+  --fg-dim:        oklch(0.45 0 0);
+  --border:        oklch(0.32 0.005 260);
+  --border-subtle: oklch(0.25 0.005 260);
+  --accent:        oklch(0.72 0.12 192);
+  --accent-hover:  oklch(0.80 0.12 192);
+  --accent-glow:   oklch(0.72 0.12 192 / 0.1);
+  --card-bg:       oklch(0.21 0.005 260);
+  --input-bg:      oklch(0.15 0.005 260);
+  --nav-bg:        oklch(0.18 0.005 260 / 0.85);
+
+  --font-display: 'Manrope', sans-serif;
+  --font-mono:    'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --font:         var(--font-mono);
+  --font-serif:   'Source Serif 4', Charter, Georgia, serif;
+
+  --nav-h:       72px;
+  --max-w:       1120px;
+  --section-py:  clamp(80px, 10vw, 140px);
+  --gap:         24px;
+  --transition:  0.25s ease;
+
+  --callout-orange: oklch(0.75 0.15 55);
+  --callout-red:    oklch(0.65 0.2 25);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-h);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; color: inherit; }
+ul { list-style: none; }
+input, textarea, select { font-family: inherit; font-size: inherit; }
+
+/* ---------- Layout ---------- */
+.container {
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+/* ---------- Progress Bar ---------- */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), oklch(0.72 0.10 230));
+  z-index: 1100;
+  width: 0%;
+  transition: width 0.1s;
+}
+
+/* ---------- Navigation ---------- */
+.nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
+.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
+.toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+.toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width var(--transition);
+}
+
+.nav-link:hover,
+.nav-link.nav-link--active {
+  color: var(--fg);
+}
+
+.nav-link:hover::after,
+.nav-link.nav-link--active::after {
+  width: 100%;
+}
+
+.nav-link.nav-link--active {
+  color: var(--accent);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  padding: 14px 32px;
+  border-radius: 0;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.btn:hover { transform: scale(1.02); }
+.btn:active { transform: scale(0.98); }
+
+.btn--primary {
+  background: var(--accent);
+  color: oklch(0.12 0 0);
+  border: 1px solid var(--accent);
+  font-weight: 700;
+}
+
+.btn--primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn--nav {
+  padding: 10px 22px;
+  font-size: 0.75rem;
+}
+
+/* ---------- Hamburger ---------- */
+.hamburger {
+  display: none;
+  width: 40px;
+  height: 40px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  z-index: 1001;
+}
+
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--fg);
+  transition: all var(--transition);
+  transform-origin: center;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* ---------- Mobile Menu ---------- */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-menu-inner {
+  text-align: center;
+}
+
+.mobile-menu-link {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  font-weight: 600;
+  color: var(--fg-muted);
+  padding: 14px 0;
+  transition: color var(--transition);
+}
+
+.mobile-menu-link:hover {
+  color: var(--fg);
+}
+
+.mobile-menu-link.nav-link--active {
+  color: var(--accent);
+}
+
+.mobile-menu-cta {
+  margin-top: 40px;
+  padding: 0 40px;
+}
+
+/* ---------- TOC Sidebar ---------- */
+
+/* TOC Toggle Button (mobile) */
+.toc-toggle {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 200;
+  width: 48px;
+  height: 48px;
+  border-radius: 0;
+  background: var(--accent);
+  color: oklch(0.12 0 0);
+  border: none;
+  font-size: 1.2rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3);
+}
+
+/* TOC Overlay (mobile) */
+.toc-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: oklch(0 0 0 / 0.6);
+  z-index: 109;
+}
+
+.toc-overlay.open {
+  display: block;
+}
+
+/* ---------- Main Content ---------- */
+.main {
+  margin-left: 280px;
+  min-height: 100vh;
+}
+
+.main-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px) 4rem;
+}
+
+/* ---------- Article Header ---------- */
+.article-header {
+  padding-top: calc(var(--nav-h) + 32px);
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 3rem;
+}
+
+.back-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  margin-bottom: 1.5rem;
+  transition: color var(--transition);
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+.article-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-muted);
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  margin-bottom: 1rem;
+}
+
+.article-date {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  margin-bottom: 1rem;
+}
+
+.article-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin-bottom: 1rem;
+}
+
+.article-subtitle {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  color: var(--fg-muted);
+  line-height: 1.6;
+}
+
+/* ---------- Hero Stats ---------- */
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.hero-stat {
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  padding: 1.2rem;
+  text-align: center;
+  transition: border-color var(--transition), transform var(--transition);
+}
+
+.hero-stat:hover {
+  border-color: var(--border);
+  transform: translateY(-2px);
+}
+
+.hero-stat .value {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.hero-stat .label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ---------- Article Body ---------- */
+.article-body {
+  font-family: var(--font-serif);
+}
+
+.article-body .section {
+  margin: 3rem 0;
+  padding: 0 0 2rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.article-body .section:last-child {
+  border-bottom: none;
+}
+
+.article-body p {
+  font-family: var(--font-serif);
+  font-size: 1.1875rem;
+  line-height: 1.9;
+  color: var(--fg-muted);
+  margin-bottom: 1.5em;
+}
+
+.article-body h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 700;
+  color: var(--fg);
+  margin-top: 2.5em;
+  margin-bottom: 1rem;
+  line-height: 1.25;
+}
+
+.article-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-top: 2em;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.article-body h4 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-top: 1.5em;
+  margin-bottom: 0.5rem;
+}
+
+.article-body strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.article-body ul,
+.article-body ol {
+  margin-bottom: 1.5em;
+  padding-left: 1.5em;
+}
+
+.article-body ul {
+  list-style: disc;
+}
+
+.article-body ol {
+  list-style: decimal;
+}
+
+.article-body li {
+  font-family: var(--font-serif);
+  font-size: 1.1875rem;
+  line-height: 1.9;
+  color: var(--fg-muted);
+  margin-bottom: 0.5rem;
+}
+
+.article-body a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--transition);
+}
+
+.article-body a:hover {
+  color: var(--accent-hover);
+}
+
+/* ---------- Callout / Highlight Boxes ---------- */
+.highlight {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  border-left: 3px solid var(--accent);
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.highlight strong:first-child {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.highlight.warning {
+  border-left-color: var(--callout-orange);
+}
+
+.highlight.warning strong:first-child {
+  color: var(--callout-orange);
+}
+
+.highlight.danger {
+  border-left-color: var(--callout-red);
+}
+
+.highlight.danger strong:first-child {
+  color: var(--callout-red);
+}
+
+/* ---------- Code ---------- */
+code {
+  background: var(--bg-deeper);
+  padding: 0.15rem 0.4rem;
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+
+pre {
+  background: var(--bg-deeper);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 1.2rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: var(--fg);
+}
+
+/* ---------- Tables ---------- */
+.table-container {
+  overflow-x: auto;
+  margin: 2rem 0;
+  border: 1px solid var(--border);
+  border-radius: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: var(--bg-deeper);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  padding: 0.7rem 1rem;
+  text-align: left;
+}
+
+td {
+  padding: 0.7rem 1rem;
+  border-top: 1px solid var(--border-subtle);
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  color: var(--fg-muted);
+}
+
+tbody tr:hover td {
+  background: var(--accent-glow);
+}
+
+/* ---------- ASCII Diagrams ---------- */
+.ascii-diagram {
+  background: var(--bg-deeper);
+  border: 1px solid var(--border);
+  padding: 1.5rem;
+  margin: 2rem 0;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  overflow-x: auto;
+  color: var(--fg);
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  padding: 20px 0;
+  background: var(--bg-raised);
+  border-top: 1px solid var(--border-subtle);
+  margin-left: 280px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 28px;
+}
+
+.footer-brand .nav-logo {
+  margin-bottom: 14px;
+}
+
+.footer-address {
+  font-size: 0.8125rem;
+  color: var(--fg-dim);
+  line-height: 1.5;
+}
+
+.footer-heading {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--fg);
+  margin-bottom: 16px;
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+}
+
+.footer-links a:hover {
+  color: var(--fg);
+}
+
+.footer-bottom { display: flex; align-items: center; justify-content: center; }
+
+.footer-bottom p { font-size: 0.7rem; color: var(--fg-dim); margin: 0; line-height: 1; }
+
+/* ---------- Focus & Selection ---------- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: oklch(0.72 0.12 192 / 0.25);
+}
+
+/* ---------- Responsive: Tablet (1024px) ---------- */
+@media (max-width: 1024px) {
+    .toc { transform: translateX(-100%); }
+    .main, .main-content, .main-container, .article-wrapper, .content-wrapper { margin-left: 0 !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .nav-links {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .toc.open {
+    transform: translateX(0);
+  }
+
+  .toc-toggle {
+    display: block;
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .footer {
+    margin-left: 0;
+  }
+}
+
+/* ---------- Responsive: Mobile (768px) ---------- */
+@media (max-width: 768px) {
+  .main-container {
+    padding: 0 1rem 3rem;
+  }
+
+  .article-title {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+  }
+
+  .hero-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .article-header {
+    padding-top: calc(var(--nav-h) + 20px);
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .hamburger {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+
+<body>
+
+  <div class="progress-bar" id="progress-bar"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="navbar">
+  <div class="progress-bar" id="progressBar"></div>
+  <div style="display:flex;align-items:center;height:100%;padding:0 24px;">
+    <a href="/"><img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);"></a>
+  </div>
+</nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-inner">
+      <a href="/" class="mobile-menu-link nav-link--active">Research</a>
+      <div class="mobile-menu-cta">
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC Toggle (mobile) -->
+  <button class="toc-toggle" id="toc-toggle" aria-label="Toggle table of contents">&#9776;</button>
+  <div class="toc-overlay" id="toc-overlay"></div>
+
+  <!-- TOC Sidebar -->
+  <nav class="toc" id="toc">
+    <h3>Contents</h3>
+    <ul>
+      <li><a href="#introduction">Introduction</a></li>
+      <li><a href="#attack-surface-model">Attack Surface Model</a></li>
+      <li><a href="#isolation-spectrum">The Isolation Spectrum</a></li>
+      <li><a href="#namespaces">Namespaces: Visibility Walls</a></li>
+      <li><a href="#cgroups">Cgroups: Resource Accounting</a></li>
+      <li><a href="#seccomp">Seccomp-BPF: Syscall Filtering</a></li>
+      <li><a href="#gvisor">gVisor: User-Space Kernels</a></li>
+      <li><a href="#microvms">MicroVMs: Hardware Boundaries</a></li>
+      <li><a href="#webassembly">WebAssembly: No Kernel Access</a></li>
+      <li><a href="#agentic-implications">Agentic AI Implications</a></li>
+      <li><a href="#recommendations">Recommendations</a></li>
+      <li><a href="#conclusions">Conclusions</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="main-container">
+
+      <!-- Article Header -->
+      <header class="article-header">
+        <a href="index.html" class="back-link">&larr; Back to Research</a>
+        <span class="article-tag">Technical Analysis</span>
+        <span class="article-date">March 2, 2026</span>
+        <h1 class="article-title">Agentic Security</h1>
+        <p class="article-subtitle">
+          Sandbox Isolation Technologies & Frameworks &mdash;
+          From namespaces to hardware boundaries for autonomous AI systems
+        </p>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="value">~340</div>
+            <div class="label">Linux Syscalls</div>
+          </div>
+          <div class="hero-stat">
+            <div class="value">40M LOC</div>
+            <div class="label">Kernel Attack Surface</div>
+          </div>
+          <div class="hero-stat">
+            <div class="value">6 Layers</div>
+            <div class="label">Isolation Technologies</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Article Body -->
+      <div class="article-body">
+
+        <section class="section" id="introduction">
+          <h2>Introduction</h2>
+
+          <p>
+            Sandbox isolation has become critical for agentic AI systems that generate and execute untrusted code dynamically. Unlike traditional applications with static code paths, AI agents create executables on-the-fly based on natural language instructions, making robust isolation essential for security.
+          </p>
+
+          <p>
+            The word "isolation" is used loosely across different technologies. A Docker container is "isolated." A microVM is "isolated." A WebAssembly module is "isolated." But these represent fundamentally different security boundaries with distinct failure modes and attack surfaces.
+          </p>
+
+          <div class="highlight">
+            <strong>Core Insight:</strong> Every isolation technique answers the same question: How do we reduce or eliminate untrusted code's access to the kernel attack surface? The approaches differ in where they draw the boundary and what they consider shared versus dedicated state.
+          </div>
+
+          <p>
+            <em>This analysis is based on research by <a href="https://www.shayon.dev/post/2026/52/lets-discuss-sandbox-isolation/">Shayon Mukherjee</a>, adapted for agentic security contexts.</em>
+          </p>
+        </section>
+
+        <section class="section" id="attack-surface-model">
+          <h2>The Attack Surface Model</h2>
+
+          <p>
+            When any code runs on Linux, it interacts with hardware through the kernel via system calls. The Linux kernel exposes roughly <strong>340 syscalls</strong> and contains tens of millions of lines of C code. Every syscall represents a potential entry point into this massive attack surface.
+          </p>
+
+          <div class="ascii-diagram">
+Untrusted Code ─( Syscall )─→ Host Kernel ─( Hardware API )─→ Hardware
+                              [ 40M LOC C ]
+          </div>
+
+          <p>
+            This creates a fundamental challenge for agentic systems: AI-generated code has access to the same kernel interface as any other process, with all the associated vulnerabilities and attack vectors.
+          </p>
+
+          <h3>Shared State vs. Dedicated State</h3>
+
+          <p>
+            A key concept in isolation design is the distinction between <strong>shared state</strong> and <strong>dedicated state</strong>:
+          </p>
+
+          <ul>
+            <li><strong>Shared State:</strong> Standard containers share the host kernel and its internal data structures (TCP/IP stack, VFS caches, memory allocators)</li>
+            <li><strong>Dedicated State:</strong> Stronger isolation models push complex state into the sandbox, exposing only simple interfaces to the host</li>
+          </ul>
+
+          <p>
+            When state is shared, a vulnerability in kernel packet parsing affects every container on the host. Stronger isolation models minimize this shared attack surface by dedicating resources to individual workloads.
+          </p>
+        </section>
+
+        <section class="section" id="isolation-spectrum">
+          <h2>The Isolation Spectrum</h2>
+
+          <p>
+            Understanding isolation requires recognizing that different techniques provide qualitatively different boundaries, not just stronger versions of the same protection. Each step represents a fundamentally different security model.
+          </p>
+
+          <div class="ascii-diagram">
+ Isolation Strength →
+ Attack Surface ↓
+
+Namespaces  Seccomp  gVisor   MicroVM   WASM
+    │          │        │        │        │
+    │ visibility │ syscall │ separate │ hardware │ no kernel
+    │ walls only │ filter on │ kernel in │ boundary │ access at
+    │            │ same     │ user-space│ via KVM   │ all
+    │            │ kernel   │           │           │
+    ▼          ▼        ▼        ▼        ▼
+  Fast       Fast   Moderate   Slower   Fastest
+ Weakest     Weak    Strong   Strongest Strong*
+                                      (*limited scope)
+          </div>
+
+          <p>
+            The progression from left to right represents not just increasing security, but fundamentally different approaches to the isolation problem. Each has specific use cases where it provides the optimal balance of security, compatibility, and performance.
+          </p>
+        </section>
+
+        <section class="section" id="namespaces">
+          <h2>Namespaces: Visibility Walls</h2>
+
+          <p>
+            Linux namespaces wrap global system resources so processes appear to have their own isolated instance. There are eight types of namespaces, each isolating specific resources:
+          </p>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Namespace</th>
+                  <th>Isolates</th>
+                  <th>What Process Sees</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>PID</td>
+                  <td>Process IDs</td>
+                  <td>Own process tree, starts at PID 1</td>
+                </tr>
+                <tr>
+                  <td>Mount</td>
+                  <td>Filesystem mount points</td>
+                  <td>Own mount table, different root</td>
+                </tr>
+                <tr>
+                  <td>Network</td>
+                  <td>Network interfaces, routing</td>
+                  <td>Own interfaces, IP addresses, ports</td>
+                </tr>
+                <tr>
+                  <td>User</td>
+                  <td>UID/GID mapping</td>
+                  <td>Can be root inside, nobody outside</td>
+                </tr>
+                <tr>
+                  <td>UTS</td>
+                  <td>Hostname</td>
+                  <td>Own hostname</td>
+                </tr>
+                <tr>
+                  <td>IPC</td>
+                  <td>SysV IPC, POSIX message queues</td>
+                  <td>Own shared memory, semaphores</td>
+                </tr>
+                <tr>
+                  <td>Cgroup</td>
+                  <td>Cgroup root directory</td>
+                  <td>Own cgroup hierarchy</td>
+                </tr>
+                <tr>
+                  <td>Time</td>
+                  <td>System clocks</td>
+                  <td>Own system uptime, clock offsets</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="highlight danger">
+            <strong>Critical Limitation:</strong> Namespaces are visibility walls, not security boundaries. They prevent processes from seeing resources outside their namespace but do not prevent kernel exploitation. A vulnerability in the kernel affects all containers regardless of namespace isolation.
+          </div>
+
+          <h3>Real-World Container Escapes</h3>
+
+          <p>
+            Recent container escape vulnerabilities demonstrate the limitations of namespace-based isolation:
+          </p>
+
+          <ul>
+            <li><strong>CVE-2024-21626 (runc):</strong> File descriptor leak allowed container access to host filesystem despite intact mount namespace</li>
+            <li><strong>CVE-2025-31133, CVE-2025-52565, CVE-2025-52881:</strong> Three runc CVEs in 2025 showing mount race conditions enabling host filesystem writes</li>
+          </ul>
+
+          <p>
+            These examples show that namespace integrity doesn't guarantee isolation when the underlying container runtime or kernel has vulnerabilities.
+          </p>
+        </section>
+
+        <section class="section" id="cgroups">
+          <h2>Cgroups: Resource Accounting</h2>
+
+          <p>
+            Control groups (cgroups) limit and account for resource usage: CPU, memory, disk I/O, and process count. They prevent containers from consuming all available system resources, providing stability but not security.
+          </p>
+
+          <div class="highlight warning">
+            <strong>Important Distinction:</strong> Cgroups prevent denial-of-service attacks but are not a security boundary. They control resource consumption, not kernel access. A process constrained by cgroups still makes syscalls to the same kernel with the same attack surface.
+          </div>
+
+          <p>
+            For agentic AI systems that may spawn compute-intensive tasks (model inference, data processing, compilation), cgroups provide essential resource governance but should not be considered a security control.
+          </p>
+        </section>
+
+        <section class="section" id="seccomp">
+          <h2>Seccomp-BPF: Syscall Filtering</h2>
+
+          <p>
+            Seccomp-BPF allows attachment of Berkeley Packet Filter programs to control which syscalls a process can make. Docker applies a default seccomp profile that blocks 40-50 dangerous syscalls including process tracing, filesystem manipulation, and kernel module loading.
+          </p>
+
+          <div class="ascii-diagram">
+Without Seccomp:
+  Untrusted Code ─( ~340 syscalls )─→ Host Kernel
+
+With Seccomp:
+  Untrusted Code ─( ~300 syscalls )─→ Host Kernel
+          </div>
+
+          <p>
+            Seccomp meaningfully reduces the attack surface by preventing access to high-risk syscalls. However, allowed syscalls still enter the host kernel's code paths. If there's a vulnerability in <code>write()</code> implementation or the network stack, seccomp provides no protection.
+          </p>
+
+          <h3>Privileged Mode Considerations</h3>
+
+          <div class="highlight danger">
+            <strong>Security Trade-off:</strong> Some isolation approaches require Docker's <code>--privileged</code> flag to get <code>CAP_SYS_ADMIN</code> for nested namespaces. This removes seccomp, capability restrictions, and device isolation. The net effect may be weaker than standard unprivileged containers.
+          </div>
+
+          <p>
+            For agentic systems requiring nested isolation, prefer granting specific capabilities rather than full privileged access, or use different isolation approaches that don't require host-level privileges.
+          </p>
+        </section>
+
+        <section class="section" id="gvisor">
+          <h2>gVisor: User-Space Kernels</h2>
+
+          <p>
+            gVisor represents a qualitative shift in isolation by interposing a separate kernel implementation (the Sentry) between untrusted code and the host. This fundamentally changes the attack surface rather than just filtering it.
+          </p>
+
+          <div class="ascii-diagram">
+Standard Container (Docker)
+┌───────────────────────┐
+│ Untrusted Code        │
+└──────────┬────────────┘
+           │ ~340 syscalls
+           ▼
+    [ Seccomp Filter ]
+           │ ~300 allowed syscalls
+           ▼
+┌───────────────────────┐
+│ Host Kernel (Ring 0)  │ ◄── FULL ATTACK SURFACE
+└───────────────────────┘
+
+gVisor
+┌───────────────────────┐
+│ Untrusted Code        │
+└──────────┬────────────┘
+           │ ~340 syscalls
+           ▼
+┌───────────────────────┐
+│ gVisor Sentry (Ring 3)│ ◄── USER-SPACE KERNEL
+└──────┬────────┬───────┘
+       │        │ 9P / LISAFS
+       │        ▼
+       │    ┌───────────┐
+       │    │ Gofer     │ ◄── FILE I/O PROXY
+       │    └─────┬─────┘
+       │          │
+       ▼          ▼
+┌───────────────────────┐
+│ Host Kernel (Ring 0)  │ ◄── REDUCED ATTACK SURFACE
+└───────────────────────┘
+  (~70 host syscalls from Sentry)
+          </div>
+
+          <h3>gVisor Architecture</h3>
+
+          <p>
+            The Sentry intercepts syscalls and handles them in user-space, implementing ~200 Linux syscalls in Go. When it needs to interact with the host (file operations, network), it uses a highly restricted set of ~70 host syscalls. The failure mode changes significantly:
+          </p>
+
+          <ol>
+            <li>Attacker must first compromise the Sentry process (Go implementation, memory-safe)</li>
+            <li>Then escape from Sentry to host using only limited host syscalls</li>
+          </ol>
+
+          <p>
+            This is fundamentally different from filtering the same surface—it's a completely different surface with different implementations and attack vectors.
+          </p>
+
+          <div class="highlight">
+            <strong>Key Advantage:</strong> If someone discovers a vulnerability in Linux kernel I/O handling, Docker containers are directly exposed. gVisor sandboxes are not, because the Sentry handles those syscalls internally without exposing them to the host kernel.
+          </div>
+
+          <h3>Defense in Depth on gVisor</h3>
+
+          <p>
+            For multi-job isolation within a single gVisor sandbox, layer additional controls:
+          </p>
+
+          <div class="ascii-diagram">
+gVisor Container (runsc)
+ └─ Per-job PID + Mount Namespace
+    └─ Seccomp BPF Filter
+       └─ Privilege Drop
+          └─ Network Egress Control
+             └─ Ephemeral tmpfs
+                └─ Capability-confined File Writes
+          </div>
+
+          <p>
+            Each layer catches different attack classes:
+          </p>
+
+          <ul>
+            <li><strong>Namespace escape</strong> → reaches Sentry, not host kernel</li>
+            <li><strong>Seccomp bypass</strong> → hits Sentry's syscall implementation (also sandboxed)</li>
+            <li><strong>Privilege escalation</strong> → blocked by privilege drop</li>
+            <li><strong>Persistent state leakage</strong> → prevented by ephemeral tmpfs with atomic cleanup</li>
+          </ul>
+
+          <h3>Performance Trade-offs</h3>
+
+          <p>
+            gVisor adds overhead through user-space syscall interception. I/O-heavy workloads feel this most. For agentic AI systems:
+          </p>
+
+          <ul>
+            <li><strong>Short-lived code execution:</strong> Usually acceptable overhead</li>
+            <li><strong>High-throughput I/O:</strong> May need different isolation approach</li>
+            <li><strong>Model inference:</strong> CPU-bound workloads less affected</li>
+          </ul>
+        </section>
+
+        <section class="section" id="microvms">
+          <h2>MicroVMs: Hardware Boundaries</h2>
+
+          <p>
+            MicroVMs use hardware virtualization to run each workload in its own virtual machine with dedicated kernel. This provides the strongest isolation boundary available through hardware enforcement.
+          </p>
+
+          <div class="ascii-diagram">
+MicroVM Architecture
+┌───────────────────────┐
+│ Untrusted Code        │
+└──────────┬────────────┘
+           │ Syscalls
+           ▼
+┌───────────────────────┐
+│ Guest Kernel (Ring 0) │ ◄── DEDICATED KERNEL
+└──────────┬────────────┘
+           │ VirtIO / MMIO
+           ▼
+┌───────────────────────┐
+│ KVM Hypervisor (Host) │ ◄── HARDWARE BOUNDARY
+└──────────┬────────────┘
+           │ Secure API
+           ▼
+┌───────────────────────┐
+│ VMM (User-Space)      │ ◄── DEVICE EMULATION
+└───────────────────────┘
+          </div>
+
+          <h3>Security Properties</h3>
+
+          <ul>
+            <li><strong>Hardware-enforced separation:</strong> Guest runs in separate virtual address space</li>
+            <li><strong>Kernel bugs contained:</strong> Guest kernel vulnerabilities cannot access host memory</li>
+            <li><strong>Minimal attack surface:</strong> Only hypervisor and VMM device emulation exposed</li>
+            <li><strong>Escape requirements:</strong> Vulnerabilities in VMM or CPU virtualization features (rare and high-value)</li>
+          </ul>
+
+          <h3>VMM Design Approaches</h3>
+
+          <p>
+            Two main approaches to Virtual Machine Monitor design serve different use cases:
+          </p>
+
+          <h4>Minimal VMMs (Firecracker)</h4>
+          <ul>
+            <li>Built for thousands of tiny, short-lived functions</li>
+            <li>Minimal features: no hot-plugging, GPU passthrough, etc.</li>
+            <li>Smallest possible attack surface and memory footprint</li>
+            <li>Ideal for serverless and CI workloads</li>
+          </ul>
+
+          <h4>Feature-Rich VMMs (Cloud Hypervisor, QEMU)</h4>
+          <ul>
+            <li>Support for dynamic workloads</li>
+            <li>Hot-plugging memory and CPUs</li>
+            <li>GPU passthrough for AI workloads</li>
+            <li>More complex but more flexible</li>
+          </ul>
+
+          <h3>Performance Optimization: Snapshotting</h3>
+
+          <p>
+            Snapshotting captures running VM state (CPU registers, memory, devices) for rapid restoration. This enables warm pools where you:
+          </p>
+
+          <ol>
+            <li>Boot VM once, install dependencies</li>
+            <li>Snapshot the prepared state</li>
+            <li>Restore clones in milliseconds</li>
+          </ol>
+
+          <p>
+            This technique achieves fast cold starts even with full VM isolation, making microVMs practical for latency-sensitive agentic applications.
+          </p>
+
+          <div class="highlight">
+            <strong>Trade-off vs. gVisor:</strong> MicroVMs have higher per-instance overhead but provide stronger, hardware-enforced isolation. Choose based on threat model: microVMs for high-security scenarios, gVisor for better compatibility and lower overhead.
+          </div>
+        </section>
+
+        <section class="section" id="webassembly">
+          <h2>WebAssembly: No Kernel Access</h2>
+
+          <p>
+            WebAssembly takes a fundamentally different approach by providing no syscall interface at all. Code runs in a memory-safe virtual machine that can only interact with the host through explicitly imported functions.
+          </p>
+
+          <div class="ascii-diagram">
+WebAssembly (WASM)
+┌───────────────────────┐
+│ Untrusted Code        │
+└──────────┬────────────┘
+           │ Function Calls
+           ▼
+┌───────────────────────┐
+│ WASM Runtime (Host)   │ ◄── MEMORY-SAFE VM
+└──────────┬────────────┘
+           │ Imported Host Functions
+           ▼
+┌───────────────────────┐
+│ Allowed Host APIs     │ ◄── EXPLICIT CAPABILITIES
+└───────────────────────┘
+          </div>
+
+          <h3>Security Properties</h3>
+
+          <ul>
+            <li><strong>No syscall attack surface:</strong> Code cannot make system calls directly</li>
+            <li><strong>Memory safety:</strong> Linear memory bounds-checked, call stack inaccessible</li>
+            <li><strong>Type safety:</strong> Control flow type-checked at runtime</li>
+            <li><strong>Explicit capabilities:</strong> Only imported host functions available</li>
+            <li><strong>Isolation by default:</strong> WASM modules cannot access filesystem, network, or other resources unless explicitly granted</li>
+          </ul>
+
+          <h3>Performance Characteristics</h3>
+
+          <ul>
+            <li><strong>Fast cold starts:</strong> Near-instantaneous initialization</li>
+            <li><strong>Minimal overhead:</strong> Low memory footprint</li>
+            <li><strong>Portable:</strong> Same bytecode runs on any WASM runtime</li>
+          </ul>
+
+          <h3>Language Support Status</h3>
+
+          <p>
+            WASM language support has improved significantly since early 2025:
+          </p>
+
+          <ul>
+            <li><strong>Python:</strong> <code>wasm32-unknown-wasip1</code> is Tier 2 supported for CPython, with unofficial WASI builds available</li>
+            <li><strong>JavaScript:</strong> QuickJS compiled to WASM works well for sandboxed execution</li>
+            <li><strong>Scientific Computing:</strong> Pyodide ports CPython to WASM with NumPy, pandas, SciPy support</li>
+            <li><strong>Server-side:</strong> Wasmer can run Python including native modules like gevent and SQLAlchemy</li>
+          </ul>
+
+          <div class="highlight">
+            <strong>Agentic Application:</strong> WASM is excellent for controlled execution of agent-generated code where you control the toolchain. For arbitrary language support, containers or VMs remain necessary, but WASM provides unmatched security for supported use cases.
+          </div>
+        </section>
+
+        <section class="section" id="agentic-implications">
+          <h2>Agentic AI Security Implications</h2>
+
+          <p>
+            AI agents introduce unique security challenges that traditional sandboxing must address. The non-deterministic nature of AI-generated code execution requires careful consideration of isolation strategies.
+          </p>
+
+          <h3>Dynamic Code Generation Challenges</h3>
+
+          <ul>
+            <li><strong>Runtime code creation:</strong> Traditional sandboxing assumes static code; agents create executables dynamically</li>
+            <li><strong>Intent vs. implementation gap:</strong> Natural language instructions may be ambiguous, leading to unintended code execution</li>
+            <li><strong>Tool access complexity:</strong> Agents need powerful capabilities (filesystem, network, APIs) that become attack vectors when compromised</li>
+            <li><strong>Multi-agent coordination:</strong> Cascading failures when one compromised agent affects others in the network</li>
+          </ul>
+
+          <h3>Network Egress: The Other Half of Isolation</h3>
+
+          <p>
+            Compute isolation is only half the security story for agentic systems. Perfect sandbox isolation becomes meaningless if the agent can exfiltrate secrets over unrestricted network connections.
+          </p>
+
+          <div class="highlight danger">
+            <strong>Critical Gap:</strong> An agent confined in a gVisor sandbox or Firecracker microVM can still exfiltrate every secret it can read over an outbound HTTP connection if network access is unrestricted.
+          </div>
+
+          <h4>Network Isolation Strategies</h4>
+
+          <ol>
+            <li><strong>No network access:</strong> For pure compute tasks that don't require external communication</li>
+            <li><strong>Stripped network namespace:</strong> Container with no external route</li>
+            <li><strong>Proxy-based allowlisting:</strong> Squid proxy with DNS blocking, domain-level allowlist</li>
+            <li><strong>Explicit capability grants:</strong> Agent must request permission for specific destinations</li>
+            <li><strong>Credential injection:</strong> Proxy handles authentication, agent never sees raw secrets</li>
+          </ol>
+
+          <h3>Local Developer Sandboxing</h3>
+
+          <p>
+            AI coding assistants represent a different threat model than server-side isolation. The concern isn't multi-tenancy but preventing agents from accessing sensitive local data.
+          </p>
+
+          <h4>Current Industry Approaches</h4>
+
+          <ul>
+            <li><strong>Cursor:</strong> Uses Apple Seatbelt (macOS) and Landlock + seccomp (Linux) with dynamic workspace-based policies</li>
+            <li><strong>Claude Code/Gemini CLI:</strong> Support sandboxing but ship with it disabled by default</li>
+            <li><strong>OpenAI Codex CLI:</strong> Read-only, workspace-write, and danger-full-access modes</li>
+          </ul>
+
+          <p>
+            These tools use OS-level permission scoping rather than kernel boundaries, focusing on filesystem ACLs and network restrictions appropriate for the local development threat model.
+          </p>
+
+          <h4>Apple Containerization Framework</h4>
+
+          <p>
+            Apple's new Containerization framework (announced WWDC 2025) provides each container its own lightweight VM via the Virtualization framework on Apple Silicon:
+          </p>
+
+          <ul>
+            <li>Own kernel per container</li>
+            <li>Own ext4 filesystem</li>
+            <li>Own IP address</li>
+            <li>OCI image compatibility</li>
+          </ul>
+
+          <p>
+            This collapses the gap between "development containers" and "properly isolated sandboxes" in a way Docker Desktop never achieved.
+          </p>
+        </section>
+
+        <section class="section" id="recommendations">
+          <h2>Recommendations for Agentic Systems</h2>
+
+          <p>
+            Choosing the right isolation approach depends on your specific threat model, performance requirements, and compatibility needs. Here are guidelines based on different agentic AI use cases:
+          </p>
+
+          <h3>Local Development Agents (Cursor, Claude Code, OpenClaw)</h3>
+
+          <ul>
+            <li><strong>Start with OS-level ACLs:</strong> Seatbelt/Landlock for filesystem and network restrictions</li>
+            <li><strong>Upgrade path:</strong> Apple Containerization for stronger boundaries without VM overhead</li>
+            <li><strong>Network strategy:</strong> Default network disabled, explicit approval for external requests</li>
+            <li><strong>File access:</strong> Read/write workspace, read-only system areas, no write outside project</li>
+          </ul>
+
+          <h3>Multi-Tenant Code Execution (CI, Serverless, Agent Platforms)</h3>
+
+          <ul>
+            <li><strong>gVisor:</strong> Good balance of compatibility, security, and performance</li>
+            <li><strong>MicroVMs:</strong> When you need strongest isolation guarantees</li>
+            <li><strong>WASM:</strong> For controlled execution where you control the toolchain</li>
+            <li><strong>Network isolation:</strong> Stripped namespaces or proxy-based allowlisting</li>
+          </ul>
+
+          <h3>Crypto/Financial Agents</h3>
+
+          <ul>
+            <li><strong>Hardware boundaries mandatory:</strong> MicroVMs for transaction signing and key management</li>
+            <li><strong>Network isolation critical:</strong> Explicit destination allowlisting, no DNS resolution in sandbox</li>
+            <li><strong>Formal verification:</strong> Where possible for critical decision logic</li>
+            <li><strong>Audit trails:</strong> Complete logging of all agent decisions and actions</li>
+          </ul>
+
+          <h3>RL Training and Evaluation</h3>
+
+          <ul>
+            <li><strong>Threat model:</strong> Both the generated code and potentially the worker nodes are untrusted</li>
+            <li><strong>Bidirectional isolation:</strong> Protect host from agent and agent from compromised host</li>
+            <li><strong>MicroVMs or gVisor:</strong> Depending on evaluation complexity and performance needs</li>
+            <li><strong>Ephemeral environments:</strong> Clean slate for each evaluation to prevent state leakage</li>
+          </ul>
+
+          <h3>Decision Framework</h3>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Use Case</th>
+                  <th>Threat Model</th>
+                  <th>Recommended Approach</th>
+                  <th>Key Controls</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Local Development</td>
+                  <td>Careless/confused agent</td>
+                  <td>OS ACLs (Seatbelt/Landlock)</td>
+                  <td>Filesystem restrictions, network approval</td>
+                </tr>
+                <tr>
+                  <td>Multi-tenant Compute</td>
+                  <td>Adversarial escape</td>
+                  <td>gVisor or MicroVMs</td>
+                  <td>Kernel boundary, network isolation</td>
+                </tr>
+                <tr>
+                  <td>Financial/Crypto</td>
+                  <td>High-value targets</td>
+                  <td>MicroVMs mandatory</td>
+                  <td>Hardware boundary, formal verification</td>
+                </tr>
+                <tr>
+                  <td>RL Training</td>
+                  <td>Untrusted workers + code</td>
+                  <td>MicroVMs + defense-in-depth</td>
+                  <td>Bidirectional isolation, ephemeral state</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section" id="conclusions">
+          <h2>Conclusions</h2>
+
+          <p>
+            Sandbox isolation for agentic AI systems requires understanding that different technologies provide qualitatively different security boundaries. The choice between namespaces, gVisor, microVMs, and WASM isn't about "stronger" or "weaker" isolation—it's about fundamentally different approaches to the isolation problem.
+          </p>
+
+          <h3>Key Takeaways</h3>
+
+          <ol>
+            <li>
+              <strong>Isolation is not binary:</strong> Understand the specific boundaries and failure modes of each approach rather than treating isolation as a checkbox.
+            </li>
+            <li>
+              <strong>Network egress matters:</strong> Perfect compute isolation is meaningless without network controls. Exfiltration over HTTP bypasses all kernel-level protections.
+            </li>
+            <li>
+              <strong>Threat model drives choice:</strong> Local development, multi-tenant hosting, and financial applications have different requirements and optimal solutions.
+            </li>
+            <li>
+              <strong>Defense in depth:</strong> Layer multiple isolation techniques rather than relying on a single boundary. Each layer catches different attack classes.
+            </li>
+            <li>
+              <strong>Performance trade-offs exist:</strong> Stronger isolation typically means higher overhead. Balance security needs against performance requirements.
+            </li>
+          </ol>
+
+          <h3>The Agentic Security Challenge</h3>
+
+          <p>
+            Traditional sandbox isolation was designed for deterministic code execution. Agentic systems introduce non-deterministic decision-making that creates new security challenges:
+          </p>
+
+          <ul>
+            <li><strong>Dynamic code generation</strong> requires runtime security decisions</li>
+            <li><strong>Natural language instructions</strong> can be ambiguous or manipulated</li>
+            <li><strong>Tool access management</strong> becomes critical when agents have powerful capabilities</li>
+            <li><strong>Multi-agent coordination</strong> amplifies the blast radius of single compromises</li>
+          </ul>
+
+          <div class="highlight">
+            <strong>Future Perspective:</strong> The transition from "Code is Law" to "Policy is Law" in agentic systems requires rethinking not just sandboxing, but the entire security model. We're moving from protecting against code vulnerabilities to ensuring agent behavior aligns with intended policies.
+          </div>
+
+          <h3>Market Opportunity</h3>
+
+          <p>
+            The gap between traditional isolation technologies and agentic security needs represents a significant market opportunity. Organizations building agentic systems need:
+          </p>
+
+          <ul>
+            <li><strong>Agent-aware isolation platforms</strong> that understand AI-specific attack vectors</li>
+            <li><strong>Policy enforcement frameworks</strong> that can verify agent behavior alignment</li>
+            <li><strong>Dynamic security controls</strong> that adapt to runtime agent decisions</li>
+            <li><strong>Audit and compliance tools</strong> for non-deterministic systems</li>
+          </ul>
+
+          <p>
+            The organizations that successfully bridge traditional sandboxing expertise with agentic AI understanding will define the security standards for the autonomous future.
+          </p>
+
+          <p class="article-credit">
+            <em>Research based on <a href="https://www.shayon.dev/post/2026/52/lets-discuss-sandbox-isolation/">"Let's discuss sandbox isolation"</a> by Shayon Mukherjee, adapted for agentic security contexts by TestMachine Research.</em>
+          </p>
+        </section>
+
+      </div><!-- /.article-body -->
+    </div><!-- /.main-container -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 TestMachine. Internal use only.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Progress bar
+    function updateProgressBar() {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('progress-bar').style.width = scrolled + '%';
+    }
+
+    // Nav scroll handler
+    const nav = document.getElementById('navbar');
+    function handleNavScroll() {
+      if (window.scrollY > 10) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    }
+
+    // Active section highlighting
+    function highlightActiveSection() {
+      const sections = document.querySelectorAll('.section');
+      const navLinks = document.querySelectorAll('.toc a');
+
+      let currentSection = '';
+      sections.forEach(function(section) {
+        const sectionTop = section.getBoundingClientRect().top;
+        const sectionHeight = section.offsetHeight;
+        if (sectionTop <= 100 && sectionTop + sectionHeight > 100) {
+          currentSection = section.id;
+        }
+      });
+
+      navLinks.forEach(function(link) {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + currentSection) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', function() {
+      updateProgressBar();
+      handleNavScroll();
+      highlightActiveSection();
+    });
+
+    // Hamburger toggle
+    var hamburger = document.getElementById('hamburger');
+    var mobileMenu = document.getElementById('mobile-menu');
+    if (hamburger) {
+      hamburger.addEventListener('click', function() {
+        hamburger.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+        document.body.classList.toggle('menu-open');
+      });
+    }
+
+    // Mobile TOC toggle
+    document.getElementById('toc-toggle').onclick = function() {
+      var toc = document.getElementById('toc');
+      var overlay = document.getElementById('toc-overlay');
+      toc.classList.toggle('open');
+      overlay.classList.toggle('open');
+    };
+
+    document.getElementById('toc-overlay').onclick = function() {
+      var toc = document.getElementById('toc');
+      var overlay = document.getElementById('toc-overlay');
+      toc.classList.remove('open');
+      overlay.classList.remove('open');
+    };
+
+    // Smooth scrolling for TOC links
+    document.querySelectorAll('.toc a').forEach(function(anchor) {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        var targetId = this.getAttribute('href').substring(1);
+        var targetSection = document.getElementById(targetId);
+
+        if (targetSection) {
+          targetSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+
+        // Close mobile TOC
+        var toc = document.getElementById('toc');
+        var overlay = document.getElementById('toc-overlay');
+        toc.classList.remove('open');
+        overlay.classList.remove('open');
+      });
+    });
+
+    // Initialize
+    updateProgressBar();
+    handleNavScroll();
+  </script>
+<script src="confidential-toggle.js"></script>
+</body>
+</html>

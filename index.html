@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>TestMachine Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+<style>
+/* ---------- Custom Properties ---------- */
+:root {
+  --bg:            oklch(0.18 0.005 260);
+  --bg-raised:     oklch(0.21 0.005 260);
+  --bg-deeper:     oklch(0.14 0.005 260);
+  --fg:            oklch(0.92 0 0);
+  --fg-muted:      oklch(0.65 0 0);
+  --fg-dim:        oklch(0.45 0 0);
+  --border:        oklch(0.32 0.005 260);
+  --border-subtle: oklch(0.25 0.005 260);
+  --accent:        oklch(0.72 0.12 192);
+  --accent-hover:  oklch(0.80 0.12 192);
+  --accent-glow:   oklch(0.72 0.12 192 / 0.1);
+  --card-bg:       oklch(0.21 0.005 260);
+  --input-bg:      oklch(0.15 0.005 260);
+  --nav-bg:        oklch(0.18 0.005 260 / 0.85);
+
+  --font-display: 'Manrope', sans-serif;
+  --font-mono:    'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --font:         var(--font-mono);
+  --font-serif:   'Source Serif 4', Charter, Georgia, serif;
+
+  --nav-h:       72px;
+  --max-w:       1120px;
+  --section-py:  clamp(80px, 10vw, 140px);
+  --gap:         24px;
+  --transition:  0.25s ease;
+
+  --callout-orange: oklch(0.75 0.15 55);
+  --callout-red:    oklch(0.65 0.2 25);
+  --callout-green:  oklch(0.65 0.15 140);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-h);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+button { border: none; background: none; cursor: pointer; font-family: var(--font-mono); color: inherit; }
+ul { list-style: none; }
+input, textarea, select { font-family: inherit; font-size: inherit; }
+
+/* ---------- Layout ---------- */
+.container {
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+/* ---------- Navigation ---------- */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--nav-h);
+  z-index: 1000;
+  background: var(--nav-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ---------- Main Content ---------- */
+.main {
+  min-height: 100vh;
+  padding-top: var(--nav-h);
+}
+
+.main-container {
+  padding: 3rem clamp(20px, 4vw, 40px) 0;
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+/* ---------- Header ---------- */
+.header {
+  margin-bottom: var(--section-py);
+  text-align: center;
+}
+
+.header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--fg);
+  margin-bottom: 16px;
+  letter-spacing: -0.02em;
+}
+
+.header p {
+  font-size: 1.125rem;
+  color: var(--fg-muted);
+  line-height: 1.5;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* ---------- Search ---------- */
+.search-container {
+  margin-bottom: 48px;
+}
+
+.search-box {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.search-input {
+  width: 100%;
+  padding: 16px 20px 16px 48px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  color: var(--fg);
+  transition: all var(--transition);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-glow);
+}
+
+.search-input::placeholder {
+  color: var(--fg-dim);
+}
+
+.search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--fg-dim);
+  font-size: 1rem;
+}
+
+/* ---------- Filters ---------- */
+.filters {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 48px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 8px 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ---------- Research Grid ---------- */
+.research-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 24px;
+  margin-bottom: var(--section-py);
+}
+
+.research-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all var(--transition);
+  cursor: pointer;
+}
+
+.research-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px var(--accent-glow);
+}
+
+.research-card-header {
+  margin-bottom: 16px;
+}
+
+.research-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.research-card-date {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+}
+
+.research-card-category {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  background: var(--accent-glow);
+  padding: 3px 6px;
+  border-radius: 4px;
+}
+
+.research-card-title {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--fg);
+  margin-bottom: 12px;
+}
+
+.research-card-summary {
+  font-size: 0.875rem;
+  color: var(--fg-muted);
+  line-height: 1.5;
+  margin-bottom: 16px;
+}
+
+.research-card-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.metric {
+  text-align: center;
+  padding: 8px;
+  background: var(--bg-deeper);
+  border-radius: 6px;
+}
+
+.metric-value {
+  font-family: var(--font-display);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 2px;
+}
+
+.metric-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--fg-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.research-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.research-card-tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  color: var(--fg-dim);
+  background: var(--bg-deeper);
+  padding: 2px 6px;
+  border-radius: 3px;
+}
+
+.read-time {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  background: var(--bg-raised);
+  padding: var(--section-py) 0 40px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 28px;
+}
+
+.footer-brand .nav-logo {
+  margin-bottom: 14px;
+}
+
+.footer-address {
+  font-size: 0.8125rem;
+  color: var(--fg-dim);
+  line-height: 1.5;
+}
+
+.footer-heading {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--fg);
+  margin-bottom: 16px;
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+}
+
+.footer-links a:hover {
+  color: var(--fg);
+}
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-bottom p {
+  font-size: 0.7rem;
+  color: var(--fg-dim);
+  margin: 0;
+  line-height: 1;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .research-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filters {
+    gap: 8px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .research-card-metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .research-card-tags {
+    display: none;
+  }
+}
+</style>
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <div class="nav-container">
+      <div class="nav-logo">
+        <img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);">
+        <span class="nav-logo-text">TestMachine</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="main-container">
+
+      <!-- Header -->
+      <header class="header">
+        <h1>Research</h1>
+        <p>
+          Strategic analysis, market intelligence, and technical research for TestMachine's smart contract security platform and emerging opportunities in Web3.
+        </p>
+      </header>
+
+      <!-- Search -->
+      <div class="search-container">
+        <div class="search-box">
+          <div class="search-icon">🔍</div>
+          <input type="text" class="search-input" id="search" placeholder="Search research reports..." />
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters">
+        <button class="filter-btn active" data-category="all">All</button>
+        <button class="filter-btn" data-category="strategy">Strategy</button>
+        <button class="filter-btn" data-category="market">Market</button>
+        <button class="filter-btn" data-category="technical">Technical</button>
+      </div>
+
+      <!-- Research Grid -->
+      <div class="research-grid" id="research-grid">
+        <!-- Populated by JavaScript -->
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo">
+            <img src="assets/logo-icon.png" alt="TestMachine" style="height:32px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);">
+            <span class="nav-logo-text">TestMachine</span>
+          </div>
+          <div class="footer-address">
+            Research & Strategy Division<br>
+            Ann Arbor, Michigan
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="footer-heading">Research</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">All Reports</a></li>
+            <li><a href="#strategy">Strategy</a></li>
+            <li><a href="#market">Market Analysis</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="footer-heading">Company</h4>
+          <ul class="footer-links">
+            <li><a href="https://testmachine.ai">TestMachine</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="footer-heading">Connect</h4>
+          <ul class="footer-links">
+            <li><a href="https://twitter.com/testmachine_ai">Twitter</a></li>
+            <li><a href="https://linkedin.com/company/testmachine">LinkedIn</a></li>
+            <li><a href="#newsletter">Newsletter</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2026 TestMachine. Research & analysis for internal strategy development.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Research data from manifest
+    const researchData = [
+      {
+        title: "Web3 Design Firm Marketing Strategy — TestMachine Customer Acquisition Plan — March 2026",
+        file: "web3-design-firm-marketing-strategy.html",
+        date: "2026-03-09",
+        category: "strategy",
+        summary: "Comprehensive customer acquisition plan targeting Web3 design agencies and UX/UI studios to secure 10-15 new customers within 100 days. Three-tier strategy combines direct outreach (LinkedIn/email), community engagement (Discord/content), and strategic partnerships (conferences/integrations).",
+        metrics: [
+          { label: "Target Customers", value: "10-15" },
+          { label: "Timeline", value: "100 Days" },
+          { label: "Prospect Database", value: "200+" },
+          { label: "Budget Investment", value: "$8,610" }
+        ],
+        readTimeMinutes: 35,
+        tags: ["marketing-strategy", "customer-acquisition", "web3-design-firms", "testmachine", "direct-outreach", "community-building", "partnerships", "pipeline-management", "conversion-optimization"]
+      },
+      {
+        title: "Paul Hsu Product Update Requirements — TestMachine Sunday Noon Deliverable — March 2026",
+        file: "paul-hsu-product-update-requirements.html",
+        date: "2026-03-07",
+        category: "strategy",
+        summary: "Comprehensive product roadmap addressing Paul Hsu's Sunday noon deadline requirements. Analyzes the 78% → 8% pipeline conversion crisis and outlines revenue-first product strategy with immediate blockers, self-serve capabilities, pricing sheet alignment, and execution framework.",
+        metrics: [
+          { label: "Conversion Crisis", value: "78% → 8%" },
+          { label: "P0 Features", value: "3" },
+          { label: "Revenue Impact", value: "$2.6M+" },
+          { label: "Sunday Deadline", value: "Noon" }
+        ],
+        readTimeMinutes: 28,
+        tags: ["product-strategy", "paul-hsu", "revenue-features", "pricing-alignment", "pipeline-conversion", "sunday-deadline", "board-requirements", "self-serve", "testmachine"]
+      },
+      {
+        title: "Paul Hsu Three-Week Deep Dive Synthesis — TestMachine Board Crisis Analysis & Required Response — March 2026",
+        file: "paul-hsu-comprehensive-synthesis.html",
+        date: "2026-03-07",
+        category: "strategy",
+        summary: "Complete synthesis of three weeks of intensive board correspondence with Paul Hsu from February 28 - March 7. Chronicles the evolution from revenue model feedback to existential accountability crisis. Exposes systematic execution gaps: 78% of pipeline still prospecting, accountability shifting between team members, 60%+ below October plan with no clear process fixes.",
+        metrics: [
+          { label: "Below October Plan", value: "60%+" },
+          { label: "Pipeline Prospecting", value: "78%" },
+          { label: "Response Time", value: "3 weeks" },
+          { label: "Deadline", value: "Sunday noon" }
+        ],
+        readTimeMinutes: 32,
+        tags: ["board", "crisis", "comprehensive", "paul-hsu", "decasonic", "testmachine", "accountability", "execution", "pipeline", "synthesis"]
+      },
+      {
+        title: "TestMachine Q1 2026 Board Correspondence — Pipeline Reality Check — March 2026",
+        file: "testmachine-q1-board-correspondence.html",
+        date: "2026-03-07",
+        category: "strategy",
+        summary: "24-hour email exchange between TestMachine leadership and Decasonic's Paul Hsu reveals brutal pipeline reality behind Q1 2026 board presentation. Despite Coinbase expanding to $40K-70K/month and tier-1 exchange engagement, 78% of pipeline remains in prospecting with systematic conversion barriers.",
+        metrics: [
+          { label: "Pipeline Prospecting", value: "78%" },
+          { label: "Realistic Annual Deals", value: "2-4" },
+          { label: "Sales Cycle Length", value: "3-6mo" },
+          { label: "Coinbase MRR", value: "$40-70K" }
+        ],
+        readTimeMinutes: 18,
+        tags: ["board", "pipeline", "forecast", "testmachine", "decasonic", "execution", "paul-hsu", "james-kelly", "correspondence"]
+      },
+      {
+        title: "Closing the Execution Gap — Board Feedback Execution Plan — March 2026",
+        file: "paul-hsu-execution-plan.html",
+        date: "2026-03-06",
+        category: "strategy",
+        summary: "Concrete execution plan addressing Paul Hsu's four structural requirements from the March 5 board call: consolidated weighted pipeline by product line, conversion-focused marketing dashboard, revenue-linked product roadmap with costing, and founder-led sales conversion processes.",
+        metrics: [
+          { label: "Structural Gaps", value: "4" },
+          { label: "Turnaround", value: "24 hrs" },
+          { label: "Acceptable Haircut", value: "25%" }
+        ],
+        readTimeMinutes: 38,
+        tags: ["strategy", "board", "execution", "testmachine", "paul-hsu", "pipeline", "sales", "process"]
+      },
+      {
+        title: "Agent Access — AI Coding Agents as TestMachine Customers — March 2026",
+        file: "agent-access-testmachine.html",
+        date: "2026-03-06",
+        category: "strategy",
+        summary: "AI coding agents are writing smart contracts at scale but lack security analysis capabilities. Analysis of the opportunity for TestMachine to expose its security engine as agent-native API, transforming from services to infrastructure company.",
+        metrics: [
+          { label: "Agent-Written Contracts", value: "Rising Fast" },
+          { label: "Security Gap", value: "Critical" },
+          { label: "Market Window", value: "12-18 mo" },
+          { label: "Revenue Potential (2030)", value: "$9M+" }
+        ],
+        readTimeMinutes: 42,
+        tags: ["agents", "ai", "market-opportunity", "testmachine", "smart-contracts", "security", "api", "infrastructure"]
+      },
+      {
+        title: "TestMachine Homepage CRO Analysis — Critical Conversion Optimization Review — March 2026",
+        file: "testmachine-homepage-cro-analysis.html",
+        date: "2026-03-06",
+        category: "strategy",
+        summary: "Critical conversion optimization analysis of TestMachine's homepage using advanced CRO frameworks. Identifies fundamental value proposition failures, CTA placement disasters, and single conversion path limitations.",
+        metrics: [
+          { label: "Current CVR", value: "0.5-1%" },
+          { label: "Target CVR", value: "3-5%" },
+          { label: "Improvement", value: "3-5x" }
+        ],
+        readTimeMinutes: 25,
+        tags: ["cro", "conversion-optimization", "testmachine", "marketing", "homepage", "analysis", "website"]
+      },
+      {
+        title: "Paul Hsu Response Strategy — TestMachine Board Crisis Plan — March 2026",
+        file: "paul-hsu-response-strategy.html",
+        date: "2026-03-02",
+        category: "strategy",
+        summary: "Comprehensive response strategy addressing Paul Hsu's (Decasonic) four critical concerns about TestMachine's Q1 2026 board deck. Covers pipeline coverage gaps, segment prioritization, plan vs. actuals analysis, and concrete bear case avoidance plan.",
+        metrics: [
+          { label: "Cash Shortfall Risk", value: "$300K" },
+          { label: "Response Window", value: "48 Hours" },
+          { label: "Action Items", value: "10" }
+        ],
+        readTimeMinutes: 45,
+        tags: ["strategy", "board", "crisis", "testmachine", "paul-hsu", "decasonic", "pipeline", "bear-case"]
+      },
+      {
+        title: "Agentic Security — Sandbox Isolation Technologies & Frameworks",
+        file: "agentic-security-sandbox-isolation.html",
+        date: "2026-03-02",
+        category: "technical",
+        summary: "Comprehensive technical analysis of sandbox isolation for AI agents. From namespaces and cgroups to gVisor, microVMs, and WebAssembly. Covers the isolation spectrum, attack surface models, agentic security implications, network egress controls, and practical recommendations for different threat models.",
+        metrics: [
+          { label: "Linux Syscalls", value: "~340" },
+          { label: "Kernel LOC", value: "40M" },
+          { label: "Isolation Layers", value: "6" }
+        ],
+        readTimeMinutes: 42,
+        tags: ["security", "agents", "sandbox", "isolation", "technical", "testmachine"]
+      },
+      {
+        title: "Kraken Exchange — From Mt. Gox's Ashes to Multi-Asset Financial Platform",
+        file: "kraken-exchange.html",
+        date: "2026-02-26",
+        category: "market",
+        summary: "Deep dive on Kraken (Payward, Inc.), the 14-year-old crypto exchange that has never been hacked. $1.5B revenue (doubled YoY), 15M users, $42.8B in custodied assets. Now expanding into stocks, futures (NinjaTrader $1.5B acquisition), tokenized equities, and white-label B2B infrastructure (Embed).",
+        metrics: [
+          { label: "2024 Revenue", value: "$1.5B" },
+          { label: "Users", value: "15M" },
+          { label: "Assets", value: "$42.8B" }
+        ],
+        readTimeMinutes: 25,
+        tags: ["market", "exchange", "crypto", "testmachine"]
+      },
+      {
+        title: "Agentic Security — Open Problems & Market Landscape",
+        file: "agentic-security-open-problems.html",
+        date: "2026-02-20",
+        category: "market",
+        summary: "Comprehensive analysis of agentic AI security challenges from OWASP Top 10 to on-chain risks. Covers threat taxonomy (prompt injection, tool misuse, supply chain attacks), open problems (agent identity standards, formal verification), market sizing ($64.5B by 2030), and TestMachine's strategic opportunity in agent auditing and policy enforcement.",
+        metrics: [
+          { label: "Market Size (2030)", value: "$64.5B" },
+          { label: "CVEs (Dec 2025)", value: "30+" },
+          { label: "Cascade Failure Rate", value: "87%" }
+        ],
+        readTimeMinutes: 38,
+        tags: ["agents", "security", "market", "testmachine"]
+      },
+      {
+        title: "AI Agents in Blockchain — Security Implications & Market Opportunity",
+        file: "ai-agents-blockchain-security.html",
+        date: "2026-02-19",
+        category: "market",
+        summary: "From 'Code is Law' to 'Policy is Law.' Comprehensive analysis of AI agents on-chain ($2.5-4B managed capital), the security gap when deterministic contracts meet indeterministic agents, and a greenfield market opportunity for TestMachine in agent auditing and policy enforcement.",
+        metrics: [
+          { label: "Agent Capital", value: "$2.5-4B" },
+          { label: "TAM (2030)", value: "$5-10B" },
+          { label: "Growth", value: "300%+" }
+        ],
+        readTimeMinutes: 30,
+        tags: ["market", "agents", "blockchain", "testmachine"]
+      },
+      {
+        title: "Arbitrage Trading Bots — A Practical Guide for Technical Operators",
+        file: "arbitrage-trading-bots.html",
+        date: "2026-02-19",
+        category: "technical",
+        summary: "Brutally honest deep dive on crypto arbitrage. DEX-to-DEX, cross-chain, CEX-DEX, statistical arb, MEV. Infrastructure costs ($2-15K/mo), realistic margins (0.1-0.5%), 80% failure rate. Where RL/ML provides real edge. Capital deployment strategies from $10K to $500K.",
+        metrics: [
+          { label: "Net Margins", value: "0.1-0.5%" },
+          { label: "Failure Rate", value: "80%+" },
+          { label: "Min Capital", value: "$100K" }
+        ],
+        readTimeMinutes: 32,
+        tags: ["technical", "trading", "ml", "blockchain"]
+      },
+      {
+        title: "Chaos Labs — DeFi Economic Modeling & Risk Intelligence",
+        file: "chaos-labs-defi-economic-modeling.html",
+        date: "2026-02-20",
+        category: "market",
+        summary: "Deep dive on DeFi's leading risk intelligence platform. Chaos Labs has secured $200B+ in protocol assets through agent-based economic modeling, AI-powered oracles, and automated parameter optimization. Strategic analysis of technology, competitive position vs. Gauntlet, and partnership/acquisition implications for TestMachine.",
+        metrics: [
+          { label: "Assets Secured", value: "$200B+" },
+          { label: "Total Funding", value: "$75M" },
+          { label: "Team Size", value: "~30" }
+        ],
+        readTimeMinutes: 38,
+        tags: ["market", "defi", "risk-management", "competitive-analysis", "testmachine"]
+      },
+      {
+        title: "TestMachine Market Research & Strategic Analysis",
+        file: "market-research.html",
+        date: "2026-02-23",
+        category: "strategy",
+        summary: "Comprehensive market analysis prepared for the board. Smart contract audit TAM ($1.5-2B, stagnating), competitive landscape (CertiK, Trail of Bits, OpenZeppelin), pricing models, growth rates, and three 'downhill boulders': RWA/Tokenization ($10-16T by 2030), Agentic AI Security ($183B by 2033), DeFi Continuous Monitoring.",
+        metrics: [
+          { label: "Audit TAM", value: "$1.5-2B" },
+          { label: "Growth TAM", value: "$15B+" },
+          { label: "Revenue Target", value: "$34M (2029)" }
+        ],
+        readTimeMinutes: 35,
+        tags: ["market", "strategy", "testmachine", "competitive-analysis"]
+      },
+      {
+        title: "Downhill Boulders: Short-Term Revenue Opportunities",
+        file: "downhill-boulders.html",
+        date: "2026-02-24",
+        category: "strategy",
+        summary: "Deep analysis of 8 pivot opportunities beyond the original three, ranked by revenue speed × market size × tech fit × competitive gap. Top picks: DeFi Insurance Underwriting (9.2/10), Protocol-Embedded Continuous Security (8.7), L2/Appchain Certification (8.3).",
+        metrics: [
+          { label: "Opportunities", value: "8 ranked" },
+          { label: "Top Score", value: "9.2/10" },
+          { label: "12-mo ARR", value: "$2.3M" }
+        ],
+        readTimeMinutes: 30,
+        tags: ["strategy", "market", "testmachine", "revenue"]
+      },
+      {
+        title: "Kraken × TestMachine Introduction — Meeting Analysis & Deal Strategy",
+        file: "kraken-testmachine-meeting.html",
+        date: "2026-02-26",
+        category: "strategy",
+        summary: "Strategic analysis of the Kraken introduction meeting. Kraken's security testing team (3 attendees) evaluated TestMachine's token custody product. Strong buying signals driven by IPO auditability needs. Six action items assigned.",
+        metrics: [
+          { label: "Deal Signal", value: "Strong" },
+          { label: "Action Items", value: "6" },
+          { label: "Next Step", value: "Workshop" }
+        ],
+        readTimeMinutes: 15,
+        tags: ["meeting", "kraken", "testmachine", "strategy", "prospect"]
+      }
+    ];
+
+    // DOM elements
+    const searchInput = document.getElementById('search');
+    const researchGrid = document.getElementById('research-grid');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+
+    let currentCategory = 'all';
+    let currentSearch = '';
+
+    // Render research cards
+    function renderResearch() {
+      const filtered = researchData.filter(report => {
+        const matchesCategory = currentCategory === 'all' || report.category === currentCategory;
+        const matchesSearch = currentSearch === '' || 
+          report.title.toLowerCase().includes(currentSearch.toLowerCase()) ||
+          report.summary.toLowerCase().includes(currentSearch.toLowerCase()) ||
+          report.tags.some(tag => tag.toLowerCase().includes(currentSearch.toLowerCase()));
+        
+        return matchesCategory && matchesSearch;
+      });
+
+      researchGrid.innerHTML = filtered.map(report => `
+        <div class="research-card" onclick="window.location.href='${report.file}'">
+          <div class="research-card-header">
+            <div class="research-card-meta">
+              <span class="research-card-date">${formatDate(report.date)}</span>
+              <span class="research-card-category">${report.category}</span>
+            </div>
+            <h3 class="research-card-title">${report.title}</h3>
+            <p class="research-card-summary">${report.summary}</p>
+          </div>
+          
+          <div class="research-card-metrics">
+            ${report.metrics.map(metric => `
+              <div class="metric">
+                <div class="metric-value">${metric.value}</div>
+                <div class="metric-label">${metric.label}</div>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="research-card-footer">
+            <div class="research-card-tags">
+              ${report.tags.slice(0, 3).map(tag => `<span class="tag">${tag}</span>`).join('')}
+            </div>
+            <span class="read-time">${report.readTimeMinutes} min read</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Format date
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+    }
+
+    // Search functionality
+    searchInput.addEventListener('input', (e) => {
+      currentSearch = e.target.value;
+      renderResearch();
+    });
+
+    // Filter functionality
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentCategory = btn.dataset.category;
+        renderResearch();
+      });
+    });
+
+    // Initial render
+    renderResearch();
+  </script>
+
+</body>
+</html>

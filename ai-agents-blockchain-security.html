@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agents in Blockchain: Security Implications — TestMachine Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TestMachine.ai — Research Article Design
+   ============================================================ */
+
+:root {
+  --bg: oklch(0.18 0.005 260);
+  --bg-raised: oklch(0.21 0.005 260);
+  --bg-deeper: oklch(0.14 0.005 260);
+  --fg: oklch(0.92 0 0);
+  --fg-muted: oklch(0.65 0 0);
+  --fg-dim: oklch(0.45 0 0);
+  --border: oklch(0.32 0.005 260);
+  --border-subtle: oklch(0.25 0.005 260);
+  --accent: oklch(0.72 0.12 192);
+  --accent-hover: oklch(0.80 0.12 192);
+  --accent-glow: oklch(0.72 0.12 192 / 0.1);
+  --card-bg: oklch(0.21 0.005 260);
+  --input-bg: oklch(0.15 0.005 260);
+  --nav-bg: oklch(0.18 0.005 260 / 0.85);
+  --font-display: 'Manrope', sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --font-serif: 'Source Serif 4', Charter, Georgia, serif;
+  --font: var(--font-mono);
+  --nav-h: 72px;
+  --max-w: 1120px;
+  --section-py: clamp(80px, 10vw, 140px);
+  --gap: 24px;
+  --transition: 0.25s ease;
+  --callout-orange: oklch(0.75 0.15 55);
+  --callout-red: oklch(0.65 0.2 25);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-h);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; color: inherit; }
+ul { list-style: none; }
+
+::selection {
+  background: oklch(0.72 0.12 192 / 0.25);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ---------- Progress Bar ---------- */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--accent);
+  z-index: 1100;
+  width: 0%;
+  transition: width 0.1s;
+}
+
+/* ---------- Navigation ---------- */
+.nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
+.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
+.toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+.toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width var(--transition);
+}
+
+.nav-link:hover,
+.nav-link.nav-link--active {
+  color: var(--fg);
+}
+
+.nav-link:hover::after,
+.nav-link.nav-link--active::after {
+  width: 100%;
+}
+
+.nav-link.nav-link--active {
+  color: var(--accent);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  padding: 14px 32px;
+  border-radius: 0;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.btn:hover { transform: scale(1.02); }
+.btn:active { transform: scale(0.98); }
+
+.btn--primary {
+  background: var(--accent);
+  color: oklch(0.12 0 0);
+  border: 1px solid var(--accent);
+  font-weight: 700;
+}
+
+.btn--primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn--nav {
+  padding: 10px 22px;
+  font-size: 0.75rem;
+}
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  width: 40px;
+  height: 40px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  z-index: 1001;
+}
+
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--fg);
+  transition: all var(--transition);
+  transform-origin: center;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-menu-inner {
+  text-align: center;
+}
+
+.mobile-menu-link {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  font-weight: 600;
+  color: var(--fg-muted);
+  padding: 14px 0;
+  transition: color var(--transition);
+}
+
+.mobile-menu-link:hover { color: var(--fg); }
+.mobile-menu-link.nav-link--active { color: var(--accent); }
+
+.mobile-menu-cta {
+  margin-top: 40px;
+  padding: 0 40px;
+}
+
+/* ---------- TOC Sidebar ---------- */
+
+/* TOC toggle (mobile) */
+.toc-toggle {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 200;
+  width: 48px;
+  height: 48px;
+  border-radius: 0;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+.toc-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 150;
+}
+
+/* ---------- Main Content ---------- */
+.main {
+  margin-left: 280px;
+  max-width: 780px;
+  padding: calc(var(--nav-h) + 3rem) 2.5rem 4rem;
+}
+
+/* ---------- Article Header ---------- */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  margin-bottom: 2rem;
+  transition: color var(--transition);
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+.article-header {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.article-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-muted);
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  margin-bottom: 1rem;
+}
+
+.article-date {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--fg-dim);
+  margin-bottom: 0.75rem;
+}
+
+.article-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin-bottom: 0.8rem;
+}
+
+.article-subtitle {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--fg-muted);
+  line-height: 1.5;
+}
+
+/* ---------- Metrics Bar ---------- */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.metric {
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  padding: 1.2rem;
+}
+
+.metric .label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fg-muted);
+  margin-bottom: 0.3rem;
+}
+
+.metric .value {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.metric .note {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  margin-top: 0.2rem;
+}
+
+/* ---------- Article Body ---------- */
+.section {
+  margin-bottom: 3rem;
+}
+
+.article-body p {
+  font-family: var(--font-serif);
+  font-size: 1.1875rem;
+  line-height: 1.9;
+  color: var(--fg-muted);
+  margin-bottom: 1rem;
+}
+
+.article-body h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 1.2rem;
+  padding-top: 1rem;
+}
+
+.article-body h2 .num {
+  color: var(--accent);
+  margin-right: 0.4rem;
+}
+
+.article-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin: 1.8rem 0 0.8rem;
+}
+
+.article-body h4 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 1.2rem 0 0.5rem;
+}
+
+.article-body strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.article-body ul,
+.article-body ol {
+  margin: 0.5rem 0 1.2rem;
+  padding-left: 1.5em;
+}
+
+.article-body ul {
+  list-style: disc;
+}
+
+.article-body ol {
+  list-style: decimal;
+}
+
+.article-body li {
+  font-family: var(--font-serif);
+  font-size: 1.1875rem;
+  line-height: 1.9;
+  color: var(--fg-muted);
+  margin-bottom: 0.4rem;
+}
+
+.article-body li strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+/* ---------- Callouts ---------- */
+.callout {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--accent);
+  border-radius: 0;
+  padding: 1.2rem 1.4rem;
+  margin: 1.5rem 0;
+}
+
+.callout.warning {
+  border-left-color: var(--callout-orange);
+}
+
+.callout.danger {
+  border-left-color: var(--callout-red);
+}
+
+.callout .callout-title {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+}
+
+.callout .callout-title.green { color: var(--accent); }
+.callout .callout-title.orange { color: var(--callout-orange); }
+.callout .callout-title.red { color: var(--callout-red); }
+
+/* ---------- Tables ---------- */
+.table-wrap {
+  overflow-x: auto;
+  margin: 1.2rem 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+th {
+  background: var(--bg-deeper);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.8rem 1rem;
+  text-align: left;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+td {
+  padding: 0.7rem 1rem;
+  border-top: 1px solid var(--border-subtle);
+  color: var(--fg-muted);
+}
+
+td strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+tr:hover td {
+  background: var(--accent-glow);
+}
+
+/* ---------- Timeline ---------- */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+  margin: 1.5rem 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border-subtle);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.65rem;
+  top: 0.5rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+}
+
+.timeline-item .phase {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 0.2rem;
+}
+
+.timeline-item h4 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin: 0 0 0.3rem;
+}
+
+.timeline-item p {
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* ---------- Container ---------- */
+.container {
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  margin-left: 280px;
+  padding: 20px 0;
+  background: var(--bg-raised);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 28px;
+}
+
+.footer-brand .nav-logo {
+  margin-bottom: 14px;
+}
+
+.footer-address {
+  font-size: 0.8125rem;
+  color: var(--fg-dim);
+  line-height: 1.5;
+}
+
+.footer-heading {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--fg);
+  margin-bottom: 16px;
+}
+
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+}
+
+.footer-links a:hover {
+  color: var(--fg);
+}
+
+.footer-bottom { display: flex; align-items: center; justify-content: center; }
+
+.footer-bottom p { font-size: 0.7rem; color: var(--fg-dim); margin: 0; line-height: 1; }
+
+/* ---------- Responsive: 1024px ---------- */
+@media (max-width: 1024px) {
+    .toc { transform: translateX(-100%); }
+    .main, .main-content, .main-container, .article-wrapper, .content-wrapper { margin-left: 0 !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .nav-links {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .toc.open {
+    transform: translateX(0);
+  }
+
+  .toc-toggle {
+    display: flex;
+  }
+
+  .toc-overlay.open {
+    display: block;
+  }
+
+  .main {
+    margin-left: 0;
+    padding: calc(var(--nav-h) + 2rem) 1.5rem 3rem;
+  }
+
+  .footer {
+    margin-left: 0;
+  }
+
+  .footer-grid {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}
+
+/* ---------- Responsive: 768px ---------- */
+@media (max-width: 768px) {
+  .main {
+    padding: calc(var(--nav-h) + 1.5rem) 1.2rem 2rem;
+  }
+
+  .article-header h1 {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+  }
+
+  .metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .metric .value {
+    font-size: 1.3rem;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .btn--nav {
+    display: none;
+  }
+}
+
+/* ---------- Responsive: 480px ---------- */
+@media (max-width: 480px) {
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+
+<div class="progress-bar" id="progress"></div>
+
+<!-- Navigation -->
+<nav class="nav" id="navbar">
+  <div class="progress-bar" id="progressBar"></div>
+  <div style="display:flex;align-items:center;height:100%;padding:0 24px;">
+    <a href="/"><img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);"></a>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner">
+    <a href="/" class="mobile-menu-link nav-link--active">Research</a>
+    <div class="mobile-menu-cta">
+    </div>
+  </div>
+</div>
+
+<!-- TOC Toggle (mobile) -->
+<button class="toc-toggle" id="tocToggle" aria-label="Table of contents">&#9776;</button>
+<div class="toc-overlay" id="tocOverlay"></div>
+
+<!-- Table of Contents -->
+<nav class="toc" id="toc">
+  <h3>Contents</h3>
+  <a href="#exec">Executive Summary</a>
+  <a href="#s1">1. Agents on Blockchain Today</a>
+  <a href="#s1-activities" class="sub">Current Activities</a>
+  <a href="#s1-projects" class="sub">Key Projects</a>
+  <a href="#s1-scale" class="sub">Scale &amp; Capital</a>
+  <a href="#s2">2. The Broader Agent Landscape</a>
+  <a href="#s2-production" class="sub">Production Deployments</a>
+  <a href="#s2-frameworks" class="sub">Frameworks &amp; Platforms</a>
+  <a href="#s2-authority" class="sub">Real-World Authority</a>
+  <a href="#s3">3. The Security Problem</a>
+  <a href="#s3-differences" class="sub">Contracts vs. Agents</a>
+  <a href="#s3-attacks" class="sub">Attack Vectors</a>
+  <a href="#s3-incidents" class="sub">Real Incidents</a>
+  <a href="#s3-accountability" class="sub">Accountability Gap</a>
+  <a href="#s4">4. Current Security Approaches</a>
+  <a href="#s4-guardrails" class="sub">Guardrails &amp; Monitoring</a>
+  <a href="#s4-rl" class="sub">RL-based Safety</a>
+  <a href="#s4-onchain" class="sub">On-chain Infrastructure</a>
+  <a href="#s5">5. The Opportunity</a>
+  <a href="#s5-thesis" class="sub">Market Thesis</a>
+  <a href="#s5-auditing" class="sub">Agent vs. Contract Auditing</a>
+  <a href="#s5-market" class="sub">Market Sizing</a>
+  <a href="#s5-competition" class="sub">Competitive Landscape</a>
+  <a href="#s5-roadmap" class="sub">Product Roadmap</a>
+  <a href="#s5-recommendations" class="sub">Recommendations</a>
+</nav>
+
+<!-- Main Content -->
+<main class="main article-body">
+
+  <!-- Back Link -->
+  <a href="index.html" class="back-link">&larr; Back to Research</a>
+
+  <!-- Article Header -->
+  <div class="article-header" id="exec">
+    <span class="article-tag">Strategic Research Brief</span>
+    <p class="article-date">February 19, 2026 &middot; Prepared for TestMachine</p>
+    <h1>AI Agents in Blockchain: Security Implications &amp; Market Opportunity</h1>
+    <p class="article-subtitle">From "Code is Law" to "Policy is Law" — how the rise of indeterministic AI agents creates a new security paradigm and a greenfield market for TestMachine.</p>
+  </div>
+
+  <!-- Key Metrics -->
+  <div class="metrics">
+    <div class="metric">
+      <div class="label">Agent-Managed Capital</div>
+      <div class="value">$2.5–4B</div>
+      <div class="note">Across blockchain protocols</div>
+    </div>
+    <div class="metric">
+      <div class="label">Daily Agent Volume</div>
+      <div class="value">$500M–1B</div>
+      <div class="note">Agent-initiated transactions</div>
+    </div>
+    <div class="metric">
+      <div class="label">Annual Growth</div>
+      <div class="value">300%+</div>
+      <div class="note">Agent-managed DeFi positions</div>
+    </div>
+    <div class="metric">
+      <div class="label">TAM (2030)</div>
+      <div class="value">$5–10B</div>
+      <div class="note">Agent security market</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section" id="s1">
+    <h2><span class="num">01</span> AI Agents on Blockchain Today</h2>
+
+    <h3 id="s1-activities">Current On-Chain Activities</h3>
+
+    <h4>DeFi Trading &amp; MEV Operations</h4>
+    <ul>
+      <li><strong>Automated Market Makers:</strong> Agents managing liquidity provision across Uniswap, Curve, Balancer</li>
+      <li><strong>MEV Searchers:</strong> AI-powered bots executing arbitrage, liquidations, and sandwich attacks (~$100–200M/month)</li>
+      <li><strong>Cross-chain Arbitrage:</strong> Agents monitoring price discrepancies across L1/L2 networks</li>
+      <li><strong>Yield Farming:</strong> Dynamic allocation across lending protocols (Aave, Compound, Maker)</li>
+    </ul>
+
+    <h4>Autonomous Organizations</h4>
+    <ul>
+      <li><strong>DAO Governance:</strong> Agents voting on proposals based on predefined criteria</li>
+      <li><strong>Treasury Management:</strong> Algorithmic diversification and risk management ($1B+ in agent-influenced decisions)</li>
+      <li><strong>Protocol Parameter Optimization:</strong> Dynamic fee adjustments, interest rates, collateral ratios</li>
+    </ul>
+
+    <h4>Agent-to-Agent Transactions</h4>
+    <ul>
+      <li><strong>Peer Coordination:</strong> Multi-agent systems coordinating complex strategies</li>
+      <li><strong>Resource Sharing:</strong> Agents trading computational resources, data, or access rights</li>
+      <li><strong>Automated Settlements:</strong> Contract execution without human intervention</li>
+    </ul>
+
+    <h3 id="s1-projects">Key Projects and Protocols</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Project</th><th>Focus</th><th>Scale</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Autonolas (OLAS)</strong></td><td>Agent orchestration framework</td><td>$150M+ TVL in agent services</td></tr>
+          <tr><td><strong>AI16z</strong></td><td>AI-managed crypto funds</td><td>$500M+ AUM</td></tr>
+          <tr><td><strong>Virtuals Protocol</strong></td><td>AI agent creation for DeFi</td><td>$200M+ agent-managed positions</td></tr>
+          <tr><td><strong>Fetch.ai (FET)</strong></td><td>AI agent marketplace</td><td>$500M+ market cap</td></tr>
+          <tr><td><strong>SingularityNET (AGIX)</strong></td><td>Decentralized AI marketplace</td><td>$400M+ market cap</td></tr>
+          <tr><td><strong>ChainGPT</strong></td><td>AI infrastructure for blockchain</td><td>$100M+ in services</td></tr>
+          <tr><td><strong>dHEDGE</strong></td><td>AI-powered asset management</td><td>$50M+ AUM</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="s1-scale">Scale &amp; Capital at Risk</h3>
+
+    <div class="callout">
+      <div class="callout-title green">Key Data Points</div>
+      <ul>
+        <li><strong>Total agent-managed capital:</strong> ~$2.5–4B across major protocols</li>
+        <li><strong>Daily transaction volume:</strong> ~$500M–1B in agent-initiated transactions</li>
+        <li><strong>MEV extraction:</strong> ~$100–200M monthly through automated strategies</li>
+        <li><strong>Growth:</strong> 300%+ in agent-managed DeFi positions (2023–2024), 150%+ in autonomous trading volume</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section" id="s2">
+    <h2><span class="num">02</span> The Broader Agent Landscape</h2>
+
+    <h3 id="s2-production">Production Deployments Across Industries</h3>
+
+    <h4>Software Development</h4>
+    <ul>
+      <li><strong>GitHub Copilot:</strong> 1M+ paid subscribers, generating 30%+ of code in many projects</li>
+      <li><strong>Cursor / Claude Code:</strong> AI pair programming with autonomous refactoring</li>
+      <li><strong>Devin (Cognition Labs):</strong> End-to-end software engineering agent</li>
+    </ul>
+
+    <h4>Financial Services</h4>
+    <ul>
+      <li><strong>Quant Trading:</strong> Renaissance, Two Sigma using AI agents for strategy execution</li>
+      <li><strong>Risk Management:</strong> Real-time portfolio monitoring and adjustment</li>
+      <li><strong>Customer Service:</strong> AI agents handling 70%+ of financial services inquiries</li>
+    </ul>
+
+    <h4>Operations</h4>
+    <ul>
+      <li><strong>Customer Support:</strong> Intercom, Zendesk agents resolving 60%+ of tickets autonomously</li>
+      <li><strong>Sales &amp; Marketing:</strong> Outreach automation, lead qualification, content generation</li>
+      <li><strong>Supply Chain:</strong> Inventory management, demand forecasting, logistics optimization</li>
+    </ul>
+
+    <h3 id="s2-frameworks">Agent Frameworks and Platforms</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Framework</th><th>Type</th><th>Traction</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>LangChain / LangGraph</strong></td><td>Agent orchestration</td><td>50M+ downloads; Notion, Zapier, Klarna</td></tr>
+          <tr><td><strong>AutoGPT</strong></td><td>Autonomous task execution</td><td>150K+ GitHub stars</td></tr>
+          <tr><td><strong>CrewAI</strong></td><td>Multi-agent collaboration</td><td>Role-based, hierarchical workflows</td></tr>
+          <tr><td><strong>OpenAI Agents SDK</strong></td><td>Official agent framework</td><td>Function calling, code interpreter</td></tr>
+          <tr><td><strong>Anthropic Tool Use</strong></td><td>Native agent capabilities</td><td>Computer use, Constitutional AI</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="s2-authority">The Trend Toward Real-World Authority</h3>
+
+    <div class="callout warning">
+      <div class="callout-title orange">The Authority Escalation</div>
+      <p>Agents are rapidly gaining authority over real-world actions: spending money, deploying code, sending communications, making investment decisions, managing infrastructure, and negotiating with vendors — often with minimal human oversight.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section" id="s3">
+    <h2><span class="num">03</span> The Security Problem</h2>
+
+    <h3 id="s3-differences">Why "Code is Law" Breaks Down</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Property</th><th>Smart Contracts</th><th>AI Agents</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Determinism</td><td>Same input &rarr; same output</td><td>Same input &rarr; different outputs</td></tr>
+          <tr><td>Transparency</td><td>Code is public, auditable</td><td>Decision process often opaque</td></tr>
+          <tr><td>Mutability</td><td>Immutable post-deploy</td><td>Evolves through learning/updates</td></tr>
+          <tr><td>Composability</td><td>Predictable interactions</td><td>Emergent, unpredictable behaviors</td></tr>
+          <tr><td>Verification</td><td>Mathematical proofs possible</td><td>Probabilistic confidence only</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="s3-attacks">Attack Vectors</h3>
+
+    <h4>Prompt Injection &amp; Jailbreaking</h4>
+    <ul>
+      <li><strong>Direct Injection:</strong> Malicious instructions embedded in user inputs</li>
+      <li><strong>Indirect Injection:</strong> Poisoned data sources influencing agent behavior</li>
+      <li><strong>Multi-turn Attacks:</strong> Gradual influence over extended interactions</li>
+    </ul>
+
+    <div class="callout danger">
+      <div class="callout-title red">Example Scenario</div>
+      <p>A trading agent receives market data containing hidden instructions to ignore risk limits and execute high-risk trades, resulting in catastrophic portfolio loss.</p>
+    </div>
+
+    <h4>Goal Misalignment &amp; Reward Hacking</h4>
+    <ul>
+      <li><strong>Specification Gaming:</strong> Agents finding loopholes in objective functions</li>
+      <li><strong>Proxy Objectives:</strong> Optimizing metrics misaligned with intended goals</li>
+      <li><strong>Adversarial Examples:</strong> Inputs designed to trigger specific harmful behaviors</li>
+    </ul>
+
+    <h4>Hallucination &amp; Decision Errors</h4>
+    <ul>
+      <li><strong>Factual Errors:</strong> Decisions based on false information</li>
+      <li><strong>Confidence Miscalibration:</strong> Over-confident decisions in uncertain situations</li>
+      <li><strong>Distribution Shift:</strong> Poor performance on out-of-distribution data</li>
+    </ul>
+
+    <h3 id="s3-incidents">Real Incidents</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Incident</th><th>Loss</th><th>Mechanism</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Euler Finance (2023)</strong></td><td>$197M</td><td>Flash loan attack partially automated by MEV bots</td></tr>
+          <tr><td><strong>Mango Markets (2022)</strong></td><td>$114M</td><td>Manipulation using automated trading strategies</td></tr>
+          <tr><td><strong>FTX/Alameda (2022)</strong></td><td>$8B</td><td>Automated trading systems contributing to shortfall</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="s3-accountability">The Accountability Gap</h3>
+
+    <div class="callout danger">
+      <div class="callout-title red">Open Questions</div>
+      <ul>
+        <li>Who is liable when an autonomous agent causes harm?</li>
+        <li>How do you audit non-deterministic decision-making?</li>
+        <li>How do you distinguish between errors and malicious behavior in a probabilistic system?</li>
+        <li>How do you roll back agent actions in decentralized systems?</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section" id="s4">
+    <h2><span class="num">04</span> Current Security Approaches</h2>
+
+    <h3 id="s4-guardrails">Runtime Monitoring &amp; Guardrails</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Solution</th><th>Approach</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Guardrails AI</strong></td><td>Runtime LLM output validation</td><td>$7.5M Series A</td></tr>
+          <tr><td><strong>NVIDIA NeMo Guardrails</strong></td><td>Open-source guardrails framework</td><td>Colang scripting language</td></tr>
+          <tr><td><strong>Anthropic Constitutional AI</strong></td><td>Built-in safety training</td><td>Integrated into Claude</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Sandboxing &amp; Permissions</h4>
+    <ul>
+      <li>Docker containers, WebAssembly, Firecracker micro-VMs</li>
+      <li>Capability-based and role-based access control</li>
+      <li>Zero-trust architecture with continuous verification</li>
+      <li>Rate limiting, circuit breakers, resource quotas</li>
+    </ul>
+
+    <h4>Policy Languages</h4>
+    <ul>
+      <li><strong>Rego (Open Policy Agent):</strong> Declarative policy for authorization</li>
+      <li><strong>XACML:</strong> XML-based access control</li>
+      <li>Custom DSLs for agent behavior specification</li>
+    </ul>
+
+    <h3 id="s4-rl">RL-based Safety Approaches</h3>
+    <ul>
+      <li><strong>RLHF:</strong> Training reward models from human preferences</li>
+      <li><strong>Constitutional AI:</strong> Agents trained to follow principle sets</li>
+      <li><strong>Safe Exploration:</strong> Preventing harmful actions during learning</li>
+      <li><strong>Constrained Optimization:</strong> Hard constraints on agent behavior</li>
+      <li><strong>Risk-sensitive RL:</strong> Optimizing for worst-case scenarios</li>
+      <li><strong>Distributional RL:</strong> Understanding uncertainty in value estimates</li>
+    </ul>
+
+    <h3 id="s4-onchain">On-chain Infrastructure</h3>
+    <ul>
+      <li><strong>Agent Registries:</strong> Autonolas, Fetch.ai — on-chain identity and metadata</li>
+      <li><strong>Reputation Systems:</strong> Performance tracking, slashing conditions, insurance pools</li>
+      <li><strong>Audit Trails:</strong> Event logging to IPFS/Arweave, Graph Protocol indexing</li>
+      <li><strong>Economic Accountability:</strong> Nexus Mutual, Risk Harbor — parametric insurance for DeFi</li>
+    </ul>
+
+    <div class="callout warning">
+      <div class="callout-title orange">Gap Assessment</div>
+      <p>All current approaches are early-stage and fragmented. Nobody is offering comprehensive agent security for blockchain — the space is wide open.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section" id="s5">
+    <h2><span class="num">05</span> The "Policy is Law" Opportunity</h2>
+
+    <h3 id="s5-thesis">Market Thesis</h3>
+    <p>As blockchain evolves from static smart contracts to dynamic AI agents, the security paradigm must shift from pre-deployment code auditing to <strong>runtime policy enforcement</strong>. Where "Code is Law" relied on mathematical certainty, "Policy is Law" requires probabilistic governance of agent behavior.</p>
+
+    <div class="callout">
+      <div class="callout-title green">Key Drivers</div>
+      <ul>
+        <li><strong>Capital at risk:</strong> $2.5B+ managed by blockchain agents, growing 300% annually</li>
+        <li><strong>Regulatory pressure:</strong> Increasing government scrutiny of autonomous financial systems</li>
+        <li><strong>Insurance demand:</strong> Traditional audit approaches insufficient for agent risks</li>
+        <li><strong>Enterprise adoption:</strong> Large institutions requiring compliance and accountability</li>
+      </ul>
+    </div>
+
+    <h3 id="s5-auditing">Agent Auditing vs. Smart Contract Auditing</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Dimension</th><th>Contract Audit</th><th>Agent Audit</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Method</td><td>Static analysis, formal verification</td><td>Behavioral analysis, adversarial testing</td></tr>
+          <tr><td>Frequency</td><td>One-time (immutable code)</td><td>Continuous monitoring required</td></tr>
+          <tr><td>Validation</td><td>Deterministic test coverage</td><td>Probabilistic/statistical analysis</td></tr>
+          <tr><td>Scope</td><td>Single contract</td><td>Goal alignment, robustness, explainability, privacy, multi-agent interactions</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Where RL/ML Fits</h4>
+    <ul>
+      <li><strong>Inverse RL:</strong> Infer agent objectives from observed behavior</li>
+      <li><strong>Anomaly Detection:</strong> Unsupervised learning for unusual agent actions</li>
+      <li><strong>Adversarial Training:</strong> Defensive models against known attack patterns</li>
+      <li><strong>Causal Analysis:</strong> Understanding decision-making dependencies</li>
+      <li><strong>Multi-agent Simulation:</strong> Testing interactions in controlled environments</li>
+    </ul>
+
+    <h3 id="s5-market">Market Sizing</h3>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="label">Immediate (2025–26)</div>
+        <div class="value">$50–100M</div>
+        <div class="note">Top 50 DeFi protocols, crypto funds</div>
+      </div>
+      <div class="metric">
+        <div class="label">Medium-term (2027–29)</div>
+        <div class="value">$500M–1B</div>
+        <div class="note">TradFi, supply chain, autonomous systems</div>
+      </div>
+      <div class="metric">
+        <div class="label">Long-term (2030+)</div>
+        <div class="value">$5–10B</div>
+        <div class="note">Agents as primary economic actors</div>
+      </div>
+    </div>
+
+    <h3 id="s5-competition">Competitive Landscape</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Player</th><th>Positioning</th><th>Threat Level</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>Trail of Bits</strong></td><td>Expanding from contract audits</td><td style="color:var(--callout-orange)">Medium</td></tr>
+          <tr><td><strong>Quantstamp</strong></td><td>Exploring AI safety / verification</td><td style="color:var(--callout-orange)">Medium</td></tr>
+          <tr><td><strong>ConsenSys Diligence</strong></td><td>Beginning agent security research</td><td style="color:var(--fg-dim)">Low-Med</td></tr>
+          <tr><td><strong>Guardrails AI</strong></td><td>LLM safety, potential blockchain expansion</td><td style="color:var(--fg-dim)">Low-Med</td></tr>
+          <tr><td><strong>CrowdStrike / Palo Alto</strong></td><td>Traditional security, potential entry</td><td style="color:var(--fg-dim)">Low (for now)</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title green">Competitive Moat</div>
+      <p>TestMachine sits at the intersection of blockchain security expertise and AI/RL technical depth. No current competitor has both. The window for first-mover advantage is open.</p>
+    </div>
+
+    <h3 id="s5-roadmap">Product Roadmap</h3>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="phase">Phase 1 &middot; 6–12 months</div>
+        <h4>Agent Certification</h4>
+        <p>Pre-deployment behavioral audits, formal behavior specification, standardized test suites, industry-recognized certification framework.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="phase">Phase 2 &middot; 12–18 months</div>
+        <h4>Runtime Policy Enforcement</h4>
+        <p>Real-time monitoring, flexible policy engine, automated incident response, compliance reporting and audit trails.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="phase">Phase 3 &middot; 18–24 months</div>
+        <h4>Predictive Risk Assessment</h4>
+        <p>ML-based risk scoring, scenario analysis, portfolio-level risk aggregation, insurance integration with risk-based pricing.</p>
+      </div>
+      <div class="timeline-item">
+        <div class="phase">Phase 4 &middot; 24+ months</div>
+        <h4>Agent Governance Platform</h4>
+        <p>Multi-stakeholder oversight tools, cross-chain integration, ecosystem partnerships, global regulatory compliance.</p>
+      </div>
+    </div>
+
+    <h3 id="s5-recommendations">Strategic Recommendations</h3>
+
+    <div class="callout">
+      <div class="callout-title green">Immediate Actions (Next 6 Months)</div>
+      <ol>
+        <li><strong>Build the MVP</strong> — agent behavioral analysis platform</li>
+        <li><strong>Recruit</strong> — AI safety researchers + blockchain security experts</li>
+        <li><strong>Engage</strong> — relationships with major DeFi protocols and crypto funds</li>
+        <li><strong>Research partnerships</strong> — academic collaborations on agent security</li>
+        <li><strong>Regulatory outreach</strong> — engage policymakers on agent governance frameworks</li>
+      </ol>
+    </div>
+
+    <p><strong>Revenue model:</strong> Subscription monitoring ($10K–200K+/month by tier) + professional services (agent audits at $25K–100K each, incident response at $150K–500K) + success-based pricing tied to losses prevented.</p>
+  </div>
+
+  <!-- CONCLUSION -->
+  <div class="section">
+    <h2>Bottom Line</h2>
+    <p>The transition from "Code is Law" to "Policy is Law" represents a fundamental shift in blockchain security. As AI agents manage increasing capital and authority, the need for sophisticated governance and accountability systems becomes critical.</p>
+    <p>TestMachine has the Web3 security credibility and technical depth (RL, ML, Bayesian methods) to own this category. The market need is emerging fast. Nobody's solving it yet. The window is open.</p>
+  </div>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>&copy; 2026 TestMachine. Internal use only.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
+
+// Nav scroll class toggle
+const mainNav = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 20) {
+    mainNav.classList.add('scrolled');
+  } else {
+    mainNav.classList.remove('scrolled');
+  }
+});
+
+// Hamburger + mobile menu toggle
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  mobileMenu.classList.toggle('active');
+  document.body.classList.toggle('menu-open');
+});
+
+// Close mobile menu when clicking a link
+mobileMenu.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    hamburger.classList.remove('active');
+    mobileMenu.classList.remove('active');
+    document.body.classList.remove('menu-open');
+  });
+});
+
+// TOC toggle (mobile)
+const tocToggle = document.getElementById('tocToggle');
+const toc = document.getElementById('toc');
+const overlay = document.getElementById('tocOverlay');
+
+tocToggle.addEventListener('click', () => {
+  toc.classList.toggle('open');
+  overlay.classList.toggle('open');
+});
+
+overlay.addEventListener('click', () => {
+  toc.classList.remove('open');
+  overlay.classList.remove('open');
+});
+
+// Close TOC on link click (mobile)
+toc.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    if (window.innerWidth <= 1024) {
+      toc.classList.remove('open');
+      overlay.classList.remove('open');
+    }
+  });
+});
+
+// Active TOC highlighting with IntersectionObserver
+const sections = document.querySelectorAll('[id]');
+const tocLinks = document.querySelectorAll('.toc a');
+const tocObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => tocObserver.observe(s));
+</script>
+
+<script src="confidential-toggle.js"></script>
+</body>
+</html>

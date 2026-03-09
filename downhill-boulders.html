@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Downhill Boulders: Short-Term Revenue Opportunities — TestMachine Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TestMachine.ai — Research Article Design
+   ============================================================ */
+
+:root {
+  --bg: oklch(0.18 0.005 260);
+  --bg-raised: oklch(0.21 0.005 260);
+  --bg-deeper: oklch(0.14 0.005 260);
+  --fg: oklch(0.92 0 0);
+  --fg-muted: oklch(0.65 0 0);
+  --fg-dim: oklch(0.45 0 0);
+  --border: oklch(0.32 0.005 260);
+  --border-subtle: oklch(0.25 0.005 260);
+  --accent: oklch(0.72 0.12 192);
+  --accent-hover: oklch(0.80 0.12 192);
+  --accent-glow: oklch(0.72 0.12 192 / 0.1);
+  --card-bg: oklch(0.21 0.005 260);
+  --input-bg: oklch(0.15 0.005 260);
+  --nav-bg: oklch(0.18 0.005 260 / 0.85);
+  --font-display: 'Manrope', sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --font-serif: 'Source Serif 4', Charter, Georgia, serif;
+  --font: var(--font-mono);
+  --nav-h: 72px;
+  --max-w: 1120px;
+  --section-py: clamp(80px, 10vw, 140px);
+  --gap: 24px;
+  --transition: 0.25s ease;
+  --callout-orange: oklch(0.75 0.15 55);
+  --callout-red: oklch(0.65 0.2 25);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-h);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; color: inherit; }
+ul { list-style: none; }
+
+::selection {
+  background: oklch(0.72 0.12 192 / 0.25);
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ---------- Progress Bar ---------- */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: var(--accent);
+  z-index: 1100;
+  width: 0%;
+  transition: width 0.1s;
+}
+
+/* ---------- Navigation ---------- */
+.nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
+.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
+.toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+.toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width var(--transition);
+}
+
+.nav-link:hover,
+.nav-link.nav-link--active {
+  color: var(--fg);
+}
+
+.nav-link:hover::after,
+.nav-link.nav-link--active::after {
+  width: 100%;
+}
+
+.nav-link.nav-link--active {
+  color: var(--accent);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  padding: 14px 32px;
+  border-radius: 0;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.btn:hover { transform: scale(1.02); }
+.btn:active { transform: scale(0.98); }
+
+.btn--primary {
+  background: var(--accent);
+  color: oklch(0.12 0 0);
+  border: 1px solid var(--accent);
+  font-weight: 700;
+}
+
+.btn--primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn--nav {
+  padding: 10px 22px;
+  font-size: 0.75rem;
+}
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  width: 40px;
+  height: 40px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  z-index: 1001;
+}
+
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--fg);
+  transition: all var(--transition);
+  transform-origin: center;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* Mobile Menu */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-menu-inner {
+  text-align: center;
+}
+
+.mobile-menu-link {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  font-weight: 600;
+  color: var(--fg-muted);
+  padding: 14px 0;
+  transition: color var(--transition);
+}
+
+.mobile-menu-link:hover { color: var(--fg); }
+.mobile-menu-link.nav-link--active { color: var(--accent); }
+
+.mobile-menu-cta {
+  margin-top: 40px;
+  padding: 0 40px;
+}
+
+/* ---------- TOC Sidebar ---------- */
+
+/* TOC toggle (mobile) */
+.toc-toggle {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 200;
+  width: 48px;
+  height: 48px;
+  border-radius: 0;
+  background: var(--accent);
+  color: var(--bg);
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+.toc-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 150;
+}
+
+/* ---------- Main Content ---------- */
+.main {
+  margin-left: 280px;
+  max-width: 780px;
+  padding: calc(var(--nav-h) + 3rem) 2.5rem 4rem;
+}
+
+/* ---------- Article Header ---------- */
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  margin-bottom: 2rem;
+  transition: color var(--transition);
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+.article-header {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.article-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-muted);
+  padding: 0.3rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  margin-bottom: 1rem;
+}
+
+.article-date {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--fg-dim);
+  margin-bottom: 0.75rem;
+}
+
+.article-header h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin-bottom: 0.8rem;
+}
+
+.article-subtitle {
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  color: var(--fg-muted);
+  line-height: 1.5;
+}
+
+/* ---------- Metrics Bar ---------- */
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.metric {
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  padding: 1.2rem;
+}
+
+.metric .label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--fg-muted);
+  margin-bottom: 0.3rem;
+}
+
+.metric .value {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.metric .note {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  margin-top: 0.2rem;
+}
+
+/* ---------- Article Body ---------- */
+.section {
+  margin-bottom: 3rem;
+}
+
+.article-body p {
+  font-family: var(--font-serif);
+  font-size: 1.1875rem;
+  line-height: 1.9;
+  color: var(--fg-muted);
+  margin-bottom: 1rem;
+}
+
+.article-body h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 1.2rem;
+  padding-top: 1rem;
+}
+
+.article-body h2 .num {
+  color: var(--accent);
+  margin-right: 0.4rem;
+}
+
+.article-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin: 1.8rem 0 0.8rem;
+}
+
+.article-body h4 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 1.2rem 0 0.5rem;
+}
+
+.article-body strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.article-body ul,
+.article-body ol {
+  margin: 0.5rem 0 1.2rem;
+  padding-left: 1.5em;
+}
+
+.article-body ul {
+  list-style: disc;
+}
+
+.article-body ol {
+  list-style: decimal;
+}
+
+.article-body li {
+  font-family: var(--font-serif);
+  font-size: 1.1875rem;
+  line-height: 1.9;
+  color: var(--fg-muted);
+  margin-bottom: 0.4rem;
+}
+
+.article-body li strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+/* ---------- Callouts ---------- */
+.callout {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--accent);
+  border-radius: 0;
+  padding: 1.2rem 1.4rem;
+  margin: 1.5rem 0;
+}
+
+.callout.warning {
+  border-left-color: var(--callout-orange);
+}
+
+.callout.danger {
+  border-left-color: var(--callout-red);
+}
+
+.callout .callout-title {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+}
+
+.callout .callout-title.green { color: var(--accent); }
+.callout .callout-title.orange { color: var(--callout-orange); }
+.callout .callout-title.red { color: var(--callout-red); }
+
+/* ---------- Tables ---------- */
+.table-wrap {
+  overflow-x: auto;
+  margin: 1.2rem 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+}
+
+th {
+  background: var(--bg-deeper);
+  color: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.8rem 1rem;
+  text-align: left;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+td {
+  padding: 0.7rem 1rem;
+  border-top: 1px solid var(--border-subtle);
+  color: var(--fg-muted);
+}
+
+td strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+tr:hover td {
+  background: var(--accent-glow);
+}
+
+tr.highlight-row td {
+  background: var(--accent-glow);
+}
+
+/* ---------- Score Badge ---------- */
+.score-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: var(--accent-glow);
+  padding: 0.15rem 0.5rem;
+  border: 1px solid oklch(0.72 0.12 192 / 0.3);
+  margin-left: 0.5rem;
+}
+
+/* ---------- Verdict Badges ---------- */
+.verdict {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+  margin-left: 0.25rem;
+}
+
+.verdict-reject { background: oklch(0.65 0.2 25 / 0.15); color: var(--callout-red); }
+.verdict-monitor { background: oklch(0.75 0.15 55 / 0.15); color: var(--callout-orange); }
+.verdict-partial { background: oklch(0.72 0.12 152 / 0.15); color: var(--accent); }
+
+/* ---------- Timeline ---------- */
+.timeline {
+  position: relative;
+  padding-left: 2rem;
+  margin: 1.5rem 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 0.5rem;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--border-subtle);
+}
+
+.timeline-item {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -1.65rem;
+  top: 0.5rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg);
+}
+
+.timeline-item .phase {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  margin-bottom: 0.2rem;
+}
+
+.timeline-item h4 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin: 0 0 0.3rem;
+}
+
+.timeline-item p {
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* ---------- Container ---------- */
+.container {
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  margin-left: 280px;
+  padding: 20px 0;
+  background: var(--bg-raised);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 28px;
+}
+
+.footer-brand .nav-logo {
+  margin-bottom: 14px;
+}
+
+.footer-address {
+  font-size: 0.8125rem;
+  color: var(--fg-dim);
+  line-height: 1.5;
+}
+
+.footer-heading {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--fg);
+  margin-bottom: 16px;
+}
+
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+}
+
+.footer-links a:hover {
+  color: var(--fg);
+}
+
+.footer-bottom { display: flex; align-items: center; justify-content: center; }
+
+.footer-bottom p { font-size: 0.7rem; color: var(--fg-dim); margin: 0; line-height: 1; }
+
+/* ---------- Responsive: 1024px ---------- */
+@media (max-width: 1024px) {
+    .toc { transform: translateX(-100%); }
+    .main, .main-content, .main-container, .article-wrapper, .content-wrapper { margin-left: 0 !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .nav-links {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .toc.open {
+    transform: translateX(0);
+  }
+
+  .toc-toggle {
+    display: flex;
+  }
+
+  .toc-overlay.open {
+    display: block;
+  }
+
+  .main {
+    margin-left: 0;
+    padding: calc(var(--nav-h) + 2rem) 1.5rem 3rem;
+  }
+
+  .footer {
+    margin-left: 0;
+  }
+
+  .footer-grid {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}
+
+/* ---------- Responsive: 768px ---------- */
+@media (max-width: 768px) {
+  .main {
+    padding: calc(var(--nav-h) + 1.5rem) 1.2rem 2rem;
+  }
+
+  .article-header h1 {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+  }
+
+  .metrics {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .metric .value {
+    font-size: 1.3rem;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .btn--nav {
+    display: none;
+  }
+}
+
+/* ---------- Responsive: 480px ---------- */
+@media (max-width: 480px) {
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+
+
+<div class="progress-bar" id="progress"></div>
+
+<!-- Navigation -->
+<nav class="nav" id="navbar">
+  <div class="progress-bar" id="progressBar"></div>
+  <div style="display:flex;align-items:center;height:100%;padding:0 24px;">
+    <a href="/"><img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);"></a>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner">
+    <a href="/" class="mobile-menu-link nav-link--active">Research</a>
+    <div class="mobile-menu-cta">
+    </div>
+  </div>
+</div>
+
+<!-- TOC Toggle (mobile) -->
+<button class="toc-toggle" id="tocToggle" aria-label="Table of contents">&#9776;</button>
+<div class="toc-overlay" id="tocOverlay"></div>
+
+<!-- Table of Contents -->
+<nav class="toc" id="toc">
+  <h3>Contents</h3>
+  <a href="#exec">Executive Summary</a>
+  <a href="#landscape">1. The Landscape</a>
+  <a href="#landscape-problem" class="sub">The $2.2B Problem</a>
+  <a href="#landscape-spending" class="sub">Spending Patterns</a>
+  <a href="#landscape-advantage" class="sub">Advantage Matrix</a>
+  <a href="#opp1">2. DeFi Insurance Underwriting</a>
+  <a href="#opp1-thesis" class="sub">Thesis</a>
+  <a href="#opp1-market" class="sub">Market Size</a>
+  <a href="#opp1-tech" class="sub">Technology Fit</a>
+  <a href="#opp1-competition" class="sub">Competitive Landscape</a>
+  <a href="#opp1-pricing" class="sub">Pricing &amp; Targets</a>
+  <a href="#opp2">3. Continuous Security</a>
+  <a href="#opp3">4. L2/Appchain Certification</a>
+  <a href="#opp4">5. RWA Security Compliance</a>
+  <a href="#opp5">6. MEV &amp; Economic Exploits</a>
+  <a href="#opp6">7. Bug Bounty Intelligence</a>
+  <a href="#opp7">8. AI Agent Security</a>
+  <a href="#opp8">9. Bridge Security</a>
+  <a href="#rejected">Evaluated &amp; Rejected</a>
+  <a href="#ranking">Composite Ranking</a>
+  <a href="#playbooks">GTM Playbooks</a>
+  <a href="#financials">Financial Projections</a>
+</nav>
+
+<!-- Main Content -->
+<main class="main article-body">
+
+  <!-- Back Link -->
+  <a href="index.html" class="back-link">&larr; Back to Research</a>
+
+  <!-- Article Header -->
+  <div class="article-header" id="exec">
+    <span class="article-tag">Strategic Analysis</span>
+    <p class="article-date">February 2026 &middot; Prepared for TestMachine</p>
+    <h1>Downhill Boulders: Short-Term Revenue Opportunities</h1>
+    <p class="article-subtitle">Identifying markets where TestMachine's Lodestar technology rolls downhill — where buyers are actively seeking solutions, budgets are allocated, and the competitive landscape has gaps.</p>
+  </div>
+
+  <!-- Key Metrics -->
+  <div class="metrics">
+    <div class="metric">
+      <div class="label">Current ARR</div>
+      <div class="value">$480K</div>
+      <div class="note">Coinbase engagement</div>
+    </div>
+    <div class="metric">
+      <div class="label">Monthly Burn</div>
+      <div class="value">$165K</div>
+      <div class="note">12 months runway</div>
+    </div>
+    <div class="metric">
+      <div class="label">Audit Market TAM</div>
+      <div class="value">$1.5–2B</div>
+      <div class="note">Mature, crowded</div>
+    </div>
+    <div class="metric">
+      <div class="label">Pivots Identified</div>
+      <div class="value">8</div>
+      <div class="note">Scored &amp; ranked</div>
+    </div>
+  </div>
+
+  <!-- Executive Summary Callout -->
+  <div class="section">
+    <div class="callout">
+      <div class="callout-title green">Executive Summary</div>
+      <p>TestMachine's Lodestar technology — LLM-powered smart contract analysis combined with reinforcement learning agents that execute real exploit attempts on forked chains — represents a genuinely differentiated capability in security. The zero-false-positive guarantee (every finding comes with a working PoC exploit) is rare in any security domain, not just blockchain.</p>
+      <p>The current smart contract audit market (~$1.5–2B TAM) is mature, crowded, and relationship-driven. With $480K ARR, $165K/mo burn, and 12 months of runway, TestMachine needs to find markets where the technology rolls downhill — where buyers are actively seeking solutions, budgets are allocated, and the competitive landscape has gaps.</p>
+      <p>This analysis identifies <strong>eight distinct pivot opportunities</strong>. The headline finding: the highest-leverage near-term opportunity is <strong>DeFi Insurance Risk Underwriting</strong> — a market where TestMachine's exact capability (quantifying exploit probability with working PoCs) is precisely what buyers need, and where no competitor exists.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 1: Landscape -->
+  <div class="section" id="landscape">
+    <h2><span class="num">01</span> The Landscape: Where Money Is Being Spent Now</h2>
+
+    <h3 id="landscape-problem">The $2.2 Billion Problem</h3>
+    <p>In 2024, <strong>$2.2 billion</strong> was stolen from crypto platforms across 303 individual hacking incidents — a 21% increase YoY (Chainalysis, Dec 2024). DeFi platforms remained the primary targets in Q1, while centralized services were hit hardest in Q2–Q3. Private key compromises accounted for 43.8% of stolen funds.</p>
+    <p>This number is critical context: <strong>the crypto industry loses more to exploits annually than the entire smart contract audit market generates in revenue.</strong> The economics of security are broken — audits are one-time, backward-looking snapshots, while exploits are continuous and forward-looking.</p>
+
+    <h3 id="landscape-spending">Spending Patterns in 2025–2026</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Spending Category</th><th>Est. Annual Spend</th><th>Growth</th><th>Key Drivers</th></tr></thead>
+        <tbody>
+          <tr><td>Smart Contract Audits</td><td>$1.5–2.0B</td><td>Flat–5%</td><td>Mature, commoditizing</td></tr>
+          <tr><td>Bug Bounty Programs</td><td>$150–300M</td><td>20–30%</td><td>Immunefi growth, institutional</td></tr>
+          <tr><td>Blockchain Security Monitoring</td><td>$500M–1B</td><td>40–50%</td><td>Post-hack demand, regulatory</td></tr>
+          <tr><td>DeFi Insurance Premiums</td><td>$200–400M</td><td>50–80%</td><td>Nexus Mutual $6B+ protected</td></tr>
+          <tr><td>RWA/Tokenization Security</td><td>$300–600M</td><td>80–120%</td><td>BlackRock BUIDL, MiCA</td></tr>
+          <tr><td>L2/Appchain Launch Security</td><td>$200–400M</td><td>100%+</td><td>L2 proliferation</td></tr>
+          <tr><td>AI Security / Red-Teaming</td><td>$8.65B (broader)</td><td>26.5% CAGR</td><td>EU AI Act, enterprise</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><em>Sources: Chainalysis 2024; MarketsandMarkets GenAI Cybersecurity Report; Nexus Mutual on-chain; industry estimates.</em></p>
+
+    <h3 id="landscape-advantage">The TestMachine Advantage Matrix</h3>
+    <ol>
+      <li><strong>Automated exploit generation</strong> — not "this looks vulnerable" but "here's the working attack"</li>
+      <li><strong>RL-based attack discovery</strong> — finds paths humans and static analyzers miss</li>
+      <li><strong>Forked-chain execution</strong> — tests against real state, not toy environments</li>
+      <li><strong>LLM-powered analysis</strong> — reasons about novel patterns, not just known templates</li>
+      <li><strong>Zero false positives</strong> — every finding is a proven exploit</li>
+    </ol>
+    <p>This combination is unique. No competitor offers all five simultaneously.</p>
+  </div>
+
+  <!-- SECTION 2: Opp 1 -->
+  <div class="section" id="opp1">
+    <h2><span class="num">02</span> DeFi Insurance Risk Underwriting <span class="score-badge">9.2</span></h2>
+
+    <h3 id="opp1-thesis">The Thesis</h3>
+    <p>DeFi insurance is one of the fastest-growing segments in crypto, but it has a fundamental problem: <strong>nobody can accurately price smart contract risk.</strong> Nexus Mutual has protected over $6 billion in crypto assets and provided 10,000+ covers, but risk pricing remains crude — based on historical hack rates and manual assessment rather than rigorous, automated exploit analysis.</p>
+    <p>TestMachine's Lodestar can run actual exploit attempts against any protocol and produce a quantified risk score backed by real PoC exploits. This is <em>exactly</em> what an insurance underwriter needs to price a policy.</p>
+
+    <h3 id="opp1-market">Market Size &amp; Growth</h3>
+    <ul>
+      <li><strong>DeFi insurance market (2025):</strong> ~$200–400M in annual premiums, growing 50–80% YoY</li>
+      <li><strong>Total addressable (institutional acceleration):</strong> $2–5B by 2028</li>
+      <li><strong>Key players:</strong> Nexus Mutual, Chainproof (Zurich-backed), Neptune Mutual, InsurAce</li>
+      <li><strong>Traditional insurance entering:</strong> Zurich, Aon, Marsh — all announced crypto products</li>
+      <li><strong>Catalyst:</strong> Institutional DeFi adoption demands insurance; insurers demand quantified risk</li>
+    </ul>
+
+    <h3 id="opp1-tech">Technology Fit</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Component</th><th>Status</th><th>Engineering Lift</th></tr></thead>
+        <tbody>
+          <tr><td>Automated exploit scanning</td><td><strong style="color:var(--accent)">Exists</strong></td><td>None</td></tr>
+          <tr><td>Risk scoring model</td><td><strong style="color:var(--callout-orange)">Partial</strong></td><td>2–4 weeks</td></tr>
+          <tr><td>Continuous monitoring</td><td><strong style="color:var(--accent)">Exists</strong></td><td>Minimal</td></tr>
+          <tr><td>Underwriter API</td><td><strong style="color:var(--callout-red)">Needs building</strong></td><td>4–6 weeks</td></tr>
+          <tr><td>Risk report generation</td><td><strong style="color:var(--callout-orange)">Partial</strong></td><td>2 weeks</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>Total: 6–10 weeks to MVP.</strong></p>
+
+    <h3 id="opp1-competition">Competitive Landscape</h3>
+    <div class="callout">
+      <div class="callout-title green">Key Insight</div>
+      <p><strong>Nobody is doing this.</strong></p>
+    </div>
+    <ul>
+      <li><strong>Nexus Mutual</strong> — community staking signals, no exploit testing</li>
+      <li><strong>Chainproof</strong> — manual auditor assessment, slow and expensive</li>
+      <li><strong>Gauntlet</strong> — economic simulation, not exploit-level testing</li>
+      <li><strong>OpenZeppelin Defender</strong> — monitoring, no PoC exploits</li>
+    </ul>
+    <p>TestMachine would be the <em>only</em> provider offering "we tried to hack this protocol — here's the quantified risk."</p>
+
+    <h3 id="opp1-pricing">Pricing &amp; Target Customers</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Model</th><th>Price</th></tr></thead>
+        <tbody>
+          <tr><td>Per-protocol risk assessment</td><td>$15K–50K</td></tr>
+          <tr><td>Continuous monitoring subscription</td><td>$5K–15K/mo</td></tr>
+          <tr><td>Revenue share on premiums</td><td>2–5%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title green">Year 1 Target</div>
+      <p>$200K–500K from 2–3 insurance partnerships</p>
+    </div>
+
+    <p><strong>Targets:</strong> Nexus Mutual, Chainproof (Zurich), Aon/Marsh crypto desks, Neptune Mutual, institutional DeFi protocols needing coverage.</p>
+  </div>
+
+  <!-- SECTION 3: Opp 2 -->
+  <div class="section" id="opp2">
+    <h2><span class="num">03</span> Protocol-Embedded Continuous Security <span class="score-badge">8.7</span></h2>
+
+    <h3>The Thesis</h3>
+    <p>The audit model is broken: protocols get audited once before launch, then evolve through governance proposals, parameter changes, and composability. The $2.2B in 2024 hacks happened largely to <em>already-audited</em> protocols. The opportunity is continuous security as a service.</p>
+
+    <h3>Market &amp; Fit</h3>
+    <ul>
+      <li><strong>Market:</strong> $500M–1B, growing 40–50% annually</li>
+      <li><strong>Fastest path:</strong> Repackage Coinbase engagement as monthly retainer — no new engineering</li>
+      <li><strong>Differentiator:</strong> None of the competitors (OpenZeppelin Defender, Forta, Hexagate, Hypernative) generate working PoC exploits</li>
+    </ul>
+
+    <h3>Pricing</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Model</th><th>Price</th></tr></thead>
+        <tbody>
+          <tr><td>Monthly retainer</td><td>$10K–30K/mo</td></tr>
+          <tr><td>Enterprise tier</td><td>$50K–100K/mo</td></tr>
+          <tr><td>Incident response</td><td>$25K–50K per engagement</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title green">Year 1 Target</div>
+      <p>$500K–1M ARR from 5–10 protocols</p>
+    </div>
+
+    <p><strong>Targets:</strong> Top 20 DeFi by TVL (Aave, Lido, MakerDAO, Compound), L2 ecosystems, restaking protocols.</p>
+  </div>
+
+  <!-- SECTION 4: Opp 3 -->
+  <div class="section" id="opp3">
+    <h2><span class="num">04</span> L2/Appchain Pre-Launch Certification <span class="score-badge">8.3</span></h2>
+
+    <h3>The Thesis</h3>
+    <p>100+ new L2s and appchains are launching using OP Stack, Orbit, ZK Stack, etc. Each needs security validation — especially bridge contracts. No automated, scalable certification product exists.</p>
+
+    <h3>Key Numbers</h3>
+    <ul>
+      <li><strong>Market:</strong> $200–400M, growing 100%+ as RaaS proliferates</li>
+      <li><strong>Time to first revenue:</strong> 4–6 weeks (bridge focus)</li>
+      <li><strong>Channel strategy:</strong> Partner with Conduit, Caldera (RaaS platforms) for embedded certification</li>
+    </ul>
+
+    <h3>Pricing</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Model</th><th>Price</th></tr></thead>
+        <tbody>
+          <tr><td>Bridge security certification</td><td>$50K–100K</td></tr>
+          <tr><td>Full L2 pre-launch cert</td><td>$150K–300K</td></tr>
+          <tr><td>Annual re-certification</td><td>$75K–150K/yr</td></tr>
+          <tr><td>RaaS partnership (per chain)</td><td>$25K–50K</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title green">Year 1 Target</div>
+      <p>$400K–800K from chains + RaaS partnerships</p>
+    </div>
+  </div>
+
+  <!-- SECTION 5: Opp 4 -->
+  <div class="section" id="opp4">
+    <h2><span class="num">05</span> RWA/Tokenization Security Compliance <span class="score-badge">7.8</span></h2>
+
+    <p>Tokenized assets on-chain surpassed $15B+. Every tokenized asset needs security validation and — critically — <strong>regulatory-grade attestation.</strong> This is a compliance sale (larger budgets, faster procurement) enabled by SEC/MiCA frameworks requiring security attestation for tokenized securities.</p>
+    <ul>
+      <li><strong>Market:</strong> $300–600M, growing 80–120% YoY</li>
+      <li><strong>Engineering lift:</strong> 10–16 weeks for compliance-grade product</li>
+      <li><strong>Gap:</strong> No provider combines automated exploit testing with compliance reporting for RWA</li>
+    </ul>
+
+    <div class="callout">
+      <div class="callout-title green">Year 1 Target</div>
+      <p>$300K–600K</p>
+    </div>
+
+    <p><strong>Targets:</strong> Securitize, Ondo Finance, Centrifuge, BlackRock (via Securitize), regulated custodians.</p>
+  </div>
+
+  <!-- SECTION 6: Opp 5 -->
+  <div class="section" id="opp5">
+    <h2><span class="num">06</span> MEV &amp; Economic Exploit Detection <span class="score-badge">7.5</span></h2>
+
+    <p>RL agents trained to find profitable attack paths are naturally suited to economic exploits (flash loans, oracle manipulation, governance attacks). Gauntlet ($25M+ revenue) validates the category but focuses on parameter optimization, not adversarial exploit discovery.</p>
+    <ul>
+      <li><strong>Market:</strong> $300–500M in economic exploit losses annually</li>
+      <li><strong>Engineering lift:</strong> 8–14 weeks</li>
+      <li><strong>Positioning:</strong> "The adversarial complement to Gauntlet"</li>
+    </ul>
+
+    <div class="callout">
+      <div class="callout-title green">Year 1 Target</div>
+      <p>$250K–500K</p>
+    </div>
+  </div>
+
+  <!-- SECTION 7: Opp 6 -->
+  <div class="section" id="opp6">
+    <h2><span class="num">07</span> Bug Bounty Intelligence Layer <span class="score-badge">7.1</span></h2>
+
+    <p>Near-zero engineering lift. Lodestar already finds real exploits with PoCs. Start scanning and submitting through Immunefi. Best used as a <strong>demand generation / credibility engine</strong> — every major bug found = massive marketing.</p>
+    <ul>
+      <li><strong>Time to first revenue:</strong> 2–4 weeks</li>
+      <li><strong>Risk:</strong> Revenue is lumpy and unpredictable</li>
+    </ul>
+
+    <div class="callout">
+      <div class="callout-title green">Year 1 Target</div>
+      <p>$150K–400K (variable)</p>
+    </div>
+  </div>
+
+  <!-- SECTION 8: Opp 7 -->
+  <div class="section" id="opp7">
+    <h2><span class="num">08</span> AI Agent Wallet &amp; Transaction Security <span class="score-badge">6.8</span></h2>
+
+    <p>AI agents interacting with smart contracts (trading, yield, governance) create new attack surfaces. Nobody is specifically securing this intersection. Market is early but growing 200%+.</p>
+
+    <div class="callout">
+      <div class="callout-title green">Year 1 Target</div>
+      <p>$100K–300K</p>
+    </div>
+  </div>
+
+  <!-- SECTION 9: Opp 8 -->
+  <div class="section" id="opp8">
+    <h2><span class="num">09</span> Cross-Chain Bridge Security Monitoring <span class="score-badge">6.5</span></h2>
+
+    <p>Bridges are the #1 target for the largest hacks ($2.5B+ cumulative losses). High-value contracts, but higher engineering lift due to cross-chain complexity.</p>
+
+    <div class="callout">
+      <div class="callout-title green">Year 1 Target</div>
+      <p>$200K–400K</p>
+    </div>
+  </div>
+
+  <!-- Rejected Pivots -->
+  <div class="section" id="rejected">
+    <h2>Non-Obvious Pivots: Evaluated &amp; Rejected</h2>
+
+    <h3>Traditional Software / API Security <span class="verdict verdict-reject">REJECT</span></h3>
+    <p>Massive engineering lift. Smart contract tools don't transfer to HTTP/binary exploitation. Ruthlessly competitive (Snyk, HackerOne, Cobalt). 6–12 months to first revenue. Not downhill.</p>
+
+    <h3>AI Model Red-Teaming <span class="verdict verdict-monitor">MONITOR</span></h3>
+    <p>Real market ($8.65B broader), but requires fundamentally different tooling. Lakera, Robust Intelligence (Cisco), HiddenLayer well-funded. Lodestar's RL agents don't transfer to prompt injection testing.</p>
+
+    <h3>DeFi Compliance Automation <span class="verdict verdict-partial">PARTIAL</span></h3>
+    <p>Pure compliance (KYC/AML) dominated by Chainalysis, Elliptic, TRM. No edge. But <em>security attestation for compliance</em> is captured in the RWA opportunity.</p>
+
+    <h3>White-Hat Exploit Front-Running <span class="verdict verdict-reject">REJECT</span></h3>
+    <p>Technically feasible but legally/ethically complex. Requires 24/7 monitoring and sub-second execution. Better left to specialized MEV firms.</p>
+  </div>
+
+  <!-- Ranking -->
+  <div class="section" id="ranking">
+    <h2>Composite Ranking &amp; Prioritization</h2>
+
+    <p>Scoring: Revenue Speed (30%) &times; Market Size (25%) &times; Tech Fit (25%) &times; Competitive Gap (20%)</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Rank</th><th>Opportunity</th><th>Speed</th><th>Market</th><th>Tech</th><th>Gap</th><th>Score</th></tr></thead>
+        <tbody>
+          <tr class="highlight-row"><td><strong>1</strong></td><td>DeFi Insurance Underwriting</td><td>8</td><td>8</td><td>10</td><td>10</td><td><strong>9.2</strong></td></tr>
+          <tr class="highlight-row"><td><strong>2</strong></td><td>Continuous Security</td><td>9</td><td>9</td><td>9</td><td>7</td><td><strong>8.7</strong></td></tr>
+          <tr class="highlight-row"><td><strong>3</strong></td><td>L2/Appchain Certification</td><td>8</td><td>8</td><td>8</td><td>9</td><td><strong>8.3</strong></td></tr>
+          <tr><td>4</td><td>RWA Security Compliance</td><td>6</td><td>9</td><td>7</td><td>8</td><td>7.8</td></tr>
+          <tr><td>5</td><td>MEV/Economic Exploits</td><td>7</td><td>7</td><td>8</td><td>8</td><td>7.5</td></tr>
+          <tr><td>6</td><td>Bug Bounty Intelligence</td><td>10</td><td>5</td><td>10</td><td>6</td><td>7.1</td></tr>
+          <tr><td>7</td><td>AI Agent Security</td><td>5</td><td>7</td><td>8</td><td>9</td><td>6.8</td></tr>
+          <tr><td>8</td><td>Bridge Security</td><td>6</td><td>7</td><td>6</td><td>7</td><td>6.5</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>The Recommended Portfolio</h3>
+    <ul>
+      <li><strong>Primary (60%):</strong> Insurance Underwriting + Continuous Security — shared infrastructure, overlapping buyers</li>
+      <li><strong>Secondary (30%):</strong> L2 Certification — standardizable, scales through RaaS partnerships</li>
+      <li><strong>Opportunistic (10%):</strong> Bug Bounty hunting — near-zero cost, generates marketing</li>
+    </ul>
+  </div>
+
+  <!-- Playbooks -->
+  <div class="section" id="playbooks">
+    <h2>Go-to-Market Playbooks: Top 3</h2>
+
+    <h3>Playbook 1: DeFi Insurance Risk Underwriting</h3>
+
+    <h4>Week 1–2: Build the Proof</h4>
+    <p>Run Lodestar against top 5 DeFi protocols by TVL. Produce risk scores. Package as research report: <em>"The True Security Risk of the Top 5 DeFi Protocols."</em></p>
+
+    <h4>Week 3–4: Open Doors</h4>
+    <p>Send report to Nexus Mutual, Chainproof, Neptune Mutual leadership. Pitch to Aon/Marsh crypto desks. Use Coinbase relationship for warm introductions.</p>
+
+    <h4>Week 5–8: Pilot</h4>
+    <p>Sign pilot ($50K–100K). Deliver risk assessments for 10–20 protocols. Iterate scoring with underwriter feedback.</p>
+
+    <h4>Week 9–12: Scale</h4>
+    <p>Convert to annual ($200K–400K). Publish "TestMachine Insurance Risk Index" as thought leadership.</p>
+
+    <div class="callout">
+      <div class="callout-title green">Target</div>
+      <p>$300K–500K ARR by month 6</p>
+    </div>
+
+    <h3>Playbook 2: Continuous Security</h3>
+
+    <h4>Week 1–2: Quick Win</h4>
+    <p>Repackage Coinbase model as subscription. No new engineering — monthly Lodestar re-scans + reports.</p>
+
+    <h4>Week 3–6: Outreach</h4>
+    <p>Target top 20 DeFi protocols. Lead with free scan: <em>"Your last audit was X months ago. Here's what we found."</em></p>
+
+    <h4>Week 7–12: Automate</h4>
+    <p>Build lightweight dashboard. Add governance proposal scanning. Target 5–10 protocols at $15–25K/mo.</p>
+
+    <div class="callout">
+      <div class="callout-title green">Target</div>
+      <p>$500K–1M ARR by month 6–9</p>
+    </div>
+
+    <h3>Playbook 3: L2 Certification</h3>
+
+    <h4>Week 1–4: Partnership</h4>
+    <p>Approach Conduit and Caldera. Offer first 3 certifications discounted to build case studies.</p>
+
+    <h4>Week 5–8: Standardize</h4>
+    <p>Develop certification framework. Focus on bridge contracts. Create certification badge.</p>
+
+    <h4>Week 9–16: Scale Through Channel</h4>
+    <p>$50K–100K per certification through RaaS partners. Approach enterprise launches directly ($150K–300K).</p>
+
+    <div class="callout">
+      <div class="callout-title green">Target</div>
+      <p>$300K–600K ARR by month 9–12</p>
+    </div>
+  </div>
+
+  <!-- Financials -->
+  <div class="section" id="financials">
+    <h2>Financial Projections</h2>
+
+    <h3>Conservative Scenario (50th percentile)</h3>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Quarter</th><th>Insurance</th><th>Continuous</th><th>L2 Cert</th><th>Bounties</th><th>Total New ARR</th></tr></thead>
+        <tbody>
+          <tr><td>Q1</td><td>$50K</td><td>$120K</td><td>$0</td><td>$25K</td><td><strong>$195K</strong></td></tr>
+          <tr><td>Q2</td><td>$200K</td><td>$300K</td><td>$100K</td><td>$50K</td><td><strong>$650K</strong></td></tr>
+          <tr><td>Q3</td><td>$350K</td><td>$500K</td><td>$300K</td><td>$75K</td><td><strong>$1,225K</strong></td></tr>
+          <tr><td>Q4</td><td>$500K</td><td>$750K</td><td>$500K</td><td>$100K</td><td><strong>$1,850K</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p><strong>With existing Coinbase ARR ($480K): $2.3M ARR by month 12.</strong></p>
+
+    <h3>Break-Even Analysis</h3>
+    <ul>
+      <li>At $165K/mo burn &rarr; break-even at ~$2M ARR</li>
+      <li><strong>Timeline: Month 8–10</strong> in conservative scenario</li>
+      <li>Aggressive scenario (major insurer partnership + top DeFi protocols): <strong>$3.5–4M ARR</strong></li>
+    </ul>
+  </div>
+
+  <!-- Sources -->
+  <div class="section">
+    <div class="callout warning">
+      <div class="callout-title orange">Sources &amp; Methodology</div>
+      <p>This analysis was prepared for TestMachine's board and executive team. Market data reflects conditions as of February 2026. All projections are estimates based on available data and should be validated through customer discovery.</p>
+      <p>Sources: Chainalysis 2024 Crypto Crime Report; MarketsandMarkets GenAI Cybersecurity Market; Nexus Mutual on-chain data; RWA.xyz; DeFi Llama; Rekt.news; Flashbots MEV data.</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>&copy; 2026 TestMachine. Internal use only.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
+
+// Nav scroll class toggle
+const mainNav = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 20) {
+    mainNav.classList.add('scrolled');
+  } else {
+    mainNav.classList.remove('scrolled');
+  }
+});
+
+// Hamburger + mobile menu toggle
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  mobileMenu.classList.toggle('active');
+  document.body.classList.toggle('menu-open');
+});
+
+// Close mobile menu when clicking a link
+mobileMenu.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    hamburger.classList.remove('active');
+    mobileMenu.classList.remove('active');
+    document.body.classList.remove('menu-open');
+  });
+});
+
+// TOC toggle (mobile)
+const tocToggle = document.getElementById('tocToggle');
+const toc = document.getElementById('toc');
+const overlay = document.getElementById('tocOverlay');
+
+tocToggle.addEventListener('click', () => {
+  toc.classList.toggle('open');
+  overlay.classList.toggle('open');
+});
+
+overlay.addEventListener('click', () => {
+  toc.classList.remove('open');
+  overlay.classList.remove('open');
+});
+
+// Close TOC on link click (mobile)
+toc.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    if (window.innerWidth <= 1024) {
+      toc.classList.remove('open');
+      overlay.classList.remove('open');
+    }
+  });
+});
+
+// Active TOC highlighting with IntersectionObserver
+const sections = document.querySelectorAll('[id]');
+const tocLinks = document.querySelectorAll('.toc a');
+const tocObserver = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => tocObserver.observe(s));
+</script>
+
+<script src="confidential-toggle.js"></script>
+</body>
+</html>

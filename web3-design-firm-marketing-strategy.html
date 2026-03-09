@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Web3 Design Firm Marketing Strategy — TestMachine Customer Acquisition Plan — March 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+<style>
+/* ---------- Custom Properties ---------- */
+:root {
+  --bg:            oklch(0.18 0.005 260);
+  --bg-raised:     oklch(0.21 0.005 260);
+  --bg-deeper:     oklch(0.14 0.005 260);
+  --fg:            oklch(0.92 0 0);
+  --fg-muted:      oklch(0.65 0 0);
+  --fg-dim:        oklch(0.45 0 0);
+  --border:        oklch(0.32 0.005 260);
+  --border-subtle: oklch(0.25 0.005 260);
+  --accent:        oklch(0.72 0.12 192);
+  --accent-hover:  oklch(0.80 0.12 192);
+  --accent-glow:   oklch(0.72 0.12 192 / 0.1);
+  --card-bg:       oklch(0.21 0.005 260);
+  --input-bg:      oklch(0.15 0.005 260);
+  --nav-bg:        oklch(0.18 0.005 260 / 0.85);
+
+  --font-display: 'Manrope', sans-serif;
+  --font-mono:    'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --font:         var(--font-mono);
+  --font-serif:   'Source Serif 4', Charter, Georgia, serif;
+
+  --nav-h:       72px;
+  --max-w:       1120px;
+  --section-py:  clamp(80px, 10vw, 140px);
+  --gap:         24px;
+  --transition:  0.25s ease;
+
+  --callout-orange: oklch(0.75 0.15 55);
+  --callout-red:    oklch(0.65 0.2 25);
+  --callout-green:  oklch(0.65 0.15 140);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-h);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+button { border: none; background: none; cursor: pointer; font-family: var(--font-mono); color: inherit; }
+ul { list-style: none; }
+input, textarea, select { font-family: inherit; font-size: inherit; }
+
+/* ---------- Layout ---------- */
+.container {
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+/* ---------- Progress Bar ---------- */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), oklch(0.72 0.10 230));
+  z-index: 1100;
+  width: 0%;
+  transition: width 0.1s;
+}
+
+/* ---------- Navigation ---------- */
+.nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
+.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
+.toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+.toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: width var(--transition);
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: var(--fg);
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  width: 100%;
+}
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.hamburger span {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--fg);
+  transition: all 0.3s;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: rotate(45deg) translate(6px, 6px);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* ---------- Mobile Menu ---------- */
+.mobile-menu {
+  position: fixed;
+  top: var(--nav-h);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg);
+  z-index: 999;
+  display: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.mobile-menu.open {
+  display: block;
+  opacity: 1;
+}
+
+.mobile-menu-inner {
+  padding: 40px 20px;
+}
+
+.mobile-menu-link {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 24px;
+  transition: color var(--transition);
+}
+
+.mobile-menu-link:hover {
+  color: var(--accent);
+}
+
+.mobile-menu-cta {
+  margin-top: 40px;
+}
+
+/* ---------- TOC Mobile ---------- */
+.toc-toggle {
+  position: fixed;
+  top: 16px;
+  right: 20px;
+  z-index: 1001;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  color: var(--fg);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.toc-toggle:hover {
+  background: var(--border);
+}
+
+.toc-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 150;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+
+.toc-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ---------- Main Content ---------- */
+.main {
+  margin-left: 280px;
+  min-height: 100vh;
+  padding-top: var(--nav-h);
+}
+
+.main-container {
+  padding: 3rem clamp(20px, 4vw, 40px) 0;
+  max-width: var(--max-w);
+  margin: 0 auto;
+}
+
+/* ---------- Article Header ---------- */
+.article-header {
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: var(--section-py);
+  padding-bottom: var(--section-py);
+}
+
+.back-link {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+  margin-bottom: 16px;
+  display: inline-block;
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+.article-tag {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  background: var(--accent-glow);
+  padding: 4px 8px;
+  border-radius: 4px;
+  margin-right: 12px;
+}
+
+.article-date {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--fg-dim);
+}
+
+.article-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--fg);
+  margin: 24px 0 16px;
+  letter-spacing: -0.02em;
+}
+
+.article-subtitle {
+  font-size: 1.125rem;
+  color: var(--fg-muted);
+  line-height: 1.5;
+  max-width: 720px;
+}
+
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 24px;
+  margin-top: 48px;
+}
+
+.hero-stat {
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+}
+
+.hero-stat.critical {
+  border-color: var(--callout-red);
+  background: oklch(0.21 0.005 260);
+}
+
+.hero-stat.warning {
+  border-color: var(--callout-orange);
+  background: oklch(0.21 0.005 260);
+}
+
+.hero-stat.positive {
+  border-color: var(--callout-green);
+  background: oklch(0.21 0.005 260);
+}
+
+.hero-stat .value {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 4px;
+}
+
+.hero-stat .label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ---------- Article Body ---------- */
+.article-body {
+  line-height: 1.8;
+}
+
+.section {
+  margin-bottom: var(--section-py);
+}
+
+.section h2 {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 24px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.section h3 {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 40px 0 16px;
+  line-height: 1.3;
+}
+
+.section h4 {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--fg);
+  margin: 32px 0 12px;
+  line-height: 1.4;
+}
+
+.section p {
+  margin-bottom: 20px;
+  color: var(--fg-muted);
+}
+
+.section ul {
+  margin: 20px 0;
+  padding-left: 20px;
+}
+
+.section li {
+  color: var(--fg-muted);
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.section li::before {
+  content: '•';
+  color: var(--accent);
+  position: absolute;
+  left: -20px;
+}
+
+.section strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.section em {
+  color: var(--accent);
+  font-style: italic;
+}
+
+/* ---------- Highlights ---------- */
+.highlight {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+  padding: 24px;
+  margin: 32px 0;
+}
+
+.highlight.danger {
+  border-left-color: var(--callout-red);
+  background: oklch(0.19 0.02 25 / 0.3);
+}
+
+.highlight.warning {
+  border-left-color: var(--callout-orange);
+  background: oklch(0.19 0.02 55 / 0.3);
+}
+
+.highlight.success {
+  border-left-color: var(--callout-green);
+  background: oklch(0.19 0.02 140 / 0.3);
+}
+
+.highlight p {
+  margin: 0;
+}
+
+.highlight strong {
+  color: var(--fg);
+}
+
+/* ---------- Action Items ---------- */
+.action-items {
+  display: grid;
+  gap: 20px;
+  margin: 32px 0;
+}
+
+.action-item {
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.action-item h4 {
+  margin: 0 0 12px 0;
+  font-size: 1.125rem;
+}
+
+.action-item p {
+  margin: 0 0 12px 0;
+  font-size: 0.9375rem;
+}
+
+.action-item .meta {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  margin: 0;
+}
+
+/* ---------- Tables ---------- */
+.table-container {
+  overflow-x: auto;
+  margin: 32px 0;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+}
+
+.strategy-table {
+  width: 100%;
+  background: var(--card-bg);
+  border-collapse: collapse;
+}
+
+.strategy-table th {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--fg);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 16px 20px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-raised);
+}
+
+.strategy-table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--fg-muted);
+}
+
+.strategy-table tr:last-child td {
+  border-bottom: none;
+}
+
+.strategy-table .success {
+  color: var(--callout-green);
+  font-weight: 600;
+}
+
+.strategy-table .warning {
+  color: var(--callout-orange);
+  font-weight: 600;
+}
+
+.strategy-table .critical {
+  color: var(--callout-red);
+  font-weight: 600;
+}
+
+/* ---------- Stats Grid ---------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 24px;
+  margin: 32px 0;
+}
+
+.stat-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+}
+
+.stat-card .value {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.stat-card .label {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.stat-card .description {
+  font-size: 0.875rem;
+  color: var(--fg-dim);
+  margin-top: 8px;
+  line-height: 1.4;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  background: var(--bg-raised);
+  padding: var(--section-py) 0 40px;
+  border-top: 1px solid var(--border-subtle);
+  margin-left: 280px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 28px;
+}
+
+.footer-brand .nav-logo {
+  margin-bottom: 14px;
+}
+
+.footer-address {
+  font-size: 0.8125rem;
+  color: var(--fg-dim);
+  line-height: 1.5;
+}
+
+.footer-heading {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--fg);
+  margin-bottom: 16px;
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+}
+
+.footer-links a:hover {
+  color: var(--fg);
+}
+
+.footer-bottom { display: flex; align-items: center; justify-content: center; }
+
+.footer-bottom p { font-size: 0.7rem; color: var(--fg-dim); margin: 0; line-height: 1; }
+
+/* ---------- Focus & Selection ---------- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: oklch(0.72 0.12 192 / 0.25);
+}
+
+/* ---------- Responsive: Tablet (1024px) ---------- */
+@media (max-width: 1024px) {
+    .toc { transform: translateX(-100%); }
+    .main, .main-content, .main-container, .article-wrapper, .content-wrapper { margin-left: 0 !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .nav-links {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .toc.open {
+    transform: translateX(0);
+  }
+
+  .toc-toggle {
+    display: block;
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .footer {
+    margin-left: 0;
+  }
+}
+
+/* ---------- Responsive: Mobile (768px) ---------- */
+@media (max-width: 768px) {
+  .main-container {
+    padding: 0 1rem 3rem;
+  }
+
+  .article-title {
+    font-size: 2.25rem;
+  }
+
+  .hero-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-stats {
+    grid-template-columns: 1fr;
+  }
+  
+  .article-header {
+    padding-bottom: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+
+<body>
+
+  <div class="progress-bar" id="progress-bar"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="navbar">
+  <div class="progress-bar" id="progressBar"></div>
+  <div style="display:flex;align-items:center;height:100%;padding:0 24px;">
+    <a href="/"><img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);"></a>
+  </div>
+</nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-inner">
+      <a href="/" class="mobile-menu-link nav-link--active">Research</a>
+      <div class="mobile-menu-cta">
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC Toggle (mobile) -->
+  <button class="toc-toggle" id="toc-toggle" aria-label="Toggle table of contents">&#9776;</button>
+  <div class="toc-overlay" id="toc-overlay"></div>
+
+  <!-- TOC Sidebar -->
+  <nav class="toc" id="toc">
+    <h3>Contents</h3>
+    <ul>
+      <li><a href="#executive-summary">Executive Summary</a></li>
+      <li><a href="#target-audience">Target Audience Analysis</a></li>
+      <li><a href="#channel-strategy">Channel Strategy</a></li>
+      <li><a href="#tier-1-outreach">Tier 1: Direct Outreach</a></li>
+      <li><a href="#tier-2-community">Tier 2: Community & Content</a></li>
+      <li><a href="#tier-3-partnerships">Tier 3: Partnerships & Events</a></li>
+      <li><a href="#pipeline-system">Pipeline Management</a></li>
+      <li><a href="#success-metrics">Success Metrics</a></li>
+      <li><a href="#implementation-roadmap">Implementation Roadmap</a></li>
+      <li><a href="#resource-requirements">Resource Requirements</a></li>
+      <li><a href="#risk-mitigation">Risk Mitigation</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="main-container">
+
+      <!-- Article Header -->
+      <header class="article-header">
+        <a href="index.html" class="back-link">&larr; Back to Research</a>
+        <span class="article-tag">Marketing Strategy</span>
+        <span class="article-date">March 9, 2026</span>
+        <h1 class="article-title">Web3 Design Firm Marketing Strategy</h1>
+        <p class="article-subtitle">
+          Comprehensive customer acquisition plan targeting Web3 design agencies and UX/UI studios to secure 10-15 new customers within 100 days through multi-channel outreach, community engagement, and strategic partnerships.
+        </p>
+
+        <div class="hero-stats">
+          <div class="hero-stat positive">
+            <div class="value">10-15</div>
+            <div class="label">Target Customers</div>
+          </div>
+          <div class="hero-stat">
+            <div class="value">100 Days</div>
+            <div class="label">Timeline</div>
+          </div>
+          <div class="hero-stat warning">
+            <div class="value">200+</div>
+            <div class="label">Prospect Database</div>
+          </div>
+          <div class="hero-stat critical">
+            <div class="value">3 Tiers</div>
+            <div class="label">Channel Strategy</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Article Body -->
+      <div class="article-body">
+
+        <section class="section" id="executive-summary">
+          <h2>Executive Summary</h2>
+
+          <p>
+            This comprehensive marketing strategy targets Web3 design firms with a focused, multi-channel approach to acquire 10-15 customers within 100 days. The strategy prioritizes direct outreach for immediate results while building long-term community presence and strategic partnerships.
+          </p>
+
+          <div class="highlight success">
+            <strong>Core Insight:</strong> Web3 design firms face reputational risk when their clients' smart contracts get exploited post-launch. TestMachine positions as the security validation tool that design agencies can offer clients as part of their design-to-deployment process.
+          </div>
+
+          <h3>Strategic Approach</h3>
+          <ul>
+            <li><strong>Tier 1: Direct Outreach (Weeks 1-4)</strong> — LinkedIn and email campaigns for immediate demo booking</li>
+            <li><strong>Tier 2: Community & Content (Weeks 2-8)</strong> — Web3 design community infiltration and educational content</li>
+            <li><strong>Tier 3: Partnerships & Events (Weeks 4-12)</strong> — Integration partnerships and conference presence</li>
+            <li><strong>Living Pipeline System</strong> — CRM tracking with multi-touch sequences and conversion optimization</li>
+          </ul>
+
+        </section>
+
+        <section class="section" id="target-audience">
+          <h2>Target Audience Analysis</h2>
+
+          <h3>Primary Target Profile: Web3 Design Agencies</h3>
+          
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="value">10-50</div>
+              <div class="label">Team Size</div>
+              <div class="description">Medium-sized studios with crypto clients</div>
+            </div>
+            <div class="stat-card">
+              <div class="value">$50-200K</div>
+              <div class="label">Project Value</div>
+              <div class="description">DeFi protocols, NFT platforms, DAOs</div>
+            </div>
+            <div class="stat-card">
+              <div class="value">Security Risk</div>
+              <div class="label">Core Pain Point</div>
+              <div class="description">Client contract exploits damage reputation</div>
+            </div>
+          </div>
+
+          <h4>Target Personas</h4>
+          
+          <div class="action-items">
+            <div class="action-item">
+              <h4>Creative Directors</h4>
+              <p>Lead client relationships, concerned about post-launch security issues affecting agency reputation and client retention.</p>
+              <div class="meta">Primary decision maker | Budget authority | Risk-averse</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Agency Founders</h4>
+              <p>Business owners seeking competitive differentiation and value-added services to increase project margins.</p>
+              <div class="meta">Strategic thinker | Growth focused | Price-sensitive</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Technical Leads</h4>
+              <p>Bridge between design and development, responsible for handoff quality and technical validation.</p>
+              <div class="meta">Implementation focused | Detail-oriented | Quality-driven</div>
+            </div>
+          </div>
+
+          <h3>Value Proposition by Persona</h3>
+          <ul>
+            <li><strong>For Creative Directors:</strong> "Protect your agency's reputation by catching security issues before client launch"</li>
+            <li><strong>For Agency Founders:</strong> "Add security validation as a premium service to increase project value and margins"</li>
+            <li><strong>For Technical Leads:</strong> "Ensure clean handoffs with automated security checks integrated into your workflow"</li>
+          </ul>
+
+        </section>
+
+        <section class="section" id="channel-strategy">
+          <h2>Channel Strategy Overview</h2>
+
+          <p>
+            The three-tier strategy balances immediate results (Tier 1), community building (Tier 2), and long-term partnerships (Tier 3) to create a sustainable acquisition engine.
+          </p>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Tier</th>
+                  <th>Channel</th>
+                  <th>Timeline</th>
+                  <th>Expected Results</th>
+                  <th>Resource Intensity</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Tier 1</strong></td>
+                  <td>LinkedIn + Cold Email</td>
+                  <td>Weeks 1-4</td>
+                  <td class="success">15+ demos, 3-5 trials</td>
+                  <td class="warning">High</td>
+                </tr>
+                <tr>
+                  <td><strong>Tier 2</strong></td>
+                  <td>Community + Content</td>
+                  <td>Weeks 2-8</td>
+                  <td class="success">Brand awareness, referrals</td>
+                  <td class="success">Medium</td>
+                </tr>
+                <tr>
+                  <td><strong>Tier 3</strong></td>
+                  <td>Partnerships + Events</td>
+                  <td>Weeks 4-12</td>
+                  <td class="success">Strategic distribution</td>
+                  <td class="critical">High</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </section>
+
+        <section class="section" id="tier-1-outreach">
+          <h2>Tier 1: Direct Outreach Strategy</h2>
+
+          <p>
+            Direct outreach forms the foundation of the strategy, designed to book demos within the first 30 days through targeted LinkedIn and email campaigns.
+          </p>
+
+          <h3>1. LinkedIn Outreach Campaign</h3>
+          
+          <div class="highlight warning">
+            <strong>Target Message:</strong> "Your [client] just launched—how confident are you their smart contracts won't get exploited next week?"
+          </div>
+
+          <h4>LinkedIn Campaign Structure</h4>
+          <ul>
+            <li><strong>Target Audience:</strong> Creative Directors, Founders at Web3 design agencies</li>
+            <li><strong>Daily Volume:</strong> 20 connection requests + messages per day</li>
+            <li><strong>Message Sequence:</strong> 3-touch sequence over 2 weeks</li>
+            <li><strong>Goal:</strong> 5 demos booked per week</li>
+          </ul>
+
+          <div class="action-items">
+            <div class="action-item">
+              <h4>Message 1: Connection Request</h4>
+              <p>"Hi [Name], I help Web3 design agencies protect their reputation by catching smart contract security issues before client launches. Would love to connect and share some insights on what we're seeing in the space."</p>
+              <div class="meta">Day 1 | Personalized | Short hook</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Message 2: Value Share (Day 7)</h4>
+              <p>"[Name], just saw another DeFi protocol get exploited this week - $2M drained. As a design agency, how do you handle the security side of client launches? We've helped agencies add security validation as a value-added service."</p>
+              <div class="meta">Day 7 | Industry insight | Soft pitch</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Message 3: Demo Offer (Day 14)</h4>
+              <p>"[Name], quick question: would a 15-minute demo showing how [Similar Agency] caught a critical bug before their client's launch be valuable? Happy to share the case study."</p>
+              <div class="meta">Day 14 | Social proof | Clear CTA</div>
+            </div>
+          </div>
+
+          <h3>2. Cold Email Campaign</h3>
+          
+          <div class="highlight">
+            <strong>Subject Line:</strong> "The security tool your crypto clients wish you offered"
+          </div>
+
+          <h4>Email Campaign Structure</h4>
+          <ul>
+            <li><strong>Database Size:</strong> 200+ Web3 design firms</li>
+            <li><strong>Daily Volume:</strong> 50 emails per day</li>
+            <li><strong>Sequence Length:</strong> 5 emails over 3 weeks</li>
+            <li><strong>Personalization:</strong> Agency name, recent client work, specific security angle</li>
+          </ul>
+
+          <h4>Prospect Database Sources</h4>
+          <ul>
+            <li>Clutch.co Web3 design category</li>
+            <li>Dribbble crypto portfolios</li>
+            <li>Web3 job board agency listings</li>
+            <li>Conference speaker directories</li>
+            <li>GitHub organization maintainers</li>
+          </ul>
+
+        </section>
+
+        <section class="section" id="tier-2-community">
+          <h2>Tier 2: Community & Content Strategy</h2>
+
+          <p>
+            Building presence in Web3 design communities creates trust and generates referrals while positioning TestMachine as a thought leader in design-security intersection.
+          </p>
+
+          <h3>3. Web3 Design Community Infiltration</h3>
+          
+          <div class="action-items">
+            <div class="action-item">
+              <h4>Target Communities</h4>
+              <p>Web3 Design Discord, Figma Web3 groups, Designer DAO, Crypto Design System communities, DeFi designers Slack groups.</p>
+              <div class="meta">Organic participation | Value-first approach | No direct pitching</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Content Strategy</h4>
+              <p>Share security horror stories with solutions, design-security checklists, case studies of prevented exploits.</p>
+              <div class="meta">Educational focus | Community-driven | Trust building</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Value-Add Contributions</h4>
+              <p>"Security checklist for Web3 designers" resource, template for security requirements in design briefs.</p>
+              <div class="meta">Free resources | Community benefit | Brand building</div>
+            </div>
+          </div>
+
+          <h3>4. Case Study Content Marketing</h3>
+          
+          <div class="highlight success">
+            <strong>Content Format:</strong> "How [Design Agency] Saved [Client] $2M by Catching This Bug"
+          </div>
+
+          <h4>Content Distribution Strategy</h4>
+          <ul>
+            <li><strong>Medium:</strong> Long-form technical case studies</li>
+            <li><strong>Mirror:</strong> Web3-native publishing platform</li>
+            <li><strong>Agency Newsletters:</strong> Co-branded content partnerships</li>
+            <li><strong>LinkedIn Articles:</strong> Thought leadership pieces</li>
+            <li><strong>Design System Docs:</strong> Security integration guides</li>
+          </ul>
+
+          <h4>Case Study Template</h4>
+          <ul>
+            <li><strong>The Setup:</strong> Agency client, project scope, timeline pressure</li>
+            <li><strong>The Discovery:</strong> Security issue found during design review</li>
+            <li><strong>The Impact:</strong> Potential loss prevented, client relationship strengthened</li>
+            <li><strong>The Process:</strong> How TestMachine integrated into their workflow</li>
+            <li><strong>The Results:</strong> Quantified value, ongoing partnership</li>
+          </ul>
+
+        </section>
+
+        <section class="section" id="tier-3-partnerships">
+          <h2>Tier 3: Partnerships & Events Strategy</h2>
+
+          <p>
+            Strategic partnerships and event presence create scalable distribution channels and establish TestMachine as an essential tool in the Web3 design ecosystem.
+          </p>
+
+          <h3>5. Integration Partnerships</h3>
+          
+          <div class="action-items">
+            <div class="action-item">
+              <h4>Figma Plugin Ecosystem</h4>
+              <p>Develop "Security Audit" widget for design handoffs, integrating security checkpoints into the design-to-development workflow.</p>
+              <div class="meta">Technical integration | Workflow enhancement | Daily usage</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Design Tool Partnerships</h4>
+              <p>Partner with Framer, Webflow, and other Web3-friendly design tools to add security value to their offerings.</p>
+              <div class="meta">Revenue sharing | Co-marketing | Platform integration</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Design System Integrations</h4>
+              <p>Create security components for popular Web3 design systems (Coinbase, Uniswap, Aave design systems).</p>
+              <div class="meta">Open source contribution | Community value | Brand exposure</div>
+            </div>
+          </div>
+
+          <h3>6. Web3 Conference Circuit</h3>
+          
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Event</th>
+                  <th>Date</th>
+                  <th>Strategy</th>
+                  <th>Expected Leads</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>ETHDenver</td>
+                  <td>February 2026</td>
+                  <td>Demo booth + speaking</td>
+                  <td class="success">50+ qualified</td>
+                </tr>
+                <tr>
+                  <td>Consensus</td>
+                  <td>May 2026</td>
+                  <td>Sponsorship + workshop</td>
+                  <td class="success">75+ qualified</td>
+                </tr>
+                <tr>
+                  <td>NFT.NYC</td>
+                  <td>April 2026</td>
+                  <td>Design track speaking</td>
+                  <td class="success">30+ qualified</td>
+                </tr>
+                <tr>
+                  <td>DevCon</td>
+                  <td>October 2026</td>
+                  <td>Technical workshop</td>
+                  <td class="success">100+ qualified</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>Conference Strategy Components</h4>
+          <ul>
+            <li><strong>Demo Booth:</strong> Live hack simulations on real contracts</li>
+            <li><strong>Speaking Opportunities:</strong> "Security-First Design" presentations</li>
+            <li><strong>Workshop Content:</strong> Hands-on security integration workshops</li>
+            <li><strong>Giveaway Campaign:</strong> Free security audits for conference attendees</li>
+            <li><strong>Networking Events:</strong> Design-focused meetups and dinners</li>
+          </ul>
+
+        </section>
+
+        <section class="section" id="pipeline-system">
+          <h2>Living Pipeline Management System</h2>
+
+          <p>
+            A comprehensive CRM and lead nurturing system ensures no prospect falls through the cracks while optimizing conversion at each stage.
+          </p>
+
+          <h3>CRM Setup & Tracking</h3>
+          
+          <div class="action-items">
+            <div class="action-item">
+              <h4>HubSpot Pipeline Configuration</h4>
+              <p>Lead source tracking by channel, demo conversion rates, trial-to-paid progression, agency size and deal value tracking.</p>
+              <div class="meta">Real-time analytics | Conversion optimization | ROI measurement</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Lead Scoring System</h4>
+              <p>Points for agency size (10+ employees), Web3 focus (primary vertical), budget authority (decision maker contact), timeline urgency.</p>
+              <div class="meta">Qualification automation | Sales prioritization | Resource allocation</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Pipeline Stages</h4>
+              <p>Cold → Contacted → Responded → Demo Scheduled → Demo Completed → Trial Started → Contract Negotiation → Closed Won</p>
+              <div class="meta">Clear progression | Conversion tracking | Bottleneck identification</div>
+            </div>
+          </div>
+
+          <h3>Multi-Touch Nurture Sequences</h3>
+          
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Sequence Type</th>
+                  <th>Trigger</th>
+                  <th>Touch Points</th>
+                  <th>Timeline</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Demo No-Show</td>
+                  <td>Missed demo</td>
+                  <td>5 emails</td>
+                  <td>2 weeks</td>
+                </tr>
+                <tr>
+                  <td>Trial Non-Starter</td>
+                  <td>Signed up, no usage</td>
+                  <td>7 touchpoints</td>
+                  <td>3 weeks</td>
+                </tr>
+                <tr>
+                  <td>LinkedIn Follow-up</td>
+                  <td>Connection made</td>
+                  <td>3 messages</td>
+                  <td>2 weeks</td>
+                </tr>
+                <tr>
+                  <td>Retargeting Sequence</td>
+                  <td>Website visit</td>
+                  <td>Display ads</td>
+                  <td>30 days</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </section>
+
+        <section class="section" id="success-metrics">
+          <h2>Success Metrics & Milestones</h2>
+
+          <p>
+            Clear success metrics and milestone checkpoints ensure the strategy stays on track toward the 10-15 customer goal within 100 days.
+          </p>
+
+          <h3>30-Day Checkpoint</h3>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="value">50+</div>
+              <div class="label">Qualified Leads</div>
+              <div class="description">Generated across all channels</div>
+            </div>
+            <div class="stat-card">
+              <div class="value">15+</div>
+              <div class="label">Demos Completed</div>
+              <div class="description">Direct outreach conversions</div>
+            </div>
+            <div class="stat-card">
+              <div class="value">3-5</div>
+              <div class="label">Trials Started</div>
+              <div class="description">Qualified prospects testing</div>
+            </div>
+          </div>
+
+          <h3>60-Day Checkpoint</h3>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="value">100+</div>
+              <div class="label">Pipeline Leads</div>
+              <div class="description">Active prospects in CRM</div>
+            </div>
+            <div class="stat-card">
+              <div class="value">30+</div>
+              <div class="label">Demos Completed</div>
+              <div class="description">Cumulative demo count</div>
+            </div>
+            <div class="stat-card">
+              <div class="value">8-10</div>
+              <div class="label">Active Trials</div>
+              <div class="description">Prospects in evaluation</div>
+            </div>
+            <div class="stat-card">
+              <div class="value">2-3</div>
+              <div class="label">Paying Customers</div>
+              <div class="description">Early conversions</div>
+            </div>
+          </div>
+
+          <h3>100-Day Target Achievement</h3>
+          <div class="highlight success">
+            <strong>Primary Goal:</strong> 10-15 paying customers with $50-150K ARR pipeline and established presence in Web3 design community.
+          </div>
+
+          <h4>Success Indicators</h4>
+          <ul>
+            <li><strong>Customer Acquisition:</strong> 10-15 paying customers achieved</li>
+            <li><strong>Pipeline Value:</strong> $50-150K Annual Recurring Revenue</li>
+            <li><strong>Community Presence:</strong> Recognized voice in 3+ Web3 design communities</li>
+            <li><strong>Partnership Pipeline:</strong> 2+ integration partnerships in progress</li>
+            <li><strong>Content Traction:</strong> 5+ published case studies with measurable engagement</li>
+          </ul>
+
+        </section>
+
+        <section class="section" id="implementation-roadmap">
+          <h2>Implementation Roadmap</h2>
+
+          <p>
+            A detailed week-by-week implementation plan ensures rapid execution and early momentum building toward the 100-day goal.
+          </p>
+
+          <h3>Week 1-2: Foundation & Launch</h3>
+          <div class="action-items">
+            <div class="action-item">
+              <h4>Week 1 Priorities</h4>
+              <p>Build Web3 design firm prospect database (200+ companies), create LinkedIn outreach templates, set up HubSpot pipeline tracking, draft case study framework.</p>
+              <div class="meta">Foundation building | System setup | Content preparation</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Week 2 Execution</h4>
+              <p>Launch LinkedIn outreach (20 messages/day), begin cold email campaign (50 emails/day), join Web3 design communities, book first 5 demos.</p>
+              <div class="meta">Campaign launch | Community entry | Demo pipeline start</div>
+            </div>
+          </div>
+
+          <h3>Week 3-4: Optimization & Expansion</h3>
+          <div class="action-items">
+            <div class="action-item">
+              <h4>Message Optimization</h4>
+              <p>A/B test subject lines and messaging, optimize based on response rates, refine targeting criteria based on early feedback.</p>
+              <div class="meta">Performance optimization | Data-driven refinement</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Content Creation</h4>
+              <p>Publish first case study, create security checklist resource, develop demo materials and presentation deck.</p>
+              <div class="meta">Value creation | Trust building | Sales enablement</div>
+            </div>
+          </div>
+
+          <h3>Week 5-8: Scale & Community Building</h3>
+          <div class="action-items">
+            <div class="action-item">
+              <h4>Community Engagement</h4>
+              <p>Regular valuable contributions to design communities, co-create content with community leaders, establish thought leadership presence.</p>
+              <div class="meta">Relationship building | Brand establishment | Referral generation</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Partnership Outreach</h4>
+              <p>Begin conversations with Figma plugin ecosystem, reach out to design tool partnerships, explore conference speaking opportunities.</p>
+              <div class="meta">Strategic relationship building | Distribution expansion</div>
+            </div>
+          </div>
+
+          <h3>Week 9-12: Partnerships & Events</h3>
+          <div class="action-items">
+            <div class="action-item">
+              <h4>Conference Preparation</h4>
+              <p>Secure speaking slots, plan demo booth presence, develop workshop content, create conference-specific marketing materials.</p>
+              <div class="meta">Event marketing | Thought leadership | Mass exposure</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Integration Development</h4>
+              <p>Develop Figma security widget, create design system components, establish technical partnerships.</p>
+              <div class="meta">Product integration | Workflow embedding | Sticky partnerships</div>
+            </div>
+          </div>
+
+        </section>
+
+        <section class="section" id="resource-requirements">
+          <h2>Resource Requirements</h2>
+
+          <p>
+            Detailed resource allocation ensures successful execution while maintaining focus on the highest-ROI activities.
+          </p>
+
+          <h3>Time Investment</h3>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="value">20 hrs/week</div>
+              <div class="label">Outreach & Follow-up</div>
+              <div class="description">LinkedIn, email, demo calls</div>
+            </div>
+            <div class="stat-card">
+              <div class="value">10 hrs/week</div>
+              <div class="label">Community Engagement</div>
+              <div class="description">Discord, content creation</div>
+            </div>
+            <div class="stat-card">
+              <div class="value">8 hrs/week</div>
+              <div class="label">Partnership Development</div>
+              <div class="description">Integration talks, events</div>
+            </div>
+            <div class="stat-card">
+              <div class="value">5 hrs/week</div>
+              <div class="label">Analytics & Optimization</div>
+              <div class="description">Performance tracking, iteration</div>
+            </div>
+          </div>
+
+          <h3>Budget Allocation</h3>
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Monthly Cost</th>
+                  <th>100-Day Total</th>
+                  <th>Purpose</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>LinkedIn Sales Navigator</td>
+                  <td>$80</td>
+                  <td>$270</td>
+                  <td>Advanced targeting & messaging</td>
+                </tr>
+                <tr>
+                  <td>Email Tools (Outreach, ZoomInfo)</td>
+                  <td>$300</td>
+                  <td>$1,000</td>
+                  <td>Email automation & data</td>
+                </tr>
+                <tr>
+                  <td>Conference Tickets & Travel</td>
+                  <td>$1,500</td>
+                  <td>$5,000</td>
+                  <td>Event presence & networking</td>
+                </tr>
+                <tr>
+                  <td>Content Creation Tools</td>
+                  <td>$200</td>
+                  <td>$670</td>
+                  <td>Design, video, presentation</td>
+                </tr>
+                <tr>
+                  <td>Advertising (Retargeting)</td>
+                  <td>$500</td>
+                  <td>$1,670</td>
+                  <td>LinkedIn, Google display</td>
+                </tr>
+                <tr class="success">
+                  <td><strong>Total</strong></td>
+                  <td class="success"><strong>$2,580</strong></td>
+                  <td class="success"><strong>$8,610</strong></td>
+                  <td><strong>100-day investment</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Technology Stack</h3>
+          <ul>
+            <li><strong>CRM:</strong> HubSpot (pipeline management, lead scoring, automation)</li>
+            <li><strong>Outreach:</strong> Outreach.io or SalesLoft (email sequences)</li>
+            <li><strong>Data:</strong> ZoomInfo, Apollo (prospect database)</li>
+            <li><strong>Social:</strong> LinkedIn Sales Navigator (advanced targeting)</li>
+            <li><strong>Analytics:</strong> Google Analytics, HubSpot reporting</li>
+            <li><strong>Content:</strong> Figma, Loom, Canva (creation tools)</li>
+          </ul>
+
+        </section>
+
+        <section class="section" id="risk-mitigation">
+          <h2>Risk Mitigation & Contingencies</h2>
+
+          <p>
+            Identifying potential roadblocks and preparing contingency plans ensures the strategy remains resilient and adaptable.
+          </p>
+
+          <h3>Primary Risk Factors</h3>
+          <div class="action-items">
+            <div class="action-item">
+              <h4>Low Response Rates</h4>
+              <p>Initial outreach generates <5% response rate, making volume requirements unsustainable.</p>
+              <div class="meta">Mitigation: Message testing, offer optimization, referral program launch</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Demo-to-Trial Conversion Issues</h4>
+              <p>Strong demo interest but low trial signup rates suggest product-market fit concerns.</p>
+              <div class="meta">Mitigation: Demo format optimization, objection handling, trial barrier reduction</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Community Access Barriers</h4>
+              <p>Web3 design communities prove difficult to access or engage meaningfully.</p>
+              <div class="meta">Mitigation: Influencer partnerships, content collaboration, paid community access</div>
+            </div>
+
+            <div class="action-item">
+              <h4>Resource Constraints</h4>
+              <p>Time or budget limitations prevent full strategy execution across all channels.</p>
+              <div class="meta">Mitigation: Channel prioritization, automation tools, freelancer support</div>
+            </div>
+          </div>
+
+          <h3>Contingency Plans</h3>
+          
+          <div class="highlight warning">
+            <strong>30-Day Performance Review:</strong> If <20 qualified leads generated, pivot to referral program and partnership acceleration.
+          </div>
+
+          <h4>Plan B: Referral-First Strategy</h4>
+          <ul>
+            <li>Launch customer referral program with significant incentives</li>
+            <li>Partner with security-focused Web3 consultants for joint offerings</li>
+            <li>Accelerate integration partnerships for faster distribution</li>
+            <li>Focus on case study amplification through existing customer networks</li>
+          </ul>
+
+          <h4>Plan C: Event-Focused Pivot</h4>
+          <ul>
+            <li>Concentrate resources on 1-2 major conferences</li>
+            <li>Sponsor design-focused meetups in major crypto cities</li>
+            <li>Host virtual events specifically for Web3 design agencies</li>
+            <li>Create workshop series with immediate value delivery</li>
+          </ul>
+
+          <div class="highlight success">
+            <strong>Success Indicator:</strong> If achieving >30% demo-to-trial conversion rate after 60 days, double down on working channels and expand similar targeting.
+          </div>
+
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo">
+            <img src="assets/logo-icon.png" alt="TestMachine" style="height:32px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);">
+            <span class="nav-logo-text">TestMachine</span>
+          </div>
+          <div class="footer-address">
+            Research & Strategy Division<br>
+            Ann Arbor, Michigan
+          </div>
+        </div>
+        
+        <div>
+          <h4 class="footer-heading">Research</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">All Reports</a></li>
+            <li><a href="#strategy">Strategy</a></li>
+            <li><a href="#market">Market Analysis</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="footer-heading">Company</h4>
+          <ul class="footer-links">
+            <li><a href="https://testmachine.ai">TestMachine</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="footer-heading">Connect</h4>
+          <ul class="footer-links">
+            <li><a href="https://twitter.com/testmachine_ai">Twitter</a></li>
+            <li><a href="https://linkedin.com/company/testmachine">LinkedIn</a></li>
+            <li><a href="#newsletter">Newsletter</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>&copy; 2026 TestMachine. Research & analysis for internal strategy development.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Progress bar
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('progress-bar').style.width = scrolled + '%';
+    });
+
+    // TOC active state
+    const tocLinks = document.querySelectorAll('.toc a');
+    const sections = document.querySelectorAll('.section');
+
+    function updateTOC() {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        if (window.scrollY >= sectionTop - 200) {
+          current = section.getAttribute('id');
+        }
+      });
+
+      tocLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + current) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateTOC);
+    updateTOC();
+
+    // Mobile TOC toggle
+    const tocToggle = document.getElementById('toc-toggle');
+    const toc = document.getElementById('toc');
+    const tocOverlay = document.getElementById('toc-overlay');
+
+    function toggleTOC() {
+      toc.classList.toggle('open');
+      tocOverlay.classList.toggle('active');
+      document.body.classList.toggle('menu-open');
+    }
+
+    tocToggle?.addEventListener('click', toggleTOC);
+    tocOverlay?.addEventListener('click', toggleTOC);
+  </script>
+
+</body>
+</html>

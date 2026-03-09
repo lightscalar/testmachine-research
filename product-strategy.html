@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product &amp; Growth Initiatives — TestMachine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+<style>
+/* ---------- Custom Properties ---------- */
+:root {
+  --bg:            oklch(0.18 0.005 260);
+  --bg-raised:     oklch(0.21 0.005 260);
+  --bg-deeper:     oklch(0.14 0.005 260);
+  --fg:            oklch(0.92 0 0);
+  --fg-muted:      oklch(0.65 0 0);
+  --fg-dim:        oklch(0.45 0 0);
+  --border:        oklch(0.32 0.005 260);
+  --border-subtle: oklch(0.25 0.005 260);
+  --accent:        oklch(0.72 0.12 192);
+  --accent-hover:  oklch(0.80 0.12 192);
+  --accent-glow:   oklch(0.72 0.12 192 / 0.1);
+  --card-bg:       oklch(0.21 0.005 260);
+  --input-bg:      oklch(0.15 0.005 260);
+  --nav-bg:        oklch(0.18 0.005 260 / 0.85);
+
+  --font-display: 'Manrope', sans-serif;
+  --font-mono:    'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --font:         var(--font-mono);
+  --font-serif:   'Source Serif 4', Charter, Georgia, serif;
+
+  --nav-h:       72px;
+  --max-w:       1120px;
+  --section-py:  clamp(80px, 10vw, 140px);
+  --gap:         24px;
+  --transition:  0.25s ease;
+
+  --callout-orange: oklch(0.75 0.15 55);
+  --callout-red:    oklch(0.65 0.2 25);
+  --callout-green:  oklch(0.65 0.15 140);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); -webkit-text-size-adjust: 100%; }
+body { font-family: var(--font); font-size: 17px; line-height: 1.7; color: var(--fg); background: var(--bg); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; }
+body.menu-open { overflow: hidden; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; color: inherit; }
+ul { list-style: none; }
+input, textarea, select { font-family: inherit; font-size: inherit; }
+
+/* ---------- Layout ---------- */
+.container { width: 100%; max-width: var(--max-w); margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px); }
+
+/* ---------- Progress Bar ---------- */
+.progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--accent), oklch(0.72 0.10 230)); z-index: 1100; width: 0%; transition: width 0.1s; }
+
+/* ---------- Navigation ---------- */
+.nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
+.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
+.toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+.toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
+
+.nav-container { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: var(--max-w); margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px); }
+.nav-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.nav-logo-text { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-link { font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 500; color: var(--fg-muted); transition: color var(--transition); position: relative; }
+.nav-link::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: var(--accent); transition: width var(--transition); }
+.nav-link:hover, .nav-link.nav-link--active { color: var(--fg); }
+.nav-link:hover::after, .nav-link.nav-link--active::after { width: 100%; }
+.nav-link.nav-link--active { color: var(--accent); }
+
+/* ---------- Buttons ---------- */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-family: var(--font-mono); font-weight: 600; font-size: 0.8125rem; letter-spacing: 0.02em; padding: 14px 32px; border-radius: 0; transition: all var(--transition); white-space: nowrap; }
+.btn:hover { transform: scale(1.02); }
+.btn:active { transform: scale(0.98); }
+.btn--primary { background: var(--accent); color: oklch(0.12 0 0); border: 1px solid var(--accent); font-weight: 700; }
+.btn--primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn--nav { padding: 10px 22px; font-size: 0.75rem; }
+
+/* ---------- Hamburger ---------- */
+.hamburger { display: none; width: 40px; height: 40px; flex-direction: column; align-items: center; justify-content: center; gap: 5px; z-index: 1001; }
+.hamburger span { display: block; width: 20px; height: 1.5px; background: var(--fg); transition: all var(--transition); transform-origin: center; }
+.hamburger.active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* ---------- Mobile Menu ---------- */
+.mobile-menu { position: fixed; inset: 0; z-index: 999; background: var(--bg); display: flex; align-items: center; justify-content: center; opacity: 0; visibility: hidden; transition: all 0.3s ease; }
+.mobile-menu.active { opacity: 1; visibility: visible; }
+.mobile-menu-inner { text-align: center; }
+.mobile-menu-link { display: block; font-family: var(--font-display); font-size: clamp(1.5rem, 5vw, 2.25rem); font-weight: 600; color: var(--fg-muted); padding: 14px 0; transition: color var(--transition); }
+.mobile-menu-link:hover { color: var(--fg); }
+.mobile-menu-link.nav-link--active { color: var(--accent); }
+.mobile-menu-cta { margin-top: 40px; padding: 0 40px; }
+
+/* ---------- TOC Sidebar ---------- */
+.toc-toggle { display: none; position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200; width: 48px; height: 48px; border-radius: 0; background: var(--accent); color: oklch(0.12 0 0); border: none; font-size: 1.2rem; font-family: var(--font-mono); font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3); }
+.toc-overlay { display: none; position: fixed; inset: 0; background: oklch(0 0 0 / 0.6); z-index: 109; }
+.toc-overlay.open { display: block; }
+
+/* ---------- Main Content ---------- */
+.main { margin-left: 280px; min-height: 100vh; }
+.main-container { max-width: 900px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px) 4rem; }
+
+/* ---------- Article Header ---------- */
+.article-header { padding-top: calc(var(--nav-h) + 32px); padding-bottom: 2rem; border-bottom: 1px solid var(--border-subtle); margin-bottom: 3rem; }
+.back-link { display: inline-block; font-family: var(--font-mono); font-size: 0.8125rem; color: var(--fg-muted); margin-bottom: 1.5rem; transition: color var(--transition); }
+.back-link:hover { color: var(--accent); }
+.article-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fg-muted); padding: 3px 10px; border: 1px solid var(--border); border-radius: 0; margin-bottom: 1rem; }
+.article-date { display: block; font-family: var(--font-mono); font-size: 0.75rem; color: var(--fg-dim); margin-bottom: 1rem; }
+.article-title { font-family: var(--font-display); font-size: clamp(1.875rem, 4vw, 2.75rem); font-weight: 800; line-height: 1.12; letter-spacing: -0.025em; color: var(--fg); margin-bottom: 1rem; }
+.article-subtitle { font-family: var(--font-serif); font-size: 1.125rem; color: var(--fg-muted); line-height: 1.6; }
+
+/* ---------- Hero Stats ---------- */
+.hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+.hero-stat { border: 1px solid var(--border-subtle); border-radius: 0; padding: 1.2rem; text-align: center; transition: border-color var(--transition), transform var(--transition); }
+.hero-stat:hover { border-color: var(--border); transform: translateY(-2px); }
+.hero-stat .value { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; color: var(--accent); margin-bottom: 0.3rem; }
+.hero-stat .label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.hero-stat.critical .value { color: var(--callout-red); }
+.hero-stat.warning .value { color: var(--callout-orange); }
+.hero-stat.positive .value { color: var(--callout-green); }
+
+/* ---------- Article Body ---------- */
+.article-body { font-family: var(--font-serif); }
+.article-body .section { margin: 3rem 0; padding: 0 0 2rem; border-bottom: 1px solid var(--border-subtle); }
+.article-body .section:last-child { border-bottom: none; }
+.article-body p { font-family: var(--font-serif); font-size: 1.1875rem; line-height: 1.9; color: var(--fg-muted); margin-bottom: 1.5em; }
+.article-body h2 { font-family: var(--font-display); font-size: clamp(1.25rem, 2vw, 1.5rem); font-weight: 700; color: var(--fg); margin-top: 2.5em; margin-bottom: 1rem; line-height: 1.25; }
+.article-body h3 { font-family: var(--font-display); font-size: 1.125rem; font-weight: 700; color: var(--fg); margin-top: 2em; margin-bottom: 0.75rem; line-height: 1.3; }
+.article-body h4 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--fg); margin-top: 1.5em; margin-bottom: 0.5rem; }
+.article-body strong { color: var(--fg); font-weight: 600; }
+.article-body ul, .article-body ol { margin-bottom: 1.5em; padding-left: 1.5em; }
+.article-body ul { list-style: disc; }
+.article-body ol { list-style: decimal; }
+.article-body li { font-family: var(--font-serif); font-size: 1.1875rem; line-height: 1.9; color: var(--fg-muted); margin-bottom: 0.5rem; }
+.article-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; transition: color var(--transition); }
+.article-body a:hover { color: var(--accent-hover); }
+
+/* ---------- Callout / Highlight Boxes ---------- */
+.highlight { background: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: 0; border-left: 3px solid var(--accent); padding: 1.5rem; margin: 2rem 0; }
+.highlight strong:first-child { display: block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 0.5rem; }
+.highlight.warning { border-left-color: var(--callout-orange); }
+.highlight.warning strong:first-child { color: var(--callout-orange); }
+.highlight.danger { border-left-color: var(--callout-red); }
+.highlight.danger strong:first-child { color: var(--callout-red); }
+.highlight.success { border-left-color: var(--callout-green); }
+.highlight.success strong:first-child { color: var(--callout-green); }
+
+/* ---------- Code ---------- */
+code { background: var(--bg-deeper); padding: 0.15rem 0.4rem; border-radius: 0; font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); }
+pre { background: var(--bg-deeper); border: 1px solid var(--border); border-radius: 0; padding: 1.2rem; overflow-x: auto; margin: 1.5rem 0; }
+pre code { background: none; padding: 0; color: var(--fg); }
+
+/* ---------- Tables ---------- */
+.table-container { overflow-x: auto; margin: 2rem 0; border: 1px solid var(--border); border-radius: 0; }
+table { width: 100%; border-collapse: collapse; }
+th { background: var(--bg-deeper); font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); padding: 0.7rem 1rem; text-align: left; }
+td { padding: 0.7rem 1rem; border-top: 1px solid var(--border-subtle); font-family: var(--font-serif); font-size: 0.9375rem; color: var(--fg-muted); }
+tbody tr:hover td { background: var(--accent-glow); }
+.strategy-table .critical { color: var(--callout-red); font-weight: 600; }
+.strategy-table .warning { color: var(--callout-orange); font-weight: 600; }
+.strategy-table .success { color: var(--callout-green); font-weight: 600; }
+.strategy-table .muted { color: var(--fg-dim); }
+
+/* ---------- Action Items ---------- */
+.action-items { display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 2rem 0; }
+.action-item { background: var(--bg-raised); border: 1px solid var(--border-subtle); border-left: 4px solid var(--accent); padding: 1.2rem; }
+.action-item.high { border-left-color: var(--callout-orange); }
+.action-item.critical-priority { border-left-color: var(--callout-red); }
+.action-item h4 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--fg); margin-bottom: 0.5rem; }
+.action-item p { font-family: var(--font-serif); font-size: 0.95rem; line-height: 1.6; color: var(--fg-muted); margin: 0; }
+.action-item .meta { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-dim); margin-top: 0.5rem; }
+
+/* ---------- Footer ---------- */
+.footer { padding: 20px 0; background: var(--bg-raised); border-top: 1px solid var(--border-subtle); margin-left: 280px; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 28px; }
+.footer-brand .nav-logo { margin-bottom: 14px; }
+.footer-address { font-size: 0.8125rem; color: var(--fg-dim); line-height: 1.5; }
+.footer-heading { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg); margin-bottom: 16px; }
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 10px; }
+.footer-links a { font-size: 0.8125rem; color: var(--fg-muted); transition: color var(--transition); }
+.footer-links a:hover { color: var(--fg); }
+.footer-bottom { display: flex; align-items: center; justify-content: center; }
+.footer-bottom p { font-size: 0.7rem; color: var(--fg-dim); margin: 0; line-height: 1; }
+
+/* ---------- Focus & Selection ---------- */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+::selection { background: oklch(0.72 0.12 192 / 0.25); }
+
+/* ---------- Responsive: Tablet (1024px) ---------- */
+@media (max-width: 1024px) {
+  .toc { transform: translateX(-100%); }
+  .main, .main-content, .main-container, .article-wrapper, .content-wrapper { margin-left: 0 !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .toc.open { transform: translateX(0); }
+  .toc-toggle { display: block; }
+  .main { margin-left: 0; }
+  .footer { margin-left: 0; }
+}
+
+/* ---------- Responsive: Mobile (768px) ---------- */
+@media (max-width: 768px) {
+  .main-container { padding: 0 1rem 3rem; }
+  .article-title { font-size: clamp(1.5rem, 6vw, 2rem); }
+  .hero-stats { grid-template-columns: 1fr; }
+  .article-header { padding-top: calc(var(--nav-h) + 20px); }
+  .action-items { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-bottom { flex-direction: column; gap: 16px; align-items: flex-start; }
+  .hamburger { width: 44px; height: 44px; }
+}
+
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+
+<body>
+
+  <div class="progress-bar" id="progress-bar"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="navbar">
+  <div style="display:flex;align-items:center;height:100%;padding:0 24px;">
+    <a href="/" class="nav-logo" style="display:flex;align-items:center;gap:10px;text-decoration:none;"><img src="assets/logo-icon-white.png" alt="" style="height:42px;width:auto;filter:brightness(0) invert(70%) sepia(40%) saturate(500%) hue-rotate(130deg) brightness(1.05);"><span style="font-family:var(--font-display);font-size:1.35rem;font-weight:700;letter-spacing:-0.02em;color:var(--accent);">TestMachine</span></a>
+  </div>
+</nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-inner">
+      <a href="/" class="mobile-menu-link nav-link--active">Research</a>
+      <div class="mobile-menu-cta"></div>
+    </div>
+  </div>
+
+  <!-- TOC Toggle (mobile) -->
+  <button class="toc-toggle" id="toc-toggle" aria-label="Toggle table of contents">&#9776;</button>
+  <div class="toc-overlay" id="toc-overlay"></div>
+
+  <!-- TOC Sidebar -->
+  <nav class="toc" id="toc">
+    <h3>Contents</h3>
+    <ul>
+      <li><a href="#executive-summary">Executive Summary</a></li>
+      <li><a href="#new-product-initiatives">Product &amp; Growth Initiatives</a></li>
+      <li><a href="#rwa-tokenization" class="sub">RWA Tokenization Security</a></li>
+      <li><a href="#active-pipeline">Active Pipeline</a></li>
+      <li><a href="#exchange-expansion">Exchange Expansion Playbook</a></li>
+      <li><a href="#implementation-roadmap">Implementation Roadmap</a></li>
+      <li><a href="#development-velocity">Development Velocity</a></li>
+      <li><a href="#technology-foundation">Technology Foundation</a></li>
+    </ul>
+
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="main-container">
+
+      <!-- Article Header -->
+      <header class="article-header">
+
+        <span class="article-tag">Product Strategy</span>
+        <span class="article-date">March 8, 2026</span>
+        <h1 class="article-title">Product &amp; Growth Initiatives</h1>
+        <p class="article-subtitle">
+          Six product initiatives that address TestMachine's current distribution constraints and open new market segments — self-serve platform launch, exchange expansion, interactive demos, usage analytics, DeFi protocol sales, and RWA tokenization security — leveraging the proven technology stack validated through 18 months of production deployment with Coinbase.
+        </p>
+
+        <div class="hero-stats">
+          <div class="hero-stat positive">
+            <div class="value">8M+</div>
+            <div class="label">Tokens Analyzed</div>
+          </div>
+          <div class="hero-stat positive">
+            <div class="value">Zero</div>
+            <div class="label">False Positive Rate</div>
+          </div>
+          <div class="hero-stat positive">
+            <div class="value">34</div>
+            <div class="label">Engaged / Trialing</div>
+          </div>
+          <div class="hero-stat positive">
+            <div class="value">6</div>
+            <div class="label">Active Initiatives</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Article Body -->
+      <div class="article-body">
+
+        <!-- Section 1: Executive Summary -->
+        <section class="section" id="executive-summary">
+          <h2>1. Executive Summary</h2>
+
+          <p>
+            TestMachine is executing on six product and growth initiatives that are transforming the company from a single-customer service provider into a multi-segment product platform. These initiatives — self-serve tiered pricing, exchange expansion, interactive demo environments, usage analytics dashboards, DeFi protocol direct sales, and RWA tokenization security — leverage a proven technology stack validated in production through an 18-month deployment with Coinbase. They are backed by 8 completed development sprints and a structured agile process that has been executing continuously since November 2025.
+          </p>
+
+          <p>
+            The underlying technology has been validated in production: Predator maintains a zero false positive rate across 8M+ analyzed tokens, and the Coinbase deployment has been sustained for 18+ months with organic growth. The question is whether this technology can be repackaged for broader distribution — particularly as institutional adoption of blockchain accelerates through RWA tokenization.
+          </p>
+
+          <div class="highlight">
+            <strong>Thesis:</strong>
+            Here are six product initiatives that address our current distribution constraints and open new market segments. The transition is from single-customer enterprise delivery to a multi-tier product platform serving developers, protocols, exchanges, and institutional asset managers — leveraging the existing Coinbase deployment as the reference implementation.
+          </div>
+
+          <p>
+            The analysis that follows details each product initiative with implementation approach, market positioning, and a phased roadmap.
+          </p>
+        </section>
+
+        <!-- Initiative Overview -->
+        <div class="table-container" style="margin: 3rem 0;">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Initiative</th><th>Description</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td><strong>Self-Serve Platform</strong></td><td>Tiered pricing for Azimuth smart contract security analysis</td><td>In development</td></tr>
+              <tr><td>2</td><td><strong>Exchange Expansion</strong></td><td>Replicate the Coinbase deployment model</td><td>6 exchanges engaged</td></tr>
+              <tr><td>3</td><td><strong>RWA Tokenization Security</strong></td><td>Institutional-grade blockchain security for tokenized assets</td><td>Market positioning</td></tr>
+              <tr><td>4</td><td><strong>Interactive Demo Environment</strong></td><td>Self-service sandbox for prospect evaluation</td><td>Testing this sprint</td></tr>
+              <tr><td>5</td><td><strong>Usage Analytics Dashboard</strong></td><td>Real-time security posture and ROI visibility</td><td>Planned Q2</td></tr>
+              <tr><td>6</td><td><strong>DeFi Protocol Direct Sales</strong></td><td>Azimuth-powered adversarial smart contract testing</td><td>12 protocols engaged</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Section 2: Product &amp; Growth Initiatives -->
+        <section class="section" id="new-product-initiatives">
+          <h2>2. Product &amp; Growth Initiatives</h2>
+
+          <p>
+            The following analysis examines six distinct product and distribution initiatives, each evaluated for implementation approach, target market, and timeline to impact. Of these, the RWA tokenization security opportunity (Section 2.6) addresses the largest total addressable market, projected in the trillions, with institutional buyers whose security requirements align with TestMachine's zero-false-positive capabilities.
+          </p>
+
+          <h3>2.1 Self-Serve Platform</h3>
+
+          <p>
+            The most structurally significant initiative is the introduction of tiered self-serve pricing for Azimuth's security analysis capabilities — covering smart contracts, DeFi protocols, and token security. Currently, all revenue is generated through enterprise-level custom engagements, requiring direct sales involvement for every transaction. This model imposes a hard ceiling on pipeline throughput and excludes the long-tail market of smaller teams and protocols that cannot justify or navigate an enterprise procurement process.
+          </p>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Tier</th>
+                  <th>Price</th>
+                  <th>Included</th>
+                  <th>Target Buyer</th>
+                  <th>Est. Market Size</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Starter</strong></td>
+                  <td>$299/mo</td>
+                  <td>5 contracts/month</td>
+                  <td>Small teams, indie devs</td>
+                  <td>~2,500 (<a href="https://www.developerreport.com/developer-report" target="_blank" style="color:var(--accent)">Electric Capital</a>: 23K monthly active open-source crypto devs; ~10% work on smart contracts needing security tooling)</td>
+                </tr>
+                <tr>
+                  <td><strong>Professional</strong></td>
+                  <td>$899/mo</td>
+                  <td>25 contracts/month</td>
+                  <td>Growing protocols, DeFi projects</td>
+                  <td>~600 (DeFiLlama tracks ~4,000 protocols; ~15% have active development teams with security budgets)</td>
+                </tr>
+                <tr>
+                  <td><strong>Enterprise</strong></td>
+                  <td>$2,499/mo</td>
+                  <td>Unlimited</td>
+                  <td>Large protocols, multi-chain ops</td>
+                  <td>~150 (protocols with &gt;$100M TVL or equivalent operational scale, per <a href="https://defillama.com/" target="_blank" style="color:var(--accent)">DeFiLlama</a>)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <strong>Implementation status:</strong> Actively in development. The API is already productized and operational. Current engineering work is focused on tiered billing integration, self-serve onboarding flow, and customer-facing documentation. The core infrastructure is production-ready; remaining work is in packaging the API behind metered access tiers and completing the billing pipeline.
+          </p>
+
+          <h3>2.2 Exchange Expansion</h3>
+
+          <p>
+            Predator's deployment at Coinbase provides a replicable model for other centralized exchanges. The integration pattern, security requirements, and value proposition are well-understood and documented through 18+ months of production operation.
+          </p>
+
+          <p>
+            <strong>Implementation complexity:</strong> Low-to-medium. The technology is production-proven. Primary effort is in sales execution, compliance documentation, and integration customization per exchange. Each integration follows a 2–3 week timeline from initial engagement to production deployment.
+          </p>
+
+          <h3>2.3 Interactive Demo / Sandbox Environment</h3>
+
+          <p>
+            The interactive demo environment — a self-service sandbox where prospects can upload a smart contract and receive scan results in under 5 minutes — is nearing completion and will begin testing during the current sprint (Sprint 8). This compresses the evaluation phase from weeks of documentation review and reference calls to minutes of hands-on product experience, converting inbound interest into qualified pipeline at higher rates.
+          </p>
+
+          <p>
+            <strong>Conversion impact:</strong> An increase in qualified pipeline is expected based on the pattern observed in B2B security tools that introduced self-serve evaluation (e.g., <a href='https://www.gainsight.com/blog/free-trial-conversion-rate/' target='_blank'>Gainsight research on trial conversion</a>). The primary effect is not generating new interest but converting existing interest that currently dies at the "contact sales" gate.
+          </p>
+
+          <p>
+            <strong>Status:</strong> Core functionality built. Remaining work is sandboxed execution environment hardening and results visualization polish. Testing begins this sprint.
+          </p>
+
+          <h3>2.4 Usage Analytics Dashboard</h3>
+
+          <p>
+            Real-time visibility into security posture, vulnerability trends, and ROI metrics serves a dual function: it makes value tangible for retention and expansion conversations, and it creates switching costs by embedding TestMachine data into customer workflows and reporting.
+          </p>
+
+          <p>
+            <strong>Retention impact:</strong> Usage dashboards are strongly correlated with reduced churn in B2B SaaS. Customers who can see and report on value are materially less likely to cancel, and expansion conversations benefit from concrete data showing increased usage.
+          </p>
+
+          <p>
+            <strong>Implementation complexity:</strong> Low-to-medium. Leverages existing data already collected during analysis. Primary work is in frontend development and data aggregation.
+          </p>
+
+          <h3>2.5 DeFi Protocol Direct Sales</h3>
+
+          <p>
+            Azimuth positions TestMachine to sell directly to DeFi protocols, a market segment that traditional audit firms address with manual code review at high cost and long turnaround. With 119 protocols already in our pipeline — including 12 in active engagement and IPOR currently trialing the product — this segment represents a significant near-term growth opportunity.
+          </p>
+
+          <p>
+            The target is 5–10 DeFi protocol clients by end of 2026, scaling to 15–25 in 2027. This is achievable given the pipeline depth: tier-1 protocols like EigenLayer, MakerDAO, Aave, and Chainlink each carry security budgets of $1–5M annually, and the Avalanche Foundation partnership is already generating warm introductions across its ecosystem. Azimuth's ability to deliver verified exploit proofs — not theoretical findings — differentiates the offering from traditional auditors, with the potential for shorter close cycles and stronger retention.
+          </p>
+
+          <p>
+            <strong>Implementation:</strong> Azimuth is in later-stage development with active pilot deployments underway. The focus in Q2–Q3 2026 is converting current trials into reference customers and publishing security findings that establish market credibility. Each signed protocol accelerates the next — the compounding effect of reference customers in this market is significant.
+          </p>
+
+          <!-- Section 2.6: RWA Tokenization Security -->
+          <div id="rwa-tokenization"></div>
+          <h3>2.6 RWA Tokenization Security</h3>
+
+          <div class="highlight success">
+            <strong>Market Context:</strong>
+            RWA tokenization security represents TestMachine's largest long-term market opportunity. The convergence of traditional finance and blockchain is creating significant new demand for institutional-grade security — and TestMachine's zero-false-positive, dynamic analysis approach is precisely what regulated institutions require.
+          </div>
+
+          <h4>Market Opportunity</h4>
+
+          <p>
+            Real World Asset (RWA) tokenization — the representation of traditional financial assets (treasuries, bonds, real estate, commodities, equities) as on-chain tokens — is the fastest-growing segment in blockchain. The market is transitioning from early experimentation to institutional-scale deployment, driven by the world's largest financial institutions.
+          </p>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Current (2024–2025)</th>
+                  <th>Projected (2030)</th>
+                  <th>Source</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Total on-chain RWA value</strong></td>
+                  <td>~$12–15B</td>
+                  <td class="success">$10–16 Trillion</td>
+                  <td><a href='https://web-assets.bcg.com/1e/a2/5b5f2b7e4174bba9cf741e52d348/on-chain-asset-tokenization.pdf' target='_blank'>BCG</a>, <a href='https://www.sc.com/en/feature/the-tokenisation-opportunity/' target='_blank'>Standard Chartered</a>, <a href='https://www.mckinsey.com/industries/financial-services/our-insights/tokenization-a-digital-asset-deja-vu' target='_blank'>McKinsey</a></td>
+                </tr>
+                <tr>
+                  <td><strong>Tokenized US Treasuries</strong></td>
+                  <td>$3B+</td>
+                  <td>—</td>
+                  <td><a href='https://app.rwa.xyz/' target='_blank'>RWA.xyz</a>, DeFi Llama</td>
+                </tr>
+                <tr>
+                  <td><strong>Annual growth rate</strong></td>
+                  <td class="success">50–100%+</td>
+                  <td>—</td>
+                  <td>Industry consensus</td>
+                </tr>
+                <tr>
+                  <td><strong>BlackRock BUIDL Fund AUM</strong></td>
+                  <td>$1B+</td>
+                  <td>—</td>
+                  <td>BlackRock public filings</td>
+                </tr>
+                <tr>
+                  <td><strong>Franklin Templeton on-chain</strong></td>
+                  <td>$400M+</td>
+                  <td>—</td>
+                  <td>Franklin Templeton disclosures</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            Key institutional players now actively deploying on-chain include <strong>BlackRock</strong> (BUIDL tokenized treasury fund), <strong>Franklin Templeton</strong> (on-chain money market fund), <strong>JPMorgan</strong> (Onyx/Kinexys blockchain platform), and <strong>Goldman Sachs</strong> (Digital Asset Platform). These are not exploratory pilots — they are production deployments managing real assets on public and permissioned blockchains.
+          </p>
+
+          <h4>Why TestMachine Is Uniquely Positioned</h4>
+
+          <p>
+            Institutional players entering blockchain operate under regulatory frameworks that impose fundamentally different security requirements than crypto-native protocols. Traditional audit firms — the current default for smart contract security — cannot provide the continuous, automated, zero-false-positive analysis that regulated institutions require. Several factors create a structural advantage for TestMachine:
+          </p>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr><th>Advantage</th><th>Detail</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Zero False Positive Requirement</strong></td><td>Regulated institutions cannot tolerate noise. A false positive triggers compliance reviews and delays asset operations. Predator's verified zero false positive rate across 8M+ tokens is a prerequisite for institutional adoption.</td></tr>
+                <tr><td><strong>RWA-Specific Risk Vectors</strong></td><td>Tokenized assets introduce risk categories absent from standard DeFi: custody logic, redemption mechanisms, compliance gates (KYC/AML at the contract level), and oracle dependencies for NAV feeds. These require specialized analysis beyond generic token scanning.</td></tr>
+                <tr><td><strong>Continuous Monitoring</strong></td><td>Traditional audits provide a snapshot. RWA tokens managing significant assets require continuous security monitoring — the operational model TestMachine already runs for Coinbase.</td></tr>
+                <tr><td><strong>Institutional Credibility</strong></td><td>The existing Coinbase deployment demonstrates the ability to meet institutional-grade security requirements. Coinbase is a publicly traded, regulated entity — serving as their security provider is a strong reference.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>Implementation Approach</h4>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr><th>Step</th><th>Approach</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Extend Token Analysis</strong></td><td>Add RWA-specific risk detection covering custody logic, redemption mechanisms, compliance gates, and oracle dependencies for NAV feeds. Much of the dynamic analysis infrastructure exists — the work is in defining and validating RWA-specific risk heuristics.</td></tr>
+                <tr><td><strong>Compliance-Grade Reporting</strong></td><td>Institutional buyers require audit-trail documentation meeting regulatory standards. Reports structured for compliance teams — risk severity classifications, remediation guidance, and continuous monitoring attestations.</td></tr>
+                <tr><td><strong>Leverage Coinbase Relationship</strong></td><td>Use the existing engagement for warm introductions to institutional token issuers. Coinbase's expansion into institutional services (Coinbase Prime, Base chain) creates connection points to asset managers and tokenization platforms.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="highlight warning">
+            <strong>Timeline Consideration:</strong>
+            The RWA security market is forming now. Institutional players are making vendor selections for security infrastructure as they deploy tokenized assets at scale. Early positioning in this segment is valuable — once an institution integrates a security provider into their compliance workflow, switching costs are high. The window to establish TestMachine as a leading institutional provider is 2026–2028.
+          </div>
+
+          <h3>Initiative Summary</h3>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Initiative</th>
+                  <th>Description</th>
+                  <th>Timeline</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Self-Serve Platform</strong></td>
+                  <td>Tiered API access to Azimuth security analysis (Starter / Professional / Enterprise)</td>
+                  <td>Q2–Q3 2026</td>
+                </tr>
+                <tr>
+                  <td><strong>Exchange Expansion</strong></td>
+                  <td>Replicate Coinbase deployment model to additional centralized exchanges</td>
+                  <td>Q2–Q4 2026</td>
+                </tr>
+                <tr>
+                  <td><strong>Interactive Demo</strong></td>
+                  <td>Self-service sandbox for prospect evaluation — upload a contract, get results in minutes</td>
+                  <td>Q2 2026</td>
+                </tr>
+                <tr>
+                  <td><strong>Analytics Dashboard</strong></td>
+                  <td>Real-time security posture, vulnerability trends, and usage metrics for customers</td>
+                  <td>Q2 2026</td>
+                </tr>
+                <tr>
+                  <td><strong>DeFi Protocol Sales</strong></td>
+                  <td>Azimuth-powered adversarial testing sold directly to DeFi protocols</td>
+                  <td>Q3–Q4 2026</td>
+                </tr>
+                <tr>
+                  <td><strong>RWA Tokenization Security</strong></td>
+                  <td>Institutional-grade continuous security for tokenized real-world assets</td>
+                  <td>Q3–Q4 2026</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Section 3: Active Pipeline -->
+        <section class="section" id="active-pipeline">
+          <h2>3. Active Pipeline</h2>
+
+          <p>
+            The product initiatives outlined above are grounded in an active, structured pipeline spanning three market segments. As of March 2026, TestMachine is engaged with organizations across exchanges, security auditors, and DeFi protocols — with 34 in active engagement or trialing stages. This pipeline reflects completed demonstrations, active product trials, and ongoing technical discussions.
+          </p>
+
+          <h3>Pipeline Summary</h3>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Segment</th>
+                  <th>Engaged / Trialing</th>
+                  <th>Est. Close Timeline</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Exchanges</strong></td>
+                  <td class="success">6 engaged</td>
+                  <td>3–9 months</td>
+                </tr>
+                <tr>
+                  <td><strong>Security Auditors</strong></td>
+                  <td class="success">16 engaged/trialing</td>
+                  <td>2 weeks – 3 months</td>
+                </tr>
+                <tr>
+                  <td><strong>DeFi Protocols</strong></td>
+                  <td class="success">12 engaged/trialing</td>
+                  <td>1–6 months</td>
+                </tr>
+                <tr style="border-top: 2px solid var(--border);">
+                  <td><strong>Total</strong></td>
+                  <td class="success"><strong>34 active</strong></td>
+                  <td>—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Exchange Pipeline Detail</h3>
+
+          <p>
+            Six centralized exchanges are actively engaged, spanning demo completions, security team evaluations, and integration discussions. Each has received a product demonstration or direct technical engagement.
+          </p>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Exchange</th>
+                  <th>Stage</th>
+                  <th>Timeline</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Kraken</strong></td>
+                  <td class="success">Demo held (Feb 2026); security team evaluating</td>
+                  <td>Q2–Q3 2026</td>
+                </tr>
+                <tr>
+                  <td><strong>Binance</strong></td>
+                  <td class="warning">Demoed Nov 2025; CTO received app access</td>
+                  <td>Q2–Q4 2026</td>
+                </tr>
+                <tr>
+                  <td><strong>Bitget</strong></td>
+                  <td class="warning">Demoed Dec 2025; indicated late Q1/Q2 timeline</td>
+                  <td>Q1–Q2 2026</td>
+                </tr>
+                <tr>
+                  <td><strong>OKX</strong></td>
+                  <td>Integrated DEX into CEX; evaluating security tooling</td>
+                  <td>Q2–Q3 2026</td>
+                </tr>
+                <tr>
+                  <td><strong>KuCoin</strong></td>
+                  <td>Warm introduction; passing technical details</td>
+                  <td>Q2–Q4 2026</td>
+                </tr>
+                <tr>
+                  <td><strong>Purps DEX</strong></td>
+                  <td>Engaged on multi-chain security needs</td>
+                  <td>Q2–Q3 2026</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            An additional 9 exchanges are in active outreach — including Crypto.com, Blockchain.com, MEXC, Bybit, Bullish, LBank, BEQUANT, EDX Markets, and BitMEX — with 52 more in prospecting stages including Fidelity, Gemini, Gate.io, Revolut, and leading DEXs.
+          </p>
+
+          <h3>Auditor Traction</h3>
+
+          <p>
+            The security auditor segment provides a strong near-term product-market fit signal. Six firms are actively trialing TestMachine's tools in their audit workflows — a milestone reached through product demonstrations, not promotional pricing or incentives. These auditors chose to integrate TestMachine into live engagements because the technology delivers measurable value.
+          </p>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Firm</th>
+                  <th>Stage</th>
+                  <th>Audit Volume</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Cyberscope</strong></td>
+                  <td class="success">Trialing</td>
+                  <td>15–30 audits/month</td>
+                </tr>
+                <tr>
+                  <td><strong>Pessimistic Security</strong></td>
+                  <td class="success">Trialing</td>
+                  <td>6–10 audits/month</td>
+                </tr>
+                <tr>
+                  <td><strong>3DOC</strong></td>
+                  <td class="success">Trialing</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td><strong>Ustas</strong></td>
+                  <td class="success">Trialing</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td><strong>Trust Security</strong></td>
+                  <td class="success">Trialing</td>
+                  <td>—</td>
+                </tr>
+                <tr>
+                  <td><strong>Guardian</strong></td>
+                  <td class="success">Trialing</td>
+                  <td>—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            Beyond the 6 trialing firms, 10 additional auditors are engaged (including Paladin Security, Shieldify, Dedaub, ABDK Consulting, and 0xMacro), with 2 more at the demo stage. Total outreach has covered 64+ firms out of 98 identified targets.
+          </p>
+
+          <div class="highlight">
+            <strong>Observation:</strong>
+            Six independent audit firms chose to trial TestMachine after seeing demonstrations. These trials were initiated after product demonstrations without promotional pricing. The willingness of auditors to integrate an external tool into revenue-generating workflows suggests the technology addresses a real need in their process.
+          </div>
+
+          <h3>DeFi Protocol Reach</h3>
+
+          <p>
+            The DeFi protocol pipeline spans 119 organizations, with 12 in engaged or trialing stages. The Avalanche Foundation has established an active partnership, providing introductions across its ecosystem. IPOR, a DeFi protocol, is actively trialing TestMachine's tools — running contracts through the system and comparing results against competing AI-powered security tools.
+          </p>
+
+          <div class="highlight success">
+            <strong>Pipeline Status:</strong>
+            As of March 2026: 34 organizations in active engagement or trialing across three segments, 6 exchanges past the demo stage. Pipeline data sourced from internal CRM as of March 8, 2026.
+          </div>
+        </section>
+
+        <!-- Section 4: Exchange Expansion Playbook -->
+        <section class="section" id="exchange-expansion">
+          <h2>4. Exchange Expansion Playbook</h2>
+
+          <p>
+            The Coinbase deployment provides a documented, replicable model for additional exchange engagements. The playbook below codifies the integration pattern, sales process, and timeline established through the Coinbase relationship — now supported by a pipeline of exchange targets with 6 in active engagement.
+          </p>
+
+          <h3>Replication Model</h3>
+          <p>
+            Each exchange integration follows a predictable sequence: security requirements assessment and technical scoping (3–5 days), API integration and configuration (3–5 days), pilot deployment on test environment with validation (3–5 days), and production rollout with monitoring (2–3 days). Total time from initial engagement to production: approximately 2–3 weeks. Predator's architecture was designed for multi-tenant deployment from the outset — the Coinbase integration established reusable connector patterns, token ingestion pipelines, and alerting frameworks that new exchanges inherit directly, reducing integration effort to days of configuration rather than weeks of custom work.
+          </p>
+
+          <p>
+            The current exchange pipeline is detailed in <a href="#active-pipeline" style="color:var(--accent)">Section 3</a>. Six exchanges are in active engagement, with 9 in active outreach and 52 in prospecting stages.
+          </p>
+
+          <h3>Sales Acceleration Factors</h3>
+          <p>
+            Several factors suggest exchange expansion sales cycles may compress relative to the initial Coinbase engagement:
+          </p>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr><th>Factor</th><th>Impact</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Reference Customer</strong></td><td>Coinbase serves as a Tier 1 reference, materially de-risking evaluation for subsequent exchanges</td></tr>
+                <tr><td><strong>Production Track Record</strong></td><td>18+ months of continuous operation with zero false positives provides quantitative evidence</td></tr>
+                <tr><td><strong>Regulatory Tailwinds</strong></td><td>Increasing regulatory scrutiny of token listing processes creates compliance-driven demand</td></tr>
+                <tr><td><strong>Interactive Demo</strong></td><td>Sandbox environment enables prospect validation before procurement, compressing evaluation from weeks to days</td></tr>
+                <tr><td><strong>Pipeline Depth</strong></td><td>Multiple exchange targets with 15 in engaged or active outreach absorbs individual deal delays</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="highlight">
+            <strong>Note:</strong>
+            The Coinbase relationship functions as both a revenue source and a sales accelerator. Each month of continued operation adds to the body of evidence (tokens analyzed, false positive rate, uptime) that makes subsequent sales conversations more efficient. With 6 exchanges now past the demo stage — including Kraken's security team actively evaluating and Binance's CTO with app access — the pipeline has transitioned from prospecting to active evaluation across multiple prospects simultaneously.
+          </div>
+        </section>
+
+        <!-- Section 5: Implementation Roadmap -->
+        <section class="section" id="implementation-roadmap">
+          <h2>5. Implementation Roadmap</h2>
+
+          <p>
+            The following roadmap sequences initiatives by impact and dependency, front-loading the highest-leverage items while maintaining parallel progress on longer-term initiatives.
+          </p>
+
+          <h3>Foundation</h3>
+
+          <p>
+            Core infrastructure and go-to-market readiness. Much of this phase is already complete or actively in progress as of Sprint 8 (March 9–20, 2026).
+          </p>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr><th>Initiative</th><th>Description</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Azimuth Benchmarking</strong></td><td>Establish quality benchmarks for experiment generation and hypothesis filtering — required to prove and measure Azimuth's effectiveness to prospects</td><td>Complete (Sprint 7)</td></tr>
+                <tr><td><strong>Azimuth Pricing &amp; Sales Playbook</strong></td><td>Tier pricing, usage limits, overage model, and sales quoting guide all defined and reviewed with leadership</td><td>Complete</td></tr>
+                <tr><td><strong>Self-Serve Billing Integration</strong></td><td>API already productized. Building billing integration and self-serve onboarding flow</td><td>In development</td></tr>
+                <tr><td><strong>Interactive Demo / Sandbox</strong></td><td>Nearing completion — testing begins this sprint (Sprint 8)</td><td>Sprint 8 (active)</td></tr>
+                <tr><td><strong>Ad Campaigns</strong></td><td>Launching paid campaigns for both Token Custody and Azimuth — ad copy, target lists, and tracking infrastructure</td><td>Sprint 8 (active)</td></tr>
+                <tr><td><strong>Exchange Pipeline Advancement</strong></td><td>Advance Kraken to technical scoping; follow up with Binance, Bitget, OKX post-demo</td><td>Ongoing</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Launch</h3>
+
+          <p>
+            Product availability and initial market traction.
+          </p>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr><th>Initiative</th><th>Description</th><th>Dependencies</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Self-Serve Platform (Beta)</strong></td><td>Launch tiered self-serve access to Azimuth with Starter and Professional tiers. Enterprise remains sales-assisted. Begin tracking conversion funnel metrics.</td><td>Billing integration</td></tr>
+                <tr><td><strong>Usage Analytics Dashboard</strong></td><td>Customer-facing dashboard: scan history, vulnerability trends, security posture metrics. Prioritize for Coinbase, then extend to self-serve.</td><td>Data pipeline</td></tr>
+                <tr><td><strong>Auditor Conversion</strong></td><td>Convert trialing auditors (Cyberscope, Pessimistic Security, and 4 others) to paid agreements</td><td>Trial completion</td></tr>
+                <tr><td><strong>SEO &amp; Developer Platforms</strong></td><td>On-page optimization, developer tool platform listings, backlink strategy — organic discovery channel</td><td>Content ready</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Scale</h3>
+
+          <p>
+            Revenue diversification and segment expansion.
+          </p>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr><th>Initiative</th><th>Description</th><th>Dependencies</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><strong>Self-Serve Optimization</strong></td><td>Analyze conversion data, optimize onboarding funnel, implement upgrade prompts and usage-based expansion triggers</td><td>30+ days of self-serve data</td></tr>
+                <tr><td><strong>DeFi Protocol Pilots</strong></td><td>Expand Azimuth deployments to 5–10 DeFi protocols, leveraging Avalanche Foundation partnership and IPOR trial results</td><td>Azimuth production readiness</td></tr>
+                <tr><td><strong>RWA Market Entry</strong></td><td>Extend analysis to RWA-specific risk vectors; pursue 1–2 institutional clients via Coinbase relationship network</td><td>RWA heuristics development</td></tr>
+                <tr><td><strong>Thought Leadership</strong></td><td>Publish token security reports, vulnerability disclosures, and market analysis — organic pipeline and authority positioning</td><td>None</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Section 6: Development Velocity & Product Maturity -->
+        <section class="section" id="development-velocity">
+          <h2>6. Development Velocity &amp; Product Maturity</h2>
+
+          <p>
+            The initiatives described in this document are the output of a structured product development process that has been executing continuously since November 2025. TestMachine runs two-week agile sprints — now in Sprint 8 — with defined goals, tracked deliverables, and major features shipping every sprint. This section documents the execution record.
+          </p>
+
+          <h3>Sprint-Based Development Process</h3>
+
+          <p>
+            TestMachine adopted a structured two-week sprint cadence beginning in November 2025. Each sprint carries a defined goal, and the team has completed 8 consecutive sprints without interruption. The current sprint (Sprint 8) is focused on commercial readiness, with ad campaigns launching for both Token Custody and Azimuth.
+          </p>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th style="white-space:nowrap;min-width:90px;">Sprint</th>
+                  <th style="white-space:nowrap;">Dates</th>
+                  <th>Goal</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Sprint 0</strong></td>
+                  <td>Nov 14–21, 2025</td>
+                  <td>Setup</td>
+                </tr>
+                <tr>
+                  <td><strong>Sprint 1</strong></td>
+                  <td>Nov 21 – Dec 5, 2025</td>
+                  <td>Ship end-to-end slice of TestMachine experience (Coinbase blog, press release, onboarding)</td>
+                </tr>
+                <tr>
+                  <td><strong>Sprint 2</strong></td>
+                  <td>Dec 6–19, 2025</td>
+                  <td>Deliver polished TestMachine experience (Fraud Farm in UI, behavior details)</td>
+                </tr>
+                <tr>
+                  <td><strong>Sprint 3</strong></td>
+                  <td>Dec 22 – Jan 9, 2026</td>
+                  <td>Operationalize Azimuth, strengthen workflows, onboarding, feedback loops</td>
+                </tr>
+                <tr>
+                  <td><strong>Sprint 4</strong></td>
+                  <td>Jan 12–23, 2026</td>
+                  <td>Prepare Azimuth for first live demo, advance Token Custody toward production</td>
+                </tr>
+                <tr>
+                  <td><strong>Sprint 5</strong></td>
+                  <td>Jan 26 – Feb 6, 2026</td>
+                  <td>Make Azimuth launch-ready — impact/likelihood findings, Lodestar integration</td>
+                </tr>
+                <tr>
+                  <td><strong>Sprint 6</strong></td>
+                  <td>Feb 9–20, 2026</td>
+                  <td>Improve Azimuth usability, observability, benchmarking; increase external visibility</td>
+                </tr>
+                <tr>
+                  <td><strong>Sprint 7</strong></td>
+                  <td>Feb 23 – Mar 6, 2026</td>
+                  <td>Get Azimuth ready to sell: benchmarks, bug fixes, features for demos</td>
+                </tr>
+                <tr>
+                  <td><strong>Sprint 8</strong></td>
+                  <td>Mar 9–20, 2026</td>
+                  <td class="success">CURRENT — Get Azimuth ready to sell; ad campaigns launching for TC and AZ</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Select Shipped Features</h3>
+
+          <p>
+            The following highlights key features shipped across these sprints, grouped by product area. All are production-deployed.
+          </p>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr><th>Category</th><th>Feature</th><th>Description</th></tr>
+              </thead>
+              <tbody>
+                <tr><td rowspan="4"><strong>Azimuth</strong></td><td>App Integration</td><td>Full integration of Azimuth into the TestMachine web application</td></tr>
+                <tr><td>Benchmarking Suite</td><td>Experiment generation and hypothesis filtering benchmarks for quality measurement</td></tr>
+                <tr><td>Impact &amp; Likelihood Scoring</td><td>Findings enriched with severity impact and exploitation likelihood</td></tr>
+                <tr><td>Hardhat &amp; Scope Control</td><td>Azimuth runs on Hardhat projects with configurable scope limiting</td></tr>
+                <tr><td rowspan="3"><strong>Token Security</strong></td><td>Risk Scoring</td><td>Summary and individual token risk scores with behavioral analysis</td></tr>
+                <tr><td>Fraud Farm Detection</td><td>Identification of coordinated fraud networks, exposed via API and UI</td></tr>
+                <tr><td>Liquidity Analysis</td><td>Liquidity pool integration and network graph analysis</td></tr>
+                <tr><td rowspan="3"><strong>Platform</strong></td><td>Self-Serve Application</td><td>Full web application with onboarding, organization management, and analytics</td></tr>
+                <tr><td>API Upgrade</td><td>Productized API with usage statistics, pricing tiers, and documentation</td></tr>
+                <tr><td>Observability</td><td>Telemetry dashboards, event tracking, and production monitoring</td></tr>
+                <tr><td rowspan="2"><strong>Infrastructure</strong></td><td>ECS → EKS Migration</td><td>Full container orchestration migration to Kubernetes</td></tr>
+                <tr><td>Lodestar Production</td><td>RL worker integration and Lodestar operational for design partners</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Pricing Readiness</h3>
+
+          <p>
+            Azimuth pricing is fully defined and operationalized. This is not a planned task — all pricing work is complete:
+          </p>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr><th>Pricing Task</th><th>Status</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Tier pricing defined (Starter ~$10K, Professional, Enterprise)</td><td>Complete</td></tr>
+                <tr><td>Usage limits and overage pricing model</td><td>Complete</td></tr>
+                <tr><td>Internal pricing sheet</td><td>Complete</td></tr>
+                <tr><td>Pricing framework reviewed with leadership</td><td>Complete</td></tr>
+                <tr><td>Sales playbook ("How to quote Azimuth")</td><td>Complete</td></tr>
+                <tr><td>Azimuth module tiers and inclusions defined</td><td>Complete</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="highlight success">
+            <strong>Status:</strong>
+            All pricing tasks are complete. The sales team has a playbook, tiered pricing, and a defined overage model. Azimuth is commercially ready to quote.
+          </div>
+
+          <h3>Product Roadmap Pipeline</h3>
+
+          <p>
+            Beyond shipped features, an active product ideas backlog reflects continued investment in platform expansion. Current items under consideration include a TestMachine MCP Server for AI-native integrations, x402 payment acceptance, a Portfolio Analyzer, network graph visualization, on-demand token coverage expansion, and a Code4Arena competition benchmarking Azimuth against competitive tools. This backlog is managed alongside the sprint process and prioritized against customer demand signals.
+          </p>
+        </section>
+
+        <!-- Section 7: Technology Foundation -->
+        <section class="section" id="technology-foundation">
+          <h2>7. Technology Foundation</h2>
+
+          <p>
+            TestMachine's competitive position rests on two core technology platforms, each addressing a distinct segment of blockchain security with approaches that are architecturally distinct from existing methods.
+          </p>
+
+          <h3>Predator: Token Security Analysis at Scale</h3>
+          <p>
+            Predator performs automated security analysis of every token listed on-chain, scanning for dangerous behaviors including token confiscation mechanisms, hidden minting functions, proxy manipulation patterns, and other adversarial contract behaviors. The system operates at scale — over <strong>8 million tokens analyzed to date</strong> — with a verified <strong>zero false positive rate</strong>.
+          </p>
+
+          <p>
+            The zero false positive guarantee is architecturally significant. Unlike static analysis tools that flag potential risks based on pattern matching (producing high false positive rates that erode user trust), Predator's analysis is grounded in behavioral execution. When Predator identifies a dangerous token, the identified behavior has been confirmed through dynamic analysis, not merely inferred from code patterns.
+          </p>
+
+          <p>
+            Predator is currently deployed in production for Coinbase, where it serves as a critical component of their token listing security infrastructure. This deployment constitutes TestMachine's anchor customer relationship and represents the strongest available evidence of product-market fit: a Tier 1 exchange with stringent security requirements has chosen TestMachine as its provider and maintained the relationship through continuous operation.
+          </p>
+
+          <div class="highlight success">
+            <strong>Observation:</strong>
+            Coinbase retention through continuous production deployment, 8M+ tokens analyzed with zero false positives, and organic contract growth constitute strong quantitative evidence that the product delivers measurable value.
+          </div>
+
+          <h3>Azimuth (Lodestar): Adversarial Smart Contract Testing</h3>
+          <p>
+            Azimuth represents a fundamentally different approach to smart contract security. Rather than performing static code analysis — the methodology employed by virtually every existing audit firm and automated tool — Azimuth deploys <strong>reinforcement learning agents that actively attack smart contracts on forked mainnet environments</strong>.
+          </p>
+
+          <p>
+            The distinction is consequential. Static analysis examines code patterns and infers potential vulnerabilities. Azimuth executes real transactions against a fork of the live blockchain, constructing multi-step attack chains through dynamic exploration. When Azimuth identifies a vulnerability, it provides an <strong>end-to-end exploit proof</strong>: the complete sequence of transactions required to execute the attack, demonstrated against a realistic environment. This is not a theoretical finding — it is a verified exploit.
+          </p>
+
+          <p>
+            This architecture produces the same zero false positive characteristic as Predator: if Azimuth reports a vulnerability, it has been actually exploited. The system does not generate speculative warnings or require manual triage. Every finding is actionable and verified.
+          </p>
+
+          <p>
+            Azimuth is positioned as TestMachine's primary growth engine for entering the DeFi protocol security market, where the combination of verified exploits and zero false positives represents a different methodology than existing audit approaches.
+          </p>
+
+          <h3>Competitive Differentiation</h3>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Capability</th>
+                  <th>TestMachine</th>
+                  <th>Static Analysis Tools</th>
+                  <th>Manual Audit Firms</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Analysis Method</td>
+                  <td class="success">Dynamic execution, RL agents</td>
+                  <td>Pattern matching</td>
+                  <td>Human code review</td>
+                </tr>
+                <tr>
+                  <td>False Positive Rate</td>
+                  <td class="success">0%</td>
+                  <td class="critical">15–40%</td>
+                  <td class="warning">5–15%</td>
+                </tr>
+                <tr>
+                  <td>Exploit Verification</td>
+                  <td class="success">Full exploit proof</td>
+                  <td class="critical">None</td>
+                  <td class="warning">Occasional PoC</td>
+                </tr>
+                <tr>
+                  <td>Scale</td>
+                  <td class="success">8M+ tokens</td>
+                  <td class="warning">Varies</td>
+                  <td class="critical">10–50/year</td>
+                </tr>
+                <tr>
+                  <td>Turnaround</td>
+                  <td class="success">Minutes to hours</td>
+                  <td class="success">Minutes</td>
+                  <td class="critical">Weeks to months</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+      </div><!-- /.article-body -->
+    </div><!-- /.main-container -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 TestMachine. Internal use only.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ==================== Progress bar ====================
+    function updateProgressBar() {
+      var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      var scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+      document.getElementById('progress-bar').style.width = scrolled + '%';
+    }
+
+    // ==================== Nav scroll ====================
+    var nav = document.getElementById('navbar');
+    function handleNavScroll() {
+      if (window.scrollY > 10) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+    }
+
+    // ==================== Active section ====================
+    function highlightActiveSection() {
+      var sections = document.querySelectorAll('.section');
+      var navLinks = document.querySelectorAll('.toc a');
+      var currentSection = '';
+      sections.forEach(function(section) {
+        var top = section.getBoundingClientRect().top;
+        var h = section.offsetHeight;
+        if (top <= 100 && top + h > 100) currentSection = section.id;
+      });
+      navLinks.forEach(function(link) {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + currentSection) link.classList.add('active');
+      });
+    }
+
+    window.addEventListener('scroll', function() {
+      updateProgressBar();
+      handleNavScroll();
+      highlightActiveSection();
+    });
+
+    // ==================== Hamburger ====================
+    var hamburger = document.getElementById('hamburger');
+    var mobileMenu = document.getElementById('mobile-menu');
+    if (hamburger) {
+      hamburger.addEventListener('click', function() {
+        hamburger.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+        document.body.classList.toggle('menu-open');
+      });
+    }
+
+    // ==================== Mobile TOC ====================
+    document.getElementById('toc-toggle').onclick = function() {
+      document.getElementById('toc').classList.toggle('open');
+      document.getElementById('toc-overlay').classList.toggle('open');
+    };
+    document.getElementById('toc-overlay').onclick = function() {
+      document.getElementById('toc').classList.remove('open');
+      document.getElementById('toc-overlay').classList.remove('open');
+    };
+
+    // ==================== TOC smooth scroll ====================
+    document.querySelectorAll('.toc a').forEach(function(anchor) {
+      anchor.addEventListener('click', function(e) {
+        if (this.getAttribute('href').startsWith('#')) {
+          e.preventDefault();
+          var target = document.getElementById(this.getAttribute('href').substring(1));
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          document.getElementById('toc').classList.remove('open');
+          document.getElementById('toc-overlay').classList.remove('open');
+        }
+      });
+    });
+
+    updateProgressBar();
+    handleNavScroll();
+  </script>
+</body>
+</html>

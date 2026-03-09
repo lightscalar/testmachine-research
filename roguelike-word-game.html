@@ -1,0 +1,2038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lexicon Rogue — A Roguelike Word Game in the Balatro Tradition — Design Research</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+<style>
+/* ---------- Custom Properties ---------- */
+:root {
+  --bg:            oklch(0.18 0.005 260);
+  --bg-raised:     oklch(0.21 0.005 260);
+  --bg-deeper:     oklch(0.14 0.005 260);
+  --fg:            oklch(0.92 0 0);
+  --fg-muted:      oklch(0.65 0 0);
+  --fg-dim:        oklch(0.45 0 0);
+  --border:        oklch(0.32 0.005 260);
+  --border-subtle: oklch(0.25 0.005 260);
+  --accent:        oklch(0.72 0.12 192);
+  --accent-hover:  oklch(0.80 0.12 192);
+  --accent-glow:   oklch(0.72 0.12 192 / 0.1);
+  --card-bg:       oklch(0.21 0.005 260);
+  --input-bg:      oklch(0.15 0.005 260);
+  --nav-bg:        oklch(0.18 0.005 260 / 0.85);
+
+  --font-display: 'Manrope', sans-serif;
+  --font-mono:    'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --font:         var(--font-mono);
+  --font-serif:   'Source Serif 4', Charter, Georgia, serif;
+
+  --nav-h:       72px;
+  --max-w:       1120px;
+  --section-py:  clamp(80px, 10vw, 140px);
+  --gap:         24px;
+  --transition:  0.25s ease;
+
+  --callout-orange: oklch(0.75 0.15 55);
+  --callout-red:    oklch(0.65 0.2 25);
+  --callout-green:  oklch(0.65 0.15 140);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-h);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; color: inherit; }
+ul { list-style: none; }
+input, textarea, select { font-family: inherit; font-size: inherit; }
+
+/* ---------- Layout ---------- */
+.container {
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+/* ---------- Progress Bar ---------- */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), oklch(0.72 0.10 230));
+  z-index: 1100;
+  width: 0%;
+  transition: width 0.1s;
+}
+
+/* ---------- Navigation ---------- */
+.nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
+.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
+.toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+.toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width var(--transition);
+}
+
+.nav-link:hover,
+.nav-link.nav-link--active {
+  color: var(--fg);
+}
+
+.nav-link:hover::after,
+.nav-link.nav-link--active::after {
+  width: 100%;
+}
+
+.nav-link.nav-link--active {
+  color: var(--accent);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  padding: 14px 32px;
+  border-radius: 0;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.btn:hover { transform: scale(1.02); }
+.btn:active { transform: scale(0.98); }
+
+.btn--primary {
+  background: var(--accent);
+  color: oklch(0.12 0 0);
+  border: 1px solid var(--accent);
+  font-weight: 700;
+}
+
+.btn--primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn--nav {
+  padding: 10px 22px;
+  font-size: 0.75rem;
+}
+
+/* ---------- Hamburger ---------- */
+.hamburger {
+  display: none;
+  width: 40px;
+  height: 40px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  z-index: 1001;
+}
+
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--fg);
+  transition: all var(--transition);
+  transform-origin: center;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* ---------- Mobile Menu ---------- */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-menu-inner {
+  text-align: center;
+}
+
+.mobile-menu-link {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  font-weight: 600;
+  color: var(--fg-muted);
+  padding: 14px 0;
+  transition: color var(--transition);
+}
+
+.mobile-menu-link:hover {
+  color: var(--fg);
+}
+
+.mobile-menu-link.nav-link--active {
+  color: var(--accent);
+}
+
+.mobile-menu-cta {
+  margin-top: 40px;
+  padding: 0 40px;
+}
+
+/* ---------- TOC Sidebar ---------- */
+
+/* TOC Toggle Button (mobile) */
+.toc-toggle {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 200;
+  width: 48px;
+  height: 48px;
+  border-radius: 0;
+  background: var(--accent);
+  color: oklch(0.12 0 0);
+  border: none;
+  font-size: 1.2rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3);
+}
+
+/* TOC Overlay (mobile) */
+.toc-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: oklch(0 0 0 / 0.6);
+  z-index: 109;
+}
+
+.toc-overlay.open {
+  display: block;
+}
+
+/* ---------- Main Content ---------- */
+.main {
+  margin-left: 280px;
+  min-height: 100vh;
+}
+
+.main-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px) 4rem;
+}
+
+/* ---------- Article Header ---------- */
+.article-header {
+  padding-top: calc(var(--nav-h) + 32px);
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 3rem;
+}
+
+.back-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  margin-bottom: 1.5rem;
+  transition: color var(--transition);
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+.article-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-muted);
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  margin-bottom: 1rem;
+}
+
+.article-date {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  margin-bottom: 1rem;
+}
+
+.article-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin-bottom: 1rem;
+}
+
+.article-subtitle {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  color: var(--fg-muted);
+  line-height: 1.6;
+}
+
+/* ---------- Hero Stats ---------- */
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.hero-stat {
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  padding: 1.2rem;
+  text-align: center;
+  transition: border-color var(--transition), transform var(--transition);
+}
+
+.hero-stat:hover {
+  border-color: var(--border);
+  transform: translateY(-2px);
+}
+
+.hero-stat .value {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.hero-stat .label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hero-stat.critical .value {
+  color: var(--callout-red);
+}
+
+.hero-stat.warning .value {
+  color: var(--callout-orange);
+}
+
+.hero-stat.positive .value {
+  color: var(--callout-green);
+}
+
+/* ---------- Article Body ---------- */
+.article-body {
+  font-family: var(--font-serif);
+}
+
+.article-body .section {
+  margin: 3rem 0;
+  padding: 0 0 2rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.article-body .section:last-child {
+  border-bottom: none;
+}
+
+.article-body p {
+  font-family: var(--font-serif);
+  font-size: 1.1875rem;
+  line-height: 1.9;
+  color: var(--fg-muted);
+  margin-bottom: 1.5em;
+}
+
+.article-body h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 700;
+  color: var(--fg);
+  margin-top: 2.5em;
+  margin-bottom: 1rem;
+  line-height: 1.25;
+}
+
+.article-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-top: 2em;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.article-body h4 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-top: 1.5em;
+  margin-bottom: 0.5rem;
+}
+
+.article-body strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.article-body ul,
+.article-body ol {
+  margin-bottom: 1.5em;
+  padding-left: 1.5em;
+}
+
+.article-body ul {
+  list-style: disc;
+}
+
+.article-body ol {
+  list-style: decimal;
+}
+
+.article-body li {
+  font-family: var(--font-serif);
+  font-size: 1.1875rem;
+  line-height: 1.9;
+  color: var(--fg-muted);
+  margin-bottom: 0.5rem;
+}
+
+.article-body a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--transition);
+}
+
+.article-body a:hover {
+  color: var(--accent-hover);
+}
+
+/* ---------- Callout / Highlight Boxes ---------- */
+.highlight {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  border-left: 3px solid var(--accent);
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.highlight strong:first-child {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.highlight.warning {
+  border-left-color: var(--callout-orange);
+}
+
+.highlight.warning strong:first-child {
+  color: var(--callout-orange);
+}
+
+.highlight.danger {
+  border-left-color: var(--callout-red);
+}
+
+.highlight.danger strong:first-child {
+  color: var(--callout-red);
+}
+
+.highlight.success {
+  border-left-color: var(--callout-green);
+}
+
+.highlight.success strong:first-child {
+  color: var(--callout-green);
+}
+
+/* ---------- Code ---------- */
+code {
+  background: var(--bg-deeper);
+  padding: 0.15rem 0.4rem;
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+
+pre {
+  background: var(--bg-deeper);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 1.2rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: var(--fg);
+}
+
+/* ---------- Tables ---------- */
+.table-container {
+  overflow-x: auto;
+  margin: 2rem 0;
+  border: 1px solid var(--border);
+  border-radius: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: var(--bg-deeper);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  padding: 0.7rem 1rem;
+  text-align: left;
+}
+
+td {
+  padding: 0.7rem 1rem;
+  border-top: 1px solid var(--border-subtle);
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  color: var(--fg-muted);
+}
+
+tbody tr:hover td {
+  background: var(--accent-glow);
+}
+
+/* Strategy table */
+.strategy-table .critical { color: var(--callout-red); font-weight: 600; }
+.strategy-table .warning { color: var(--callout-orange); font-weight: 600; }
+.strategy-table .success { color: var(--callout-green); font-weight: 600; }
+.strategy-table .muted { color: var(--fg-dim); }
+
+/* ---------- Action Items ---------- */
+.action-items {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.action-item {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-left: 4px solid var(--accent);
+  padding: 1.2rem;
+}
+
+.action-item.urgent {
+  border-left-color: var(--callout-red);
+}
+
+.action-item.important {
+  border-left-color: var(--callout-orange);
+}
+
+.action-item h4 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 0.5rem;
+}
+
+.action-item p {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  margin: 0;
+}
+
+.action-item .meta {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--fg-dim);
+  margin-top: 0.5rem;
+}
+
+/* ---------- Lexicon Grid ---------- */
+.lexicon-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.8rem;
+  margin: 1.5rem 0;
+}
+
+.lexicon-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--accent);
+  padding: 1rem 1.2rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.lexicon-card .icon {
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  width: 2rem;
+  text-align: center;
+}
+
+.lexicon-card .name {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.lexicon-card .desc {
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+  margin-top: 0.2rem;
+  line-height: 1.6;
+}
+
+.lexicon-card .tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.1rem 0.5rem;
+  border: 1px solid var(--border);
+  margin-top: 0.3rem;
+}
+
+.lexicon-card.scoring { border-left-color: var(--callout-green); }
+.lexicon-card.letter { border-left-color: oklch(0.65 0.15 280); }
+.lexicon-card.strategic { border-left-color: var(--callout-orange); }
+.lexicon-card.legendary { border-left-color: var(--callout-red); }
+
+/* ---------- Combo Grid ---------- */
+.combo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.combo-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  padding: 1.2rem;
+}
+
+.combo-card h4 {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.combo-card p {
+  font-family: var(--font-serif);
+  font-size: 0.9rem;
+  color: var(--fg-muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  padding: 20px 0;
+  background: var(--bg-raised);
+  border-top: 1px solid var(--border-subtle);
+  margin-left: 280px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 28px;
+}
+
+.footer-brand .nav-logo {
+  margin-bottom: 14px;
+}
+
+.footer-address {
+  font-size: 0.8125rem;
+  color: var(--fg-dim);
+  line-height: 1.5;
+}
+
+.footer-heading {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--fg);
+  margin-bottom: 16px;
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+}
+
+.footer-links a:hover {
+  color: var(--fg);
+}
+
+.footer-bottom { display: flex; align-items: center; justify-content: center; }
+
+.footer-bottom p { font-size: 0.7rem; color: var(--fg-dim); margin: 0; line-height: 1; }
+
+/* ---------- Focus & Selection ---------- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: oklch(0.72 0.12 192 / 0.25);
+}
+
+/* ---------- Responsive: Tablet (1024px) ---------- */
+@media (max-width: 1024px) {
+    .toc { transform: translateX(-100%); }
+    .main, .main-content, .main-container, .article-wrapper, .content-wrapper { margin-left: 0 !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .nav-links {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .toc.open {
+    transform: translateX(0);
+  }
+
+  .toc-toggle {
+    display: block;
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .footer {
+    margin-left: 0;
+  }
+}
+
+/* ---------- Responsive: Mobile (768px) ---------- */
+@media (max-width: 768px) {
+  .main-container {
+    padding: 0 1rem 3rem;
+  }
+
+  .article-title {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+  }
+
+  .hero-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .article-header {
+    padding-top: calc(var(--nav-h) + 20px);
+  }
+
+  .action-items {
+    grid-template-columns: 1fr;
+  }
+
+  .combo-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .hamburger {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+
+<body>
+
+  <div class="progress-bar" id="progress-bar"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="navbar">
+  <div class="progress-bar" id="progressBar"></div>
+  <div style="display:flex;align-items:center;height:100%;padding:0 24px;">
+    <a href="/"><img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);"></a>
+  </div>
+</nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-inner">
+      <a href="/" class="mobile-menu-link nav-link--active">Research</a>
+      <div class="mobile-menu-cta">
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC Toggle (mobile) -->
+  <button class="toc-toggle" id="toc-toggle" aria-label="Toggle table of contents">&#9776;</button>
+  <div class="toc-overlay" id="toc-overlay"></div>
+
+  <!-- TOC Sidebar -->
+  <nav class="toc" id="toc">
+    <h3>Contents</h3>
+    <ul>
+      <li><a href="#exec">Executive Summary</a></li>
+      <li><a href="#balatro">The Balatro Formula</a></li>
+      <li><a href="#dna">Word Game DNA</a></li>
+      <li><a href="#mechanics">Core Mechanics</a></li>
+      <li><a href="#powerups">Power-Up Taxonomy</a></li>
+      <li><a href="#loop">The Addictive Loop</a></li>
+      <li><a href="#landscape">Competitive Landscape</a></li>
+      <li><a href="#platform">Platform & Tech</a></li>
+      <li><a href="#monetization">Monetization</a></li>
+      <li><a href="#risks">Risks & Open Questions</a></li>
+      <li><a href="#next">Next Steps</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="main-container">
+
+      <!-- Article Header -->
+      <header class="article-header">
+        <a href="index.html" class="back-link">&larr; Back to Research</a>
+        <span class="article-tag">Game Design</span>
+        <span class="article-date">March 2026</span>
+        <h1 class="article-title">Lexicon Rogue</h1>
+        <p class="article-subtitle">
+          A Roguelike Word Game in the Balatro Tradition — Design Research Document
+        </p>
+
+        <div class="hero-stats">
+          <div class="hero-stat positive">
+            <div class="value">Blue Ocean</div>
+            <div class="label">Market Position</div>
+          </div>
+          <div class="hero-stat">
+            <div class="value">300M+</div>
+            <div class="label">Wordle Players</div>
+          </div>
+          <div class="hero-stat">
+            <div class="value">5M+</div>
+            <div class="label">Balatro Sales</div>
+          </div>
+          <div class="hero-stat warning">
+            <div class="value">12-18mo</div>
+            <div class="label">First-Mover Window</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Article Body -->
+      <div class="article-body">
+
+        <!-- ============================================================ -->
+        <section class="section" id="exec">
+          <h2>Executive Summary</h2>
+
+          <div class="highlight">
+            <strong>The Pitch:</strong> "What if Balatro, but with words?" — That's the pitch. But the depth is real.
+          </div>
+
+          <p>
+            <strong>Lexicon Rogue</strong> is a roguelike word game where players draw letter tiles, form words to hit escalating score targets, and collect persistent modifiers ("Lexicons") that create emergent scoring combos. Each run is 20-30 minutes. Each run is different.
+          </p>
+
+          <p>
+            The insight: <strong>Balatro proved that a casual base mechanic (poker) + roguelike combo systems = mass-market hit.</strong> Word games are an even larger casual market than poker. Wordle hit 300M+ players. Yet no one has applied the Balatro formula to words.
+          </p>
+
+          <p>
+            The gap is enormous. The mechanic translates cleanly. The market is proven on both sides. This is a blue ocean.
+          </p>
+
+          <p>
+            <strong>Target:</strong> Mobile-first (iOS/Android), web fallback. Free with ethical monetization (cosmetics, season pass). No pay-to-win.
+          </p>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="balatro">
+          <h2>The Balatro Formula</h2>
+
+          <p>
+            Balatro sold 5M+ copies by discovering something deceptively simple: take a universally known game (poker), strip the multiplayer, add <strong>modifiers that break the rules</strong>, and let players discover combos that feel like cheating.
+          </p>
+
+          <h3>Why It Works</h3>
+
+          <p>
+            <strong>Emergent combos.</strong> Balatro's jokers don't just add points — they multiply, trigger conditionally, chain off each other. A joker that says "+4 mult when you play a flush" is boring alone. Pair it with "all cards count as hearts" and "retrigger all heart cards" and suddenly a random hand does 50,000 points. The player discovered that combo. They feel like a genius.
+          </p>
+
+          <p>
+            <strong>Escalating stakes.</strong> The ante system means early rounds are relaxed — experiment, learn, build. By ante 6, you need insane scores. The tension ramps perfectly. Easy early success → impossible-seeming later targets → the thrill of pulling it off with a degenerate build.
+          </p>
+
+          <p>
+            <strong>Run variety.</strong> Each run, the shop offers different jokers. You never play the same build twice. One run you're a flush machine. Next run you're doing four-of-a-kind combos. The roguelike structure forces adaptation and discovery.
+          </p>
+
+          <p>
+            <strong>"One more run" psychology.</strong> Runs are 25-40 minutes. Short enough to say "just one more." Long enough to feel meaningful. The unlock system drip-feeds new jokers into the pool, so each run could reveal something new.
+          </p>
+
+          <p>
+            <strong>The "broken" feeling.</strong> The best moment in Balatro is when your build comes online and scores go from thousands to millions. The game lets you feel overpowered — briefly — before the next ante humbles you. This emotional rollercoaster is the core addiction.
+          </p>
+
+          <div class="highlight success">
+            <strong>Key Lesson:</strong> Balatro isn't a poker game. It's a combo discovery engine wearing poker's skin. Lexicon Rogue isn't a word game — it's a combo discovery engine wearing word game skin.
+          </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="dna">
+          <h2>Word Game DNA</h2>
+
+          <p>
+            The other half of the equation. Word games are the largest casual game genre, and three recent entries reveal exactly what makes them sticky.
+          </p>
+
+          <h3>Wordle: The Daily Ritual</h3>
+          <ul>
+            <li><strong>Constrained creativity</strong> — 6 guesses, 5 letters. The constraint IS the game.</li>
+            <li><strong>Social sharing</strong> — The colored grid format spread virally. People share results without spoiling answers.</li>
+            <li><strong>Daily cadence</strong> — One puzzle per day creates anticipation and habit.</li>
+            <li><strong>Low skill floor, high skill ceiling</strong> — Anyone can play; experts optimize opening words and letter frequency.</li>
+          </ul>
+
+          <h3>Spelling Bee: The Pangram Chase</h3>
+          <ul>
+            <li><strong>Open-ended scoring</strong> — No fixed "win," just ranks. The pangram (using all 7 letters) is the white whale.</li>
+            <li><strong>"How did I miss that?"</strong> — Seeing missed words after completion creates desire to play again.</li>
+            <li><strong>Vocabulary as power</strong> — Obscure words feel like secret weapons.</li>
+            <li><strong>Progressive satisfaction</strong> — Each rank threshold (Nice, Great, Amazing, Genius, Queen Bee) is a dopamine hit.</li>
+          </ul>
+
+          <h3>Shuffalo: The Rearrangement Puzzle</h3>
+          <ul>
+            <li><strong>Physical manipulation</strong> — Dragging letters creates tactile engagement.</li>
+            <li><strong>Spatial reasoning</strong> — Seeing words emerge from chaos is deeply satisfying.</li>
+            <li><strong>Time pressure option</strong> — Speed adds adrenaline to a cerebral activity.</li>
+          </ul>
+
+          <div class="highlight">
+            <strong>The Synthesis:</strong> Wordle's constraint design + Spelling Bee's open scoring + Shuffalo's tactile manipulation + Balatro's emergent combos = something genuinely new.
+          </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="mechanics">
+          <h2>The Hybrid: Core Mechanics</h2>
+
+          <h3>The "Hand" — Your Letter Rack</h3>
+
+          <p>
+            Each run, you start with a <strong>letter pool</strong> — a bag of ~40 weighted letter tiles. At the start of each round, you draw 8 tiles to your rack. You can play a word using any subset of your rack tiles, then draw replacements.
+          </p>
+
+          <p>
+            Letters have <strong>base chip values</strong> (inspired by Scrabble but rebalanced for this system):
+          </p>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Tier</th>
+                  <th>Letters</th>
+                  <th>Chips</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Common</td>
+                  <td>E, A, I, O, N, S, T, R</td>
+                  <td>2-3</td>
+                </tr>
+                <tr>
+                  <td>Uncommon</td>
+                  <td>L, D, U, G, H, C, M</td>
+                  <td>4-5</td>
+                </tr>
+                <tr>
+                  <td>Rare</td>
+                  <td>B, F, P, W, Y, V, K</td>
+                  <td>6-8</td>
+                </tr>
+                <tr>
+                  <td class="warning">Epic</td>
+                  <td>J, X</td>
+                  <td class="warning">12</td>
+                </tr>
+                <tr>
+                  <td class="success">Legendary</td>
+                  <td>Q, Z</td>
+                  <td class="success">15</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            Your word's <strong>chip total</strong> = sum of letter chips. This is then multiplied by your multiplier, which comes from word category bonuses and Lexicons.
+          </p>
+
+          <p>
+            <strong>Discards:</strong> You get 3 discards per round (like Balatro). Discard tiles you don't want, draw new ones. Strategic discarding is key.
+          </p>
+
+          <h3>The "Poker Hands" — Word Categories</h3>
+
+          <p>
+            In Balatro, different poker hands have different base chips and mult. Here, <strong>word categories</strong> serve the same role:
+          </p>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Requirement</th>
+                  <th>Base Mult</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Quick Word</td>
+                  <td>3-4 letters</td>
+                  <td>×1</td>
+                </tr>
+                <tr>
+                  <td>Solid Word</td>
+                  <td>5-6 letters</td>
+                  <td>×2</td>
+                </tr>
+                <tr>
+                  <td>Long Form</td>
+                  <td>7-8 letters</td>
+                  <td class="warning">×4</td>
+                </tr>
+                <tr>
+                  <td>Marathon</td>
+                  <td>9+ letters</td>
+                  <td class="success">×8</td>
+                </tr>
+                <tr>
+                  <td>Pangram</td>
+                  <td>Uses all 5 vowels</td>
+                  <td class="success">×6</td>
+                </tr>
+                <tr>
+                  <td>Alliterative</td>
+                  <td>Repeats starting consonant 2+ times</td>
+                  <td>×3</td>
+                </tr>
+                <tr>
+                  <td>Double Trouble</td>
+                  <td>Contains 2+ double letters</td>
+                  <td>×3</td>
+                </tr>
+                <tr>
+                  <td>Consonant Clash</td>
+                  <td>3+ consecutive consonants</td>
+                  <td class="warning">×4</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            Categories can <strong>stack</strong>. A 7-letter pangram with consecutive consonants = Long Form (×4) + Pangram (×6) + Consonant Clash (×4) = ×14 base mult. Plus your Lexicons on top.
+          </p>
+
+          <p>
+            <strong>Mastery cards</strong> (like Balatro's Planet cards) let you level up categories, increasing their base mult. If you're building a "long words" strategy, leveling up Long Form and Marathon is essential.
+          </p>
+
+          <div class="highlight success">
+            <strong>Gameplay Moment:</strong> You draw: S, T, R, E, N, G, T, H. You play STRENGTH — an 8-letter word. Long Form (×4) + Consonant Clash for "NGTH" (×4). Your "Etymologist" Lexicon triggers: +×3 for Germanic roots. Your "Double Down" Lexicon triggers: +×1.5 for the double T. Total: 56 chips × 12.5 mult = <strong>700 points</strong> from a single word. The score counter explodes. You whisper "oh my god" to no one.
+          </div>
+
+          <h3>The "Jokers" — Lexicons</h3>
+
+          <p>
+            This is the heart of the game. <strong>Lexicons</strong> are persistent modifiers you buy from the shop that alter scoring rules. You can hold up to 5 at once (expandable). They create the emergent combos that make each run unique.
+          </p>
+
+          <p>
+            Lexicons have <strong>rarities</strong>: Common (gray), Uncommon (green), Rare (blue), Legendary (purple). Like Balatro, the best runs come from finding Lexicons that synergize in unexpected ways.
+          </p>
+
+          <p>
+            Example Lexicon interactions:
+          </p>
+
+          <div class="combo-grid">
+            <div class="combo-card">
+              <h4>The Vowel Engine</h4>
+              <p>"Vowel Surge" (+5 per vowel) + "Pangram Hunter" (×3 if all vowels used) + "Marathon Mastery" Lv.3 = absurd scores from long vowel-heavy words like ONOMATOPOEIA</p>
+            </div>
+            <div class="combo-card">
+              <h4>The Short & Sharp Build</h4>
+              <p>"Razor Words" (3-4 letter words get ×3) + "Rare Letter Premium" (×2 per J/Q/X/Z) + "Rapid Fire" (play 2 words per round) = fast, efficient scoring with words like JINX, QUIZ, FLUX</p>
+            </div>
+            <div class="combo-card">
+              <h4>The Consonant Crusher</h4>
+              <p>"Consonant Chain" (×3 for 3+ consonants in a row) + "Hard Letters" (+10 chips for each letter worth 6+) + "Suffix Scholar" (×2 for -MENT, -NESS) = STRENGTH, RHYTHM, LYMPH become devastating</p>
+            </div>
+            <div class="combo-card">
+              <h4>The Palindrome Meme</h4>
+              <p>"Palindrome Mirror" (×5 for palindromes) + "Short & Sweet" Lv.5 + "Echo" (play same word twice for ×2) = KAYAK, LEVEL, CIVIC doing millions of points. Ridiculous. Beautiful.</p>
+            </div>
+          </div>
+
+          <h3>The "Boss Blinds" — Constraints</h3>
+
+          <p>
+            Each ante's final round is a <strong>boss round</strong> with a linguistic constraint that forces you to adapt your strategy:
+          </p>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Boss</th>
+                  <th>Constraint</th>
+                  <th>Strategy Impact</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>The Censor</strong></td>
+                  <td>Letter E is banned</td>
+                  <td class="critical">Devastating for most builds; rewards consonant-heavy strategies</td>
+                </tr>
+                <tr>
+                  <td><strong>The Minimalist</strong></td>
+                  <td>Words must be exactly 4 letters</td>
+                  <td class="critical">Kills long-word builds; rewards "Short & Sharp"</td>
+                </tr>
+                <tr>
+                  <td><strong>The Maximalist</strong></td>
+                  <td>Words must be 7+ letters</td>
+                  <td class="warning">Kills quick-word strategies; vocabulary matters</td>
+                </tr>
+                <tr>
+                  <td><strong>The Vowel Thief</strong></td>
+                  <td>Only 1 vowel allowed per word</td>
+                  <td class="critical">RHYTHM, LYNCH, GLYPH become heroes</td>
+                </tr>
+                <tr>
+                  <td><strong>The Mirror</strong></td>
+                  <td>Words must be palindromes</td>
+                  <td class="critical">Extremely restrictive; palindrome builds shine</td>
+                </tr>
+                <tr>
+                  <td><strong>The Alphabetist</strong></td>
+                  <td>Letters must be in alphabetical order</td>
+                  <td class="warning">ALMOST, BEGIN, CHIMPS — very challenging</td>
+                </tr>
+                <tr>
+                  <td><strong>The Taxman</strong></td>
+                  <td>Score target is 2× normal</td>
+                  <td class="warning">Pure DPS check — is your build online?</td>
+                </tr>
+                <tr>
+                  <td><strong>The Scrambler</strong></td>
+                  <td>Rack tiles shuffle randomly every 5 seconds</td>
+                  <td class="warning">Speed and pattern recognition under pressure</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="highlight danger">
+            <strong>Gameplay Moment:</strong> Ante 5. You've built a beautiful vowel engine — Pangram Hunter, Vowel Surge, everything triggers on vowels. Then the boss appears: <strong>The Vowel Thief</strong> — only 1 vowel per word. Your whole build is neutralized. Panic. But wait — you bought "Wildcard Tile" earlier as insurance. You play LYNCHPIN, treating the wildcard as the I. Your Consonant Chain Lexicon goes off instead. You scrape through with 2 points to spare. Your hands are shaking.
+          </div>
+
+          <h3>The Shop</h3>
+
+          <p>After each round (and bonus after boss rounds), the shop offers:</p>
+          <ul>
+            <li><strong>Lexicons</strong> — 2-3 on offer, reroll available ($5)</li>
+            <li><strong>Letter packs</strong> — Add specific tiles to your pool (Vowel Pack, Rare Letter Pack, etc.)</li>
+            <li><strong>Mastery cards</strong> — Level up word categories</li>
+            <li><strong>Consumables</strong> — One-shot effects (swap tiles, peek at next draw, duplicate a tile)</li>
+            <li><strong>Sell</strong> — Sell Lexicons or tiles for gold</li>
+          </ul>
+
+          <p>
+            Gold comes from meeting/exceeding score targets and from bonus words. Interest on unspent gold (like Balatro) encourages banking.
+          </p>
+
+          <h3>Run Structure</h3>
+
+          <p>
+            <strong>8 Antes.</strong> Each ante has 3 regular rounds + 1 boss round. Score targets escalate ~40% per ante. A full run is ~25-35 minutes.
+          </p>
+
+          <p>
+            Ante 1 target: 100. Ante 8 target: ~50,000. The exponential growth mirrors the exponential power of stacked Lexicons. Early game: you're scraping 150 with a 5-letter word. Late game: you're doing 200,000 with a perfectly synergized 6-letter word. The escalation feels earned.
+          </p>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="powerups">
+          <h2>Power-Up Taxonomy</h2>
+
+          <p>
+            24 Lexicons organized by type. Each has a name, effect, and strategic niche.
+          </p>
+
+          <h3>Scoring Modifiers</h3>
+
+          <div class="lexicon-grid">
+            <div class="lexicon-card scoring">
+              <div class="icon">📗</div>
+              <div>
+                <div class="name">Etymologist</div>
+                <div class="desc">Words with Latin/Greek roots score ×2 mult. (Triggers on ~40% of English words.)</div>
+                <div class="tag">Scoring</div>
+              </div>
+            </div>
+            <div class="lexicon-card scoring">
+              <div class="icon">🔤</div>
+              <div>
+                <div class="name">Vowel Surge</div>
+                <div class="desc">Each vowel in your word adds +5 chips. ONOMATOPOEIA = +30 bonus chips.</div>
+                <div class="tag">Scoring</div>
+              </div>
+            </div>
+            <div class="lexicon-card scoring">
+              <div class="icon">⛓️</div>
+              <div>
+                <div class="name">Consonant Chain</div>
+                <div class="desc">3+ consecutive consonants in a word = ×3 mult. STRENGTHS triggers twice (STR, NGTHS).</div>
+                <div class="tag">Scoring</div>
+              </div>
+            </div>
+            <div class="lexicon-card scoring">
+              <div class="icon">🪞</div>
+              <div>
+                <div class="name">Palindrome Mirror</div>
+                <div class="desc">Palindromes score ×5. RACECAR, KAYAK, CIVIC, LEVEL, MADAM.</div>
+                <div class="tag">Scoring</div>
+              </div>
+            </div>
+            <div class="lexicon-card scoring">
+              <div class="icon">🔇</div>
+              <div>
+                <div class="name">Silent E</div>
+                <div class="desc">Words ending in E get +15 chips. Stacks with other bonuses.</div>
+                <div class="tag">Scoring</div>
+              </div>
+            </div>
+            <div class="lexicon-card scoring">
+              <div class="icon">👯</div>
+              <div>
+                <div class="name">Double Down</div>
+                <div class="desc">Each double letter pair (LL, SS, TT, etc.) adds ×1.5 mult. MISSISSIPPI = ×1.5⁴.</div>
+                <div class="tag">Scoring</div>
+              </div>
+            </div>
+            <div class="lexicon-card scoring">
+              <div class="icon">💎</div>
+              <div>
+                <div class="name">Rare Letter Premium</div>
+                <div class="desc">Letters worth 6+ chips get ×2 to their individual chip value.</div>
+                <div class="tag">Scoring</div>
+              </div>
+            </div>
+            <div class="lexicon-card scoring">
+              <div class="icon">🔁</div>
+              <div>
+                <div class="name">Echo</div>
+                <div class="desc">If you play the same word as your previous round, score ×2. Encourages finding repeatable combos.</div>
+                <div class="tag">Scoring</div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Letter Manipulation</h3>
+
+          <div class="lexicon-grid">
+            <div class="lexicon-card letter">
+              <div class="icon">🃏</div>
+              <div>
+                <div class="name">Wildcard Tile</div>
+                <div class="desc">One tile in your rack becomes wild — counts as any letter. Repositions each round.</div>
+                <div class="tag">Letter</div>
+              </div>
+            </div>
+            <div class="lexicon-card letter">
+              <div class="icon">⛲</div>
+              <div>
+                <div class="name">Vowel Fountain</div>
+                <div class="desc">Draw 2 extra vowels at the start of each round. Rack size stays at 8 (replace 2 worst).</div>
+                <div class="tag">Letter</div>
+              </div>
+            </div>
+            <div class="lexicon-card letter">
+              <div class="icon">🧲</div>
+              <div>
+                <div class="name">Letter Thief</div>
+                <div class="desc">After playing a word, steal one tile from the discard pile. Sustain your best letters.</div>
+                <div class="tag">Letter</div>
+              </div>
+            </div>
+            <div class="lexicon-card letter">
+              <div class="icon">⚗️</div>
+              <div>
+                <div class="name">Alchemist</div>
+                <div class="desc">Once per round, transmute a consonant into a random vowel, or vice versa.</div>
+                <div class="tag">Letter</div>
+              </div>
+            </div>
+            <div class="lexicon-card letter">
+              <div class="icon">📌</div>
+              <div>
+                <div class="name">Sticky Letters</div>
+                <div class="desc">2 random letters in your rack persist between rounds instead of being reshuffled.</div>
+                <div class="tag">Letter</div>
+              </div>
+            </div>
+            <div class="lexicon-card letter">
+              <div class="icon">🧬</div>
+              <div>
+                <div class="name">Duplicator</div>
+                <div class="desc">Once per round, duplicate any tile in your rack. Two Z's? Don't mind if you do.</div>
+                <div class="tag">Letter</div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Strategic</h3>
+
+          <div class="lexicon-grid">
+            <div class="lexicon-card strategic">
+              <div class="icon">✏️</div>
+              <div>
+                <div class="name">Second Draft</div>
+                <div class="desc">Play 2 words per round. Keep the higher score. Safety net for experimental plays.</div>
+                <div class="tag">Strategic</div>
+              </div>
+            </div>
+            <div class="lexicon-card strategic">
+              <div class="icon">👁️</div>
+              <div>
+                <div class="name">Editor's Eye</div>
+                <div class="desc">Shows the top 3 highest-scoring words from your current rack. Knowledge is power.</div>
+                <div class="tag">Strategic</div>
+              </div>
+            </div>
+            <div class="lexicon-card strategic">
+              <div class="icon">🔮</div>
+              <div>
+                <div class="name">Oracle</div>
+                <div class="desc">Preview the next round's boss constraint. Plan your shop purchases accordingly.</div>
+                <div class="tag">Strategic</div>
+              </div>
+            </div>
+            <div class="lexicon-card strategic">
+              <div class="icon">💰</div>
+              <div>
+                <div class="name">Word Broker</div>
+                <div class="desc">Earn +$2 for every word over 6 letters. Funds your shop habit.</div>
+                <div class="tag">Strategic</div>
+              </div>
+            </div>
+            <div class="lexicon-card strategic">
+              <div class="icon">🔄</div>
+              <div>
+                <div class="name">Prefix Master</div>
+                <div class="desc">UN-, RE-, PRE-, DIS- prefixes add flat +20 chips. UNBREAKABLE = big money.</div>
+                <div class="tag">Strategic</div>
+              </div>
+            </div>
+            <div class="lexicon-card strategic">
+              <div class="icon">📚</div>
+              <div>
+                <div class="name">Suffix Scholar</div>
+                <div class="desc">-TION, -NESS, -MENT, -ABLE suffixes add ×2 mult. Stacks with Prefix Master.</div>
+                <div class="tag">Strategic</div>
+              </div>
+            </div>
+          </div>
+
+          <h3>Chaotic / Legendary</h3>
+
+          <div class="lexicon-grid">
+            <div class="lexicon-card legendary">
+              <div class="icon">🐟</div>
+              <div>
+                <div class="name">Babel Fish</div>
+                <div class="desc">Loanwords (CAFÉ, NAÏVE, ZEITGEIST, etc.) from approved list score ×4. Niche but devastating.</div>
+                <div class="tag">Legendary</div>
+              </div>
+            </div>
+            <div class="lexicon-card legendary">
+              <div class="icon">🔀</div>
+              <div>
+                <div class="name">Anagram Angel</div>
+                <div class="desc">If your word is an anagram of any previous word this run, ×3. Rewards memory and letter awareness.</div>
+                <div class="tag">Legendary</div>
+              </div>
+            </div>
+            <div class="lexicon-card legendary">
+              <div class="icon">⌨️</div>
+              <div>
+                <div class="name">QWERTY Bonus</div>
+                <div class="desc">Words typeable on one keyboard row get ×5. TYPEWRITER, QUERY, POWER. Absurd and delightful.</div>
+                <div class="tag">Legendary</div>
+              </div>
+            </div>
+            <div class="lexicon-card legendary">
+              <div class="icon">🌀</div>
+              <div>
+                <div class="name">Chaos Engine</div>
+                <div class="desc">All Lexicon effects are doubled. ALL of them. Broken by design. Legendary rarity for a reason.</div>
+                <div class="tag">Legendary</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="loop">
+          <h2>The Addictive Loop</h2>
+
+          <h3>The Micro Loop (Within a Round)</h3>
+
+          <p>
+            <strong>See tiles → Scan for words → Evaluate scoring potential → Play word → Watch score explode → Feel smart.</strong>
+          </p>
+
+          <p>
+            This loop takes 15-45 seconds. It's the Wordle "aha" moment happening every single round. The score animation is critical — chips tallying, mult cascading, numbers climbing. Balatro's score counter is genius. Steal it shamelessly.
+          </p>
+
+          <h3>The Meso Loop (Within a Run)</h3>
+
+          <p>
+            <strong>Finish round → Visit shop → See new Lexicon → Imagine combos → Buy it → Test in next round → It works even better than expected → Shop again.</strong>
+          </p>
+
+          <p>
+            This is the "build discovery" loop. Each shop visit is a slot machine of possibilities. "If I buy Consonant Chain AND I already have Double Down… what if I play a word like WITCHCRAFT?" The theorycraft happens in real-time.
+          </p>
+
+          <h3>The Macro Loop (Between Runs)</h3>
+
+          <p>
+            <strong>Run ends → See stats → Unlock new Lexicon for future runs → "What if I built around THAT?" → Start new run → Different letters, different shop, different build → Discovery.</strong>
+          </p>
+
+          <p>
+            The meta-progression drip-feeds new Lexicons into the pool over ~50 runs. Each unlock is a new build archetype to explore. "I just unlocked Chaos Engine. I NEED to see what happens."
+          </p>
+
+          <h3>Psychological Hooks</h3>
+
+          <div class="combo-grid">
+            <div class="combo-card">
+              <h4>Variable Ratio Reinforcement</h4>
+              <p>Sometimes your Lexicons align perfectly and scores go supernova. Unpredictable. Addictive. The same mechanic that makes slot machines work, but earned through skill.</p>
+            </div>
+            <div class="combo-card">
+              <h4>Near-Miss</h4>
+              <p>"I needed ONE more vowel for the pangram bonus." "I was 50 points short of beating that boss." Near-misses create urgent desire to try again.</p>
+            </div>
+            <div class="combo-card">
+              <h4>Escalating Mastery</h4>
+              <p>Your vocabulary grows as you play. You start finding words you never knew. The game makes you smarter, and that feels incredible.</p>
+            </div>
+            <div class="combo-card">
+              <h4>Social Comparison</h4>
+              <p>Daily seeded runs. Same letters, same shop. Your score vs. the world. Shareable result cards. "I scored 450,000 on today's daily. What did you get?"</p>
+            </div>
+          </div>
+
+          <div class="highlight">
+            <strong>Gameplay Moment:</strong> You're on ante 7. Score target: 35,000. You've built the "Consonant Crusher" — Chain, Hard Letters, Suffix Scholar all stacked. Your rack: S, T, R, E, N, G, T, H, M, E, N, T. Wait. ENTANGLEMENT? No, wrong letters. But ENMESHMENT — no. STRENGTHEN? Yes! 10 letters. Marathon (×8) + Consonant Clash (×4 × 2 triggers) + Suffix Scholar for -EN? Hmm. You settle on STRENGTHS — 9 letters, STR + NGTHS double consonant chains. The mult counter spirals. <strong>47,200.</strong> You clear the ante with room to spare. You take a screenshot and send it to your group chat.
+          </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="landscape">
+          <h2>Competitive Landscape</h2>
+
+          <p>
+            The short version: <strong>this niche is essentially empty.</strong>
+          </p>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Game</th>
+                  <th>Word?</th>
+                  <th>Roguelike?</th>
+                  <th>Combo System?</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Balatro</strong></td>
+                  <td>❌</td>
+                  <td class="success">✅</td>
+                  <td class="success">✅</td>
+                  <td>5M+ sales, cultural phenomenon</td>
+                </tr>
+                <tr>
+                  <td><strong>Wordle</strong></td>
+                  <td class="success">✅</td>
+                  <td>❌</td>
+                  <td>❌</td>
+                  <td>300M+ players, but single-puzzle</td>
+                </tr>
+                <tr>
+                  <td><strong>Spelling Bee</strong></td>
+                  <td class="success">✅</td>
+                  <td>❌</td>
+                  <td>❌</td>
+                  <td>NYT flagship, daily only</td>
+                </tr>
+                <tr>
+                  <td><strong>Bookworm Adventures</strong></td>
+                  <td class="success">✅</td>
+                  <td>❌</td>
+                  <td>Minimal</td>
+                  <td class="muted">Dead (PopCap, 2006)</td>
+                </tr>
+                <tr>
+                  <td><strong>Letter Quest</strong></td>
+                  <td class="success">✅</td>
+                  <td>Lite</td>
+                  <td>Minimal</td>
+                  <td class="muted">Indie, modest sales</td>
+                </tr>
+                <tr>
+                  <td><strong>Spellsword Cards</strong></td>
+                  <td class="success">✅</td>
+                  <td class="success">✅</td>
+                  <td>Some</td>
+                  <td class="muted">Very niche, low production value</td>
+                </tr>
+                <tr>
+                  <td><strong>Cryptmaster</strong></td>
+                  <td class="success">✅</td>
+                  <td class="success">✅</td>
+                  <td>❌</td>
+                  <td>2024, novel but typing-focused RPG</td>
+                </tr>
+                <tr>
+                  <td><strong>Lexicon Rogue</strong></td>
+                  <td class="success">✅</td>
+                  <td class="success">✅</td>
+                  <td class="success">✅</td>
+                  <td class="success"><strong>The gap</strong></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Why Does This Gap Exist?</h3>
+
+          <ul>
+            <li><strong>Pre-Balatro:</strong> Nobody thought "casual mechanic + deep roguelike" was viable at scale. Balatro proved it.</li>
+            <li><strong>Word games are seen as "casual only":</strong> Publishers thought the audiences don't overlap. They're wrong — Balatro's audience IS casual gamers who discovered they love depth.</li>
+            <li><strong>Combo design is hard:</strong> Making a modifier system that produces emergent interactions with language is genuinely difficult. It requires both game design skill and linguistic knowledge.</li>
+            <li><strong>Dictionary challenges:</strong> Balancing a game where the "deck" is the English language is more complex than a 52-card deck.</li>
+          </ul>
+
+          <div class="highlight warning">
+            <strong>Timing Matters:</strong> Post-Balatro, this idea is in the air. If someone doesn't ship it in 2026-2027, someone else will. The window for being first is probably 12-18 months.
+          </div>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="platform">
+          <h2>Platform & Tech</h2>
+
+          <h3>Platform Priority</h3>
+
+          <ol>
+            <li><strong>iOS</strong> — Primary. Word game audience skews iOS. Premium feel.</li>
+            <li><strong>Android</strong> — Simultaneous or fast-follow.</li>
+            <li><strong>Web</strong> — Demo/viral sharing vector. Play in browser, convert to app.</li>
+            <li><strong>Steam</strong> — Eventually. Balatro proved PC word-of-mouth.</li>
+          </ol>
+
+          <h3>Tech Stack Suggestions</h3>
+
+          <h4>Option A: Web-Native (Recommended for prototype)</h4>
+          <ul>
+            <li>TypeScript + Canvas/WebGL (Pixi.js or Phaser)</li>
+            <li>Capacitor for iOS/Android wrapping</li>
+            <li>Advantages: Single codebase, fast iteration, web demo for viral sharing</li>
+            <li>Risk: Performance on low-end Android</li>
+          </ul>
+
+          <h4>Option B: Native with shared logic</h4>
+          <ul>
+            <li>Game logic in Rust/C compiled to WASM + native</li>
+            <li>SwiftUI for iOS, Jetpack Compose for Android</li>
+            <li>Advantages: Native feel, better performance</li>
+            <li>Risk: 2x UI work</li>
+          </ul>
+
+          <h3>Key Technical Challenges</h3>
+          <ul>
+            <li><strong>Dictionary:</strong> SOWPODS (~280K words) or custom curated list. Needs to be on-device for offline play. ~3MB compressed.</li>
+            <li><strong>Scoring engine:</strong> Must be deterministic for daily challenges. Server-authoritative validation.</li>
+            <li><strong>Lexicon interaction engine:</strong> Needs a clean trigger/modifier system. Order of operations matters (chips first, then mult — like Balatro).</li>
+            <li><strong>Balance:</strong> AI playtesting — simulate millions of runs to find broken combos. This is the hardest part.</li>
+            <li><strong>Animations:</strong> Score counter cascades, tile shuffles, Lexicon trigger effects. 60fps essential. This is where the juice lives.</li>
+          </ul>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="monetization">
+          <h2>Monetization</h2>
+
+          <div class="highlight">
+            <strong>Principle:</strong> The game should feel generous. Players who never pay should have the full experience. Money buys style, not power.
+          </div>
+
+          <h3>Revenue Streams</h3>
+
+          <h4>1. Premium Purchase ($5-7)</h4>
+          <p>
+            Balatro model. Pay once, play forever. Works on Steam/mobile. Simple. Proven. No friction.
+          </p>
+
+          <h4>2. Free + Cosmetics (Alternative)</h4>
+          <ul>
+            <li><strong>Tile themes:</strong> Wood, neon, retro, handwritten ($2-3 each)</li>
+            <li><strong>Board skins:</strong> Different backgrounds and ambiance ($3-5)</li>
+            <li><strong>Score effects:</strong> Different explosion/cascade animations ($1-2)</li>
+            <li><strong>Lexicon skins:</strong> Visual-only alternate art for Lexicons ($1 each)</li>
+          </ul>
+
+          <h4>3. Season Pass ($5/quarter)</h4>
+          <ul>
+            <li>Daily challenge leaderboard access</li>
+            <li>Cosmetic rewards track (30 tiers over 90 days)</li>
+            <li>Monthly exclusive Lexicon skins</li>
+            <li>Stats dashboard and run replay</li>
+          </ul>
+
+          <h4>4. Supporter Pack ($10 one-time)</h4>
+          <ul>
+            <li>Exclusive "Founder" tile set</li>
+            <li>Detailed stats and analytics</li>
+            <li>Early access to new content</li>
+          </ul>
+
+          <h3>What We Will NOT Do</h3>
+          <ul>
+            <li>❌ Energy/lives system</li>
+            <li>❌ Pay to unlock Lexicons</li>
+            <li>❌ Loot boxes</li>
+            <li>❌ Ads (not even "optional")</li>
+            <li>❌ Pay-to-skip timers</li>
+          </ul>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="risks">
+          <h2>Risks & Open Questions</h2>
+
+          <h3>Design Risks</h3>
+          <ul>
+            <li><strong>Vocabulary barrier:</strong> Unlike poker (fixed hand rankings), word games reward vocabulary knowledge. Non-native speakers and younger players may feel excluded. <em>Mitigation:</em> Editor's Eye Lexicon, post-round word definitions, tiered difficulty.</li>
+            <li><strong>Dictionary disputes:</strong> "That should be a word!" is inevitable. Need clear, authoritative dictionary with a feedback mechanism.</li>
+            <li><strong>Lexicon balance:</strong> With 50+ Lexicons, some combos will be broken. Need robust playtesting pipeline. This is the #1 ongoing challenge.</li>
+            <li><strong>Analysis paralysis:</strong> Too many options per turn could slow gameplay. Need to balance rack size and word category complexity.</li>
+            <li><strong>Cultural/language:</strong> English-first is fine for launch, but localization to other languages changes EVERYTHING about balance.</li>
+          </ul>
+
+          <h3>Market Risks</h3>
+          <ul>
+            <li><strong>Timing:</strong> Someone else is probably thinking about this post-Balatro. Speed matters.</li>
+            <li><strong>Balatro fatigue:</strong> The "X but roguelike" wave could tire players. Need to stand on word game merit, not just "Balatro clone."</li>
+            <li><strong>NYT acquisition:</strong> If NYT builds this in-house, they have the brand and audience. But they're slow — 12+ month window.</li>
+          </ul>
+
+          <h3>Open Questions</h3>
+          <ul>
+            <li>How many words per round? (1 feels like Balatro; 3 feels like Spelling Bee. Test both.)</li>
+            <li>Timer or no timer? (No timer for base game; optional speed mode?)</li>
+            <li>Multiplayer? (Head-to-head with shared letter pool? Too complex for v1.)</li>
+            <li>Should there be a "story" or narrative wrapper? (Balatro has none; some roguelikes benefit.)</li>
+            <li>What about proper nouns? (Probably not. But fun Lexicon idea: "Proper Noun License.")</li>
+          </ul>
+        </section>
+
+        <!-- ============================================================ -->
+        <section class="section" id="next">
+          <h2>Next Steps</h2>
+
+          <h3>Phase 1: Paper Prototype (1 week)</h3>
+
+          <div class="action-items">
+            <div class="action-item">
+              <h4>Physical Prototype</h4>
+              <p>Scrabble tiles + index cards for Lexicons. Test the core loop: draw tiles, form word, check score, visit "shop."</p>
+              <div class="meta">Timeline: 1 week | Goal: Validate combo discovery feeling</div>
+            </div>
+            <div class="action-item">
+              <h4>Key Questions to Answer</h4>
+              <p>Is the combo discovery feeling there? Does the boss constraint system create interesting adaptation?</p>
+              <div class="meta">Success Criteria: Playtesters say "one more round"</div>
+            </div>
+          </div>
+
+          <h3>Phase 2: Digital Prototype (4-6 weeks)</h3>
+
+          <div class="action-items">
+            <div class="action-item important">
+              <h4>Web Prototype</h4>
+              <p>Web-based (TypeScript + Pixi.js). One full run: 3 antes, 5 Lexicons, 3 boss types. Basic score animation (this is critical — the "juice"). Playable on phone browser.</p>
+              <div class="meta">Timeline: 4-6 weeks | Goal: "One more run" test with 10 playtesters</div>
+            </div>
+          </div>
+
+          <h3>Phase 3: Expand & Polish (8-12 weeks)</h3>
+
+          <ul>
+            <li>Full 8 antes, 30+ Lexicons, 8+ bosses</li>
+            <li>Meta-progression (unlock new Lexicons across runs)</li>
+            <li>Daily challenge with seeded runs</li>
+            <li>Score sharing format</li>
+            <li>AI balance testing (simulate 100K+ runs)</li>
+          </ul>
+
+          <h3>Phase 4: Launch</h3>
+
+          <ul>
+            <li>iOS + Android via Capacitor</li>
+            <li>Web demo for viral loop</li>
+            <li>Press kit targeting Balatro-adjacent outlets</li>
+            <li>Soft launch in one region, iterate on retention metrics</li>
+          </ul>
+
+          <div class="highlight success">
+            <strong>The Litmus Test:</strong> If the paper prototype produces a single moment where someone says "wait, THAT works?!" — the concept is valid. Chase that moment.
+          </div>
+        </section>
+
+      </div><!-- /.article-body -->
+    </div><!-- /.main-container -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 TestMachine. Internal use only.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Progress bar
+    function updateProgressBar() {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('progress-bar').style.width = scrolled + '%';
+    }
+
+    // Nav scroll handler
+    const nav = document.getElementById('navbar');
+    function handleNavScroll() {
+      if (window.scrollY > 10) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    }
+
+    // Active section highlighting
+    function highlightActiveSection() {
+      const sections = document.querySelectorAll('.section');
+      const navLinks = document.querySelectorAll('.toc a');
+
+      let currentSection = '';
+      sections.forEach(function(section) {
+        const sectionTop = section.getBoundingClientRect().top;
+        const sectionHeight = section.offsetHeight;
+        if (sectionTop <= 100 && sectionTop + sectionHeight > 100) {
+          currentSection = section.id;
+        }
+      });
+
+      navLinks.forEach(function(link) {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + currentSection) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', function() {
+      updateProgressBar();
+      handleNavScroll();
+      highlightActiveSection();
+    });
+
+    // Hamburger toggle
+    var hamburger = document.getElementById('hamburger');
+    var mobileMenu = document.getElementById('mobile-menu');
+    if (hamburger) {
+      hamburger.addEventListener('click', function() {
+        hamburger.classList.toggle('active');
+        mobileMenu.classList.toggle('active');
+        document.body.classList.toggle('menu-open');
+      });
+    }
+
+    // Mobile TOC toggle
+    document.getElementById('toc-toggle').onclick = function() {
+      var toc = document.getElementById('toc');
+      var overlay = document.getElementById('toc-overlay');
+      toc.classList.toggle('open');
+      overlay.classList.toggle('open');
+    };
+
+    document.getElementById('toc-overlay').onclick = function() {
+      var toc = document.getElementById('toc');
+      var overlay = document.getElementById('toc-overlay');
+      toc.classList.remove('open');
+      overlay.classList.remove('open');
+    };
+
+    // Smooth scrolling for TOC links
+    document.querySelectorAll('.toc a').forEach(function(anchor) {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        var targetId = this.getAttribute('href').substring(1);
+        var targetSection = document.getElementById(targetId);
+
+        if (targetSection) {
+          targetSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+
+        // Close mobile TOC
+        var toc = document.getElementById('toc');
+        var overlay = document.getElementById('toc-overlay');
+        toc.classList.remove('open');
+        overlay.classList.remove('open');
+      });
+    });
+
+    // Initialize
+    updateProgressBar();
+    handleNavScroll();
+  </script>
+</body>
+</html>

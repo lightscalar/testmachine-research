@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Paul Hsu Product Update Requirements — TestMachine Sunday Noon Deliverable — March 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+<style>
+/* ---------- Custom Properties ---------- */
+:root {
+  --bg:            oklch(0.18 0.005 260);
+  --bg-raised:     oklch(0.21 0.005 260);
+  --bg-deeper:     oklch(0.14 0.005 260);
+  --fg:            oklch(0.92 0 0);
+  --fg-muted:      oklch(0.65 0 0);
+  --fg-dim:        oklch(0.45 0 0);
+  --border:        oklch(0.32 0.005 260);
+  --border-subtle: oklch(0.25 0.005 260);
+  --accent:        oklch(0.72 0.12 192);
+  --accent-hover:  oklch(0.80 0.12 192);
+  --accent-glow:   oklch(0.72 0.12 192 / 0.1);
+  --card-bg:       oklch(0.21 0.005 260);
+  --input-bg:      oklch(0.15 0.005 260);
+  --nav-bg:        oklch(0.18 0.005 260 / 0.85);
+
+  --font-display: 'Manrope', sans-serif;
+  --font-mono:    'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --font:         var(--font-mono);
+  --font-serif:   'Source Serif 4', Charter, Georgia, serif;
+
+  --nav-h:       72px;
+  --max-w:       1120px;
+  --section-py:  clamp(80px, 10vw, 140px);
+  --gap:         24px;
+  --transition:  0.25s ease;
+
+  --callout-orange: oklch(0.75 0.15 55);
+  --callout-red:    oklch(0.65 0.2 25);
+  --callout-green:  oklch(0.65 0.15 140);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); -webkit-text-size-adjust: 100%; }
+body { font-family: var(--font); font-size: 17px; line-height: 1.7; color: var(--fg); background: var(--bg); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; }
+body.menu-open { overflow: hidden; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; color: inherit; }
+ul { list-style: none; }
+input, textarea, select { font-family: inherit; font-size: inherit; }
+
+/* ---------- Layout ---------- */
+.container { width: 100%; max-width: var(--max-w); margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px); }
+
+/* ---------- Progress Bar ---------- */
+.progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--accent), oklch(0.72 0.10 230)); z-index: 1100; width: 0%; transition: width 0.1s; }
+
+/* ---------- Navigation ---------- */
+.nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
+.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
+.toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+.toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
+
+.nav-container { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: var(--max-w); margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px); }
+.nav-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.nav-logo-text { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+
+/* ---------- Hamburger ---------- */
+.hamburger { display: none; width: 40px; height: 40px; flex-direction: column; align-items: center; justify-content: center; gap: 5px; z-index: 1001; }
+.hamburger span { display: block; width: 20px; height: 1.5px; background: var(--fg); transition: all var(--transition); transform-origin: center; }
+
+/* ---------- TOC Toggle (mobile) ---------- */
+.toc-toggle { display: none; position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200; width: 48px; height: 48px; border-radius: 0; background: var(--accent); color: oklch(0.12 0 0); border: none; font-size: 1.2rem; font-family: var(--font-mono); font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3); }
+.toc-overlay { display: none; position: fixed; inset: 0; background: oklch(0 0 0 / 0.6); z-index: 109; }
+.toc-overlay.open { display: block; }
+
+/* ---------- Main Content ---------- */
+.main { margin-left: 280px; min-height: 100vh; }
+.main-container { max-width: 900px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px) 4rem; }
+
+/* ---------- Article Header ---------- */
+.article-header { padding-top: calc(var(--nav-h) + 32px); padding-bottom: 2rem; border-bottom: 1px solid var(--border-subtle); margin-bottom: 3rem; }
+.back-link { display: inline-block; font-family: var(--font-mono); font-size: 0.8125rem; color: var(--fg-muted); margin-bottom: 1.5rem; transition: color var(--transition); }
+.back-link:hover { color: var(--accent); }
+.article-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fg-muted); padding: 3px 10px; border: 1px solid var(--border); border-radius: 0; margin-bottom: 1rem; }
+.article-date { display: block; font-family: var(--font-mono); font-size: 0.75rem; color: var(--fg-dim); margin-bottom: 1rem; }
+.article-title { font-family: var(--font-display); font-size: clamp(1.875rem, 4vw, 2.75rem); font-weight: 800; line-height: 1.12; letter-spacing: -0.025em; color: var(--fg); margin-bottom: 1rem; }
+.article-subtitle { font-family: var(--font-serif); font-size: 1.125rem; color: var(--fg-muted); line-height: 1.6; }
+
+/* ---------- Hero Stats ---------- */
+.hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+.hero-stat { border: 1px solid var(--border-subtle); border-radius: 0; padding: 1.2rem; text-align: center; transition: border-color var(--transition), transform var(--transition); }
+.hero-stat:hover { border-color: var(--border); transform: translateY(-2px); }
+.hero-stat .value { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; color: var(--accent); margin-bottom: 0.3rem; }
+.hero-stat .label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.hero-stat.critical .value { color: var(--callout-red); }
+.hero-stat.warning .value { color: var(--callout-orange); }
+.hero-stat.positive .value { color: var(--callout-green); }
+
+/* ---------- Article Body ---------- */
+.article-body { font-family: var(--font-serif); }
+.article-body .section { margin: 3rem 0; padding: 0 0 2rem; border-bottom: 1px solid var(--border-subtle); }
+.article-body .section:last-child { border-bottom: none; }
+.article-body p { font-family: var(--font-serif); font-size: 1.1875rem; line-height: 1.9; color: var(--fg-muted); margin-bottom: 1.5em; }
+.article-body h2 { font-family: var(--font-display); font-size: clamp(1.25rem, 2vw, 1.5rem); font-weight: 700; color: var(--fg); margin-top: 2.5em; margin-bottom: 1rem; line-height: 1.25; }
+.article-body h3 { font-family: var(--font-display); font-size: 1.125rem; font-weight: 700; color: var(--fg); margin-top: 2em; margin-bottom: 0.75rem; line-height: 1.3; }
+.article-body h4 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--fg); margin-top: 1.5em; margin-bottom: 0.5rem; }
+.article-body strong { color: var(--fg); font-weight: 600; }
+.article-body ul, .article-body ol { margin-bottom: 1.5em; padding-left: 1.5em; }
+.article-body ul { list-style: disc; }
+.article-body ol { list-style: decimal; }
+.article-body li { font-family: var(--font-serif); font-size: 1.1875rem; line-height: 1.9; color: var(--fg-muted); margin-bottom: 0.5rem; }
+.article-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; transition: color var(--transition); }
+.article-body a:hover { color: var(--accent-hover); }
+
+/* ---------- Callout / Highlight Boxes ---------- */
+.highlight { background: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: 0; border-left: 3px solid var(--accent); padding: 1.5rem; margin: 2rem 0; }
+.highlight strong:first-child { display: block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 0.5rem; }
+.highlight.warning { border-left-color: var(--callout-orange); }
+.highlight.warning strong:first-child { color: var(--callout-orange); }
+.highlight.danger { border-left-color: var(--callout-red); }
+.highlight.danger strong:first-child { color: var(--callout-red); }
+.highlight.success { border-left-color: var(--callout-green); }
+.highlight.success strong:first-child { color: var(--callout-green); }
+
+/* ---------- Code ---------- */
+code { background: var(--bg-deeper); padding: 0.15rem 0.4rem; border-radius: 0; font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); }
+
+/* ---------- Tables ---------- */
+.table-container { overflow-x: auto; margin: 2rem 0; border: 1px solid var(--border); border-radius: 0; }
+table { width: 100%; border-collapse: collapse; }
+th { background: var(--bg-deeper); font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); padding: 0.7rem 1rem; text-align: left; }
+td { padding: 0.7rem 1rem; border-top: 1px solid var(--border-subtle); font-family: var(--font-serif); font-size: 0.9375rem; color: var(--fg-muted); }
+tbody tr:hover td { background: var(--accent-glow); }
+.strategy-table .critical { color: var(--callout-red); font-weight: 600; }
+.strategy-table .warning { color: var(--callout-orange); font-weight: 600; }
+.strategy-table .success { color: var(--callout-green); font-weight: 600; }
+.strategy-table .muted { color: var(--fg-dim); }
+
+/* ---------- Priority Matrix ---------- */
+.priority-matrix { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+.priority-item { border: 1px solid var(--border-subtle); padding: 1.5rem; transition: border-color var(--transition), transform var(--transition); }
+.priority-item.p0 { border-left: 4px solid var(--callout-red); }
+.priority-item.p1 { border-left: 4px solid var(--callout-orange); }
+.priority-item.p2 { border-left: 4px solid var(--callout-green); }
+.priority-item:hover { border-color: var(--border); transform: translateY(-2px); }
+.priority-item h4 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--fg); margin-bottom: 0.5rem; }
+.priority-item .priority-label { font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; font-weight: 600; }
+.priority-item.p0 .priority-label { color: var(--callout-red); }
+.priority-item.p1 .priority-label { color: var(--callout-orange); }
+.priority-item.p2 .priority-label { color: var(--callout-green); }
+.priority-item p { font-family: var(--font-serif); font-size: 0.95rem; line-height: 1.6; color: var(--fg-muted); margin-bottom: 1rem; }
+.priority-item .meta { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-dim); }
+
+/* ---------- Revenue Impact Cards ---------- */
+.revenue-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+.revenue-card { background: var(--bg-raised); border: 1px solid var(--border-subtle); padding: 1.5rem; transition: border-color var(--transition), transform var(--transition); }
+.revenue-card:hover { border-color: var(--border); transform: translateY(-2px); }
+.revenue-card h4 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--fg); margin-bottom: 0.5rem; }
+.revenue-card .impact-value { font-family: var(--font-display); font-size: 1.2rem; font-weight: 800; color: var(--accent); margin-bottom: 0.5rem; }
+.revenue-card .impact-value.high { color: var(--callout-green); }
+.revenue-card .impact-value.medium { color: var(--callout-orange); }
+.revenue-card .impact-value.low { color: var(--fg-dim); }
+.revenue-card p { font-family: var(--font-serif); font-size: 0.9375rem; line-height: 1.6; color: var(--fg-muted); margin-bottom: 1rem; }
+.revenue-card .timeline { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-dim); }
+
+/* ---------- Footer ---------- */
+.footer { padding: 20px 0; background: var(--bg-raised); border-top: 1px solid var(--border-subtle); margin-left: 280px; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 28px; }
+.footer-brand .nav-logo { margin-bottom: 14px; }
+.footer-address { font-size: 0.8125rem; color: var(--fg-dim); line-height: 1.5; }
+.footer-heading { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg); margin-bottom: 16px; }
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 10px; }
+.footer-links a { font-size: 0.8125rem; color: var(--fg-muted); transition: color var(--transition); }
+.footer-links a:hover { color: var(--fg); }
+.footer-bottom { display: flex; align-items: center; justify-content: center; }
+.footer-bottom p { font-size: 0.7rem; color: var(--fg-dim); margin: 0; line-height: 1; }
+
+/* ---------- Focus & Selection ---------- */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+::selection { background: oklch(0.72 0.12 192 / 0.25); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .toc { transform: translateX(-100%); }
+  .main, .main-content, .main-container, .article-wrapper, .content-wrapper { margin-left: 0 !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .hamburger { display: flex; }
+  .toc.open { transform: translateX(0); }
+  .toc-toggle { display: block; }
+  .main { margin-left: 0; }
+  .footer { margin-left: 0; }
+}
+
+@media (max-width: 768px) {
+  .main-container { padding: 0 1rem 3rem; }
+  .article-title { font-size: clamp(1.5rem, 6vw, 2rem); }
+  .hero-stats { grid-template-columns: 1fr; }
+  .article-header { padding-top: calc(var(--nav-h) + 20px); }
+  .priority-matrix { grid-template-columns: 1fr; }
+  .revenue-cards { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-bottom { flex-direction: column; gap: 16px; align-items: flex-start; }
+}
+
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+
+<body>
+
+  <div class="progress-bar" id="progress-bar"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="navbar">
+    <div style="display:flex;align-items:center;height:100%;padding:0 24px;">
+      <a href="/"><img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);"></a>
+    </div>
+  </nav>
+
+  <!-- TOC Toggle (mobile) -->
+  <button class="toc-toggle" id="toc-toggle" aria-label="Toggle table of contents">&#9776;</button>
+  <div class="toc-overlay" id="toc-overlay"></div>
+
+  <!-- TOC Sidebar -->
+  <nav class="toc" id="toc">
+    <h3>Contents</h3>
+    <ul>
+      <li><a href="#executive-summary">Executive Summary</a></li>
+      <li><a href="#paul-requirements">Paul's Requirements</a></li>
+      <li><a href="#conversion-crisis">Conversion Crisis Analysis</a></li>
+      <li><a href="#immediate-blockers">Immediate Revenue Blockers</a></li>
+      <li><a href="#self-serve-strategy">Self-Serve Strategy</a></li>
+      <li><a href="#revenue-roadmap">Revenue-Linked Roadmap</a></li>
+      <li><a href="#execution-framework">Execution Framework</a></li>
+      <li><a href="#success-metrics">Success Metrics</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="main-container">
+
+      <!-- Article Header -->
+      <header class="article-header">
+        <a href="index.html" class="back-link">&larr; Back to Research</a>
+        <span class="article-tag">Product Strategy</span>
+        <span class="article-date">March 7, 2026 — Sunday Noon Deadline</span>
+        <h1 class="article-title">Product Update Requirements</h1>
+        <p class="article-subtitle">
+          Comprehensive product roadmap addressing Paul Hsu's Sunday noon deadline. Focuses on revenue features, pricing alignment, and systematic pipeline conversion improvements to address the 78% → 8% engagement crisis.
+        </p>
+
+        <div class="hero-stats">
+          <div class="hero-stat critical">
+            <div class="value">78% → 8%</div>
+            <div class="label">Pipeline Conversion Crisis</div>
+          </div>
+          <div class="hero-stat warning">
+            <div class="value">3-6 months</div>
+            <div class="label">Enterprise Sales Cycle</div>
+          </div>
+          <div class="hero-stat positive">
+            <div class="value">Sunday Noon</div>
+            <div class="label">Paul's Deadline</div>
+          </div>
+          <div class="hero-stat">
+            <div class="value">Revenue-First</div>
+            <div class="label">Product Prioritization</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Article Body -->
+      <div class="article-body">
+
+        <!-- ==================== EXECUTIVE SUMMARY ==================== -->
+        <section class="section" id="executive-summary">
+          <h2>Executive Summary: The Product Crisis Behind the Board Crisis</h2>
+
+          <p>
+            Paul Hsu's Sunday noon deadline isn't just about accountability—it's about product execution. His 1:46 PM ultimatum specifically demanded follow-up on <strong>"product changes on revenue features"</strong> and <strong>"pricing sheet"</strong> alignment between sales, product, and leadership.
+          </p>
+
+          <div class="highlight danger">
+            <strong>The Core Problem:</strong>
+            TestMachine has a 90% conversion failure rate (78% prospecting → 8% engaged) despite significant product improvements since October. The product team is building features, but not the right features to accelerate revenue conversion.
+          </div>
+
+          <h3>Product vs. Pipeline Reality</h3>
+
+          <p>
+            Since October 2025, TestMachine shipped major improvements:
+          </p>
+
+          <ul>
+            <li><strong>API → App transition</strong> (reduced demo friction)</li>
+            <li><strong>Risk signals</strong> (based on Binance/Bitget feedback)</li>
+            <li><strong>Fraud farm detection</strong> (competitive differentiation)</li>
+            <li><strong>Coinbase expansion</strong> to $40K-70K/month</li>
+          </ul>
+
+          <p>
+            Yet pipeline conversion remains catastrophically low. This indicates a product-market fit problem at the conversion layer, not the product capability layer.
+          </p>
+
+          <div class="highlight warning">
+            <strong>Paul's Insight:</strong>
+            "You have a lot of leads. What you're afraid to do is have a dinner and meet people face to face to go ask them the three questions: How much budget do you have? When do you need to spend it? And are you the decision maker?"
+          </div>
+
+          <p>
+            The product roadmap must shift from feature development to conversion acceleration. Every sprint item must directly address: why do 78% of prospects never engage meaningfully with TestMachine?
+          </p>
+
+        </section>
+
+        <!-- ==================== PAUL REQUIREMENTS ==================== -->
+        <section class="section" id="paul-requirements">
+          <h2>Paul's Specific Requirements</h2>
+
+          <p>
+            Paul's 1:46 PM ultimatum contained specific product deliverables for Sunday noon:
+          </p>
+
+          <h3>1. Product Changes on Revenue Features</h3>
+
+          <div class="highlight">
+            <strong>Paul's Quote:</strong>
+            "Do you have the follow up on the other items - importantly, product changes on revenue features, again per our board meeting and our Thurs conversation?"
+          </div>
+
+          <p>
+            This references specific discussions about features that directly impact revenue conversion. Based on the three-week correspondence, these include:
+          </p>
+
+          <ul>
+            <li>Self-serve product trial capabilities</li>
+            <li>Interactive pricing and ROI calculators</li>
+            <li>Automated proof-of-concept workflows</li>
+            <li>Usage analytics and reporting dashboards</li>
+          </ul>
+
+          <h3>2. Pricing Sheet Alignment</h3>
+
+          <div class="highlight">
+            <strong>Paul's Quote:</strong>
+            "Product is also responsible with the leadership team on the pricing sheet, as the checks and balances between sales and product and leadership should guide the answers."
+          </div>
+
+          <p>
+            The disconnect: James Kelly mentioned pricing assumptions "anchored to Coinbase" but acknowledged "we still are early in the discovery of actual budgets rather than estimated budgets." This creates execution risk.
+          </p>
+
+          <h3>3. Implementation of "Many Other Parts"</h3>
+
+          <div class="highlight">
+            <strong>Paul's Quote:</strong>
+            "While we only focused on one aspect of this - pipeline for exchanges - there are many other parts of the feedback that still need to be implemented."
+          </div>
+
+          <p>
+            This refers to product changes across all seven segments (not just Token Custody exchanges), including Azimuth, RWA tokenization, agentic AI security, and DeFi monitoring.
+          </p>
+
+        </section>
+
+        <!-- ==================== CONVERSION CRISIS ==================== -->
+        <section class="section" id="conversion-crisis">
+          <h2>Conversion Crisis Analysis</h2>
+
+          <p>
+            The pipeline data reveals a systematic product problem disguised as a sales problem:
+          </p>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Stage</th>
+                  <th>Percentage</th>
+                  <th>Drop-off Rate</th>
+                  <th>Product Hypothesis</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Prospecting</strong></td>
+                  <td class="critical">78%</td>
+                  <td>—</td>
+                  <td>Value proposition unclear from marketing materials</td>
+                </tr>
+                <tr>
+                  <td><strong>Outreach</strong></td>
+                  <td class="warning">13%</td>
+                  <td>83% lost</td>
+                  <td>Demo/trial experience doesn't demonstrate value</td>
+                </tr>
+                <tr>
+                  <td><strong>Engaged</strong></td>
+                  <td class="critical">8%</td>
+                  <td>38% lost</td>
+                  <td>Missing features for enterprise evaluation</td>
+                </tr>
+                <tr>
+                  <td><strong>Closed</strong></td>
+                  <td class="critical">~2%</td>
+                  <td>75% lost</td>
+                  <td>Pricing/procurement process friction</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Product Failure Points</h3>
+
+          <h4>Prospecting → Outreach (83% Drop-off)</h4>
+          <p>
+            <strong>Problem:</strong> Prospects can't quickly understand TestMachine's value proposition or experience the product without significant sales involvement.
+          </p>
+
+          <p>
+            <strong>Product Solution:</strong> Self-serve product experience that demonstrates value in &lt;5 minutes without API keys, technical setup, or sales calls.
+          </p>
+
+          <h4>Outreach → Engaged (38% Drop-off)</h4>
+          <p>
+            <strong>Problem:</strong> Demo experience doesn't translate to meaningful evaluation or procurement discussions.
+          </p>
+
+          <p>
+            <strong>Product Solution:</strong> Automated proof-of-concept workflows that let exchanges test TestMachine against their actual transaction data.
+          </p>
+
+          <h4>Engaged → Closed (75% Drop-off)</h4>
+          <p>
+            <strong>Problem:</strong> Enterprise sales cycle takes 3-6 months with unclear pricing, ROI justification, and procurement processes.
+          </p>
+
+          <p>
+            <strong>Product Solution:</strong> Interactive ROI calculators, pricing transparency, and self-serve contract generation.
+          </p>
+
+        </section>
+
+        <!-- ==================== IMMEDIATE BLOCKERS ==================== -->
+        <section class="section" id="immediate-blockers">
+          <h2>Immediate Revenue Blockers (30-Day Sprint)</h2>
+
+          <p>
+            Based on the pipeline analysis and Paul's feedback, these features directly unblock revenue conversion:
+          </p>
+
+          <div class="priority-matrix">
+            <div class="priority-item p0">
+              <div class="priority-label">P0 - Revenue Critical</div>
+              <h4>Interactive Pricing Calculator</h4>
+              <p>
+                Live calculator that maps exchange characteristics (transaction volume, chains, compliance requirements) to monthly costs. Addresses Paul's "pricing sheet" alignment requirement and the "discovery of actual budgets" problem James identified.
+              </p>
+              <div class="meta">Revenue Impact: Direct | Timeline: 2 weeks | Blocks: Kraken, Binance pricing discussions</div>
+            </div>
+
+            <div class="priority-item p0">
+              <div class="priority-label">P0 - Revenue Critical</div>
+              <h4>Self-Serve Product Demo</h4>
+              <p>
+                Live sandbox environment where prospects can test TestMachine's capabilities against sample transaction data without API keys or technical setup. Directly addresses the 83% prospecting→outreach drop-off rate.
+              </p>
+              <div class="meta">Revenue Impact: Direct | Timeline: 3 weeks | Blocks: 78% pipeline stuck in prospecting</div>
+            </div>
+
+            <div class="priority-item p0">
+              <div class="priority-label">P0 - Revenue Critical</div>
+              <h4>Usage Analytics Dashboard</h4>
+              <p>
+                Real-time dashboard showing security events detected, false positive rates, and risk score improvements. Provides concrete ROI justification for procurement decisions.
+              </p>
+              <div class="meta">Revenue Impact: Direct | Timeline: 2 weeks | Blocks: Enterprise evaluation processes</div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ==================== SELF-SERVE STRATEGY ==================== -->
+        <section class="section" id="self-serve-strategy">
+          <h2>Self-Serve Strategy: Reducing 3-6 Month Sales Cycles</h2>
+
+          <p>
+            Paul's insight: <strong>"Get John on self-serve. Get that going. You'll be surprised. Just get the money in."</strong>
+          </p>
+
+          <h3>Self-Serve Product Experience</h3>
+
+          <div class="revenue-cards">
+            <div class="revenue-card">
+              <h4>Instant Security Scan</h4>
+              <div class="impact-value high">$500K+ ARR potential</div>
+              <p>
+                Upload wallet addresses or transaction hashes, get security analysis in 60 seconds. Freemium model: 10 free scans, $99/month for unlimited personal use, enterprise pricing for high-volume.
+              </p>
+              <div class="timeline">Implementation: 4 weeks | POC ready: 2 weeks</div>
+            </div>
+
+            <div class="revenue-card">
+              <h4>API Self-Service Portal</h4>
+              <div class="impact-value medium">$200K+ ARR potential</div>
+              <p>
+                Developer portal with API keys, documentation, and usage-based pricing. Start at $0.01 per scan, scale to enterprise contracts. Reduces technical sales cycle from months to days.
+              </p>
+              <div class="timeline">Implementation: 3 weeks | Beta ready: 1 week</div>
+            </div>
+
+            <div class="revenue-card">
+              <h4>Security Score Calculator</h4>
+              <div class="impact-value high">Lead generation tool</div>
+              <p>
+                Public tool that analyzes any smart contract address and provides security score. Generates leads for enterprise sales while providing immediate value to prospects.
+              </p>
+              <div class="timeline">Implementation: 2 weeks | Launch ready: 1 week</div>
+            </div>
+          </div>
+
+          <h3>Hybrid Sales Model</h3>
+
+          <p>
+            The goal isn't to eliminate enterprise sales—it's to accelerate time-to-value and qualification:
+          </p>
+
+          <ul>
+            <li><strong>Self-serve entry:</strong> Prospects experience value in minutes, not months</li>
+            <li><strong>Usage-based qualification:</strong> Enterprise sales triggered by usage thresholds</li>
+            <li><strong>Product-led expansion:</strong> Self-serve users upgrade to enterprise features</li>
+            <li><strong>Faster cycles:</strong> Enterprise prospects arrive pre-qualified with usage data</li>
+          </ul>
+
+        </section>
+
+        <!-- ==================== REVENUE ROADMAP ==================== -->
+        <section class="section" id="revenue-roadmap">
+          <h2>Revenue-Linked Product Roadmap</h2>
+
+          <p>
+            Every feature prioritized by <strong>Revenue Impact ÷ Engineering Cost = ROI Score</strong>:
+          </p>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Feature</th>
+                  <th>Revenue Impact</th>
+                  <th>Engineering Cost</th>
+                  <th>ROI Score</th>
+                  <th>Priority</th>
+                  <th>Blocks Deal</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Pricing Calculator</strong></td>
+                  <td class="success">$1.2M (Kraken + 2 others)</td>
+                  <td>2 eng-weeks</td>
+                  <td class="success">9.2</td>
+                  <td class="success">P0</td>
+                  <td>Kraken, Binance pricing</td>
+                </tr>
+                <tr>
+                  <td><strong>Self-Serve Demo</strong></td>
+                  <td class="success">$800K (pipeline acceleration)</td>
+                  <td>3 eng-weeks</td>
+                  <td class="success">8.7</td>
+                  <td class="success">P0</td>
+                  <td>78% prospecting stuck</td>
+                </tr>
+                <tr>
+                  <td><strong>Usage Dashboard</strong></td>
+                  <td class="warning">$600K (enterprise evaluation)</td>
+                  <td>2 eng-weeks</td>
+                  <td class="warning">7.8</td>
+                  <td class="success">P0</td>
+                  <td>Enterprise procurement</td>
+                </tr>
+                <tr>
+                  <td><strong>API Portal</strong></td>
+                  <td class="warning">$400K (self-serve revenue)</td>
+                  <td>2 eng-weeks</td>
+                  <td class="warning">6.5</td>
+                  <td class="warning">P1</td>
+                  <td>Developer adoption</td>
+                </tr>
+                <tr>
+                  <td><strong>Audit Reports</strong></td>
+                  <td class="warning">$300K (Azimuth expansion)</td>
+                  <td>3 eng-weeks</td>
+                  <td class="muted">4.2</td>
+                  <td class="warning">P1</td>
+                  <td>Audit firm procurement</td>
+                </tr>
+                <tr>
+                  <td><strong>Mobile App</strong></td>
+                  <td class="muted">$100K (user engagement)</td>
+                  <td>6 eng-weeks</td>
+                  <td class="muted">1.8</td>
+                  <td class="muted">P2</td>
+                  <td>Nice-to-have</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Sprint Allocation</h3>
+
+          <ul>
+            <li><strong>70% engineering capacity:</strong> P0 features (direct revenue unblocks)</li>
+            <li><strong>20% engineering capacity:</strong> P1 features (revenue multipliers)</li>
+            <li><strong>10% engineering capacity:</strong> P2 features (future foundation)</li>
+          </ul>
+
+        </section>
+
+        <!-- ==================== EXECUTION FRAMEWORK ==================== -->
+        <section class="section" id="execution-framework">
+          <h2>Execution Framework: Demonstrating Discipline</h2>
+
+          <p>
+            Paul's criticism was about execution discipline, not product vision. The framework must demonstrate systematic process improvement:
+          </p>
+
+          <h3>Revenue-First Sprint Planning</h3>
+
+          <div class="highlight success">
+            <strong>New Process:</strong>
+            Every sprint planning session starts with pipeline review. Features that don't directly address current deal blockers or conversion gaps get deprioritized. No exceptions.
+          </div>
+
+          <h4>Weekly Stakeholder Reviews</h4>
+          <ul>
+            <li><strong>Monday:</strong> Pipeline review with James - what deals are blocked by missing features?</li>
+            <li><strong>Wednesday:</strong> Sprint progress review with John - are P0 features on track?</li>
+            <li><strong>Friday:</strong> Revenue impact review with Matthew - did shipped features improve conversion metrics?</li>
+          </ul>
+
+          <h4>Feature Validation Framework</h4>
+          <p>
+            Before any feature enters the backlog, it must pass the <strong>"Paul Test"</strong>:
+          </p>
+
+          <ol>
+            <li><strong>Revenue Impact:</strong> Which specific deals does this unblock? What's the dollar value?</li>
+            <li><strong>Conversion Stage:</strong> Which pipeline stage does this improve? By how much?</li>
+            <li><strong>Timeline Impact:</strong> Does this reduce sales cycle length? By how many days?</li>
+            <li><strong>Self-Serve Potential:</strong> Can prospects get value without sales involvement?</li>
+          </ol>
+
+          <h3>Accountability Structure</h3>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Role</th>
+                  <th>Revenue Responsibility</th>
+                  <th>Success Metric</th>
+                  <th>Review Cadence</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>John (CTO)</strong></td>
+                  <td>Revenue-blocking features resolved</td>
+                  <td>P0 features shipped on time</td>
+                  <td>Weekly</td>
+                </tr>
+                <tr>
+                  <td><strong>Engineering Team</strong></td>
+                  <td>Feature delivery aligned to deal requirements</td>
+                  <td>ROI score > 7.0 for all P0 features</td>
+                  <td>Sprint retrospectives</td>
+                </tr>
+                <tr>
+                  <td><strong>Product Manager</strong></td>
+                  <td>Pipeline conversion improvement</td>
+                  <td>78% → 25% prospecting conversion within 90 days</td>
+                  <td>Bi-weekly</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </section>
+
+        <!-- ==================== SUCCESS METRICS ==================== -->
+        <section class="section" id="success-metrics">
+          <h2>Success Metrics: Proving the Strategy Works</h2>
+
+          <p>
+            Paul demands measurable execution improvements. These metrics demonstrate product changes are driving revenue results:
+          </p>
+
+          <h3>Pipeline Conversion Metrics</h3>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Current State</th>
+                  <th>60-Day Target</th>
+                  <th>90-Day Target</th>
+                  <th>Product Driver</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Prospecting → Outreach</strong></td>
+                  <td class="critical">17%</td>
+                  <td class="warning">35%</td>
+                  <td class="success">50%</td>
+                  <td>Self-serve demo</td>
+                </tr>
+                <tr>
+                  <td><strong>Outreach → Engaged</strong></td>
+                  <td class="critical">62%</td>
+                  <td class="warning">75%</td>
+                  <td class="success">85%</td>
+                  <td>Pricing calculator</td>
+                </tr>
+                <tr>
+                  <td><strong>Engaged → Closed</strong></td>
+                  <td class="critical">25%</td>
+                  <td class="warning">40%</td>
+                  <td class="success">55%</td>
+                  <td>Usage dashboard + ROI tools</td>
+                </tr>
+                <tr>
+                  <td><strong>Overall Conversion</strong></td>
+                  <td class="critical">2.6%</td>
+                  <td class="warning">10.5%</td>
+                  <td class="success">23.1%</td>
+                  <td>Combined effect</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Revenue Impact Metrics</h3>
+
+          <h4>30-Day Targets</h4>
+          <ul>
+            <li><strong>Self-serve trials:</strong> 50+ exchanges using demo environment</li>
+            <li><strong>Pricing transparency:</strong> 100% of prospects have calculated pricing within 1st meeting</li>
+            <li><strong>Sales cycle reduction:</strong> 25% faster progression from demo to pilot</li>
+          </ul>
+
+          <h4>60-Day Targets</h4>
+          <ul>
+            <li><strong>Pipeline velocity:</strong> 3+ exchanges in late-stage evaluation</li>
+            <li><strong>Self-serve revenue:</strong> $10K+ MRR from API/usage-based pricing</li>
+            <li><strong>Deal size increase:</strong> Average deal value increases 20% (better ROI justification)</li>
+          </ul>
+
+          <h4>90-Day Targets</h4>
+          <ul>
+            <li><strong>Pipeline conversion:</strong> 23% overall conversion rate (9x improvement)</li>
+            <li><strong>Revenue diversification:</strong> 30% of revenue from self-serve channels</li>
+            <li><strong>Sales efficiency:</strong> 50% reduction in sales cycle length</li>
+          </ul>
+
+          <div class="highlight success">
+            <strong>Paul's Success Criteria:</strong>
+            "If you are truly motivated, then please make the strong affirmative statement as such so there are no unwavering questions." Success means consistently exceeding these metrics while maintaining product development velocity.
+          </div>
+
+        </section>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo">
+            <span class="nav-logo-text">TestMachine Research</span>
+          </div>
+          <div class="footer-address">
+            Critical product strategy analysis<br>
+            Paul Hsu Sunday noon deadline response
+          </div>
+        </div>
+        <div>
+          <h3 class="footer-heading">Strategy</h3>
+          <ul class="footer-links">
+            <li><a href="paul-hsu-comprehensive-synthesis.html">Board Crisis Analysis</a></li>
+            <li><a href="paul-hsu-execution-plan.html">Execution Plan</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer-heading">Company</h3>
+          <ul class="footer-links">
+            <li><a href="https://testmachine.ai">TestMachine</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer-heading">Board</h3>
+          <ul class="footer-links">
+            <li><a href="https://decasonic.com">Decasonic</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 TestMachine Research. Critical deadline analysis.</p>
+      </div>
+    </div>
+  </footer>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = (winScroll / height) * 100;
+  document.getElementById('progress-bar').style.width = scrolled + '%';
+});
+
+// TOC highlighting
+const sections = document.querySelectorAll('section[id]');
+const tocLinks = document.querySelectorAll('.toc a[href^="#"]');
+const observerOptions = { rootMargin: '-20% 0px -70% 0px' };
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      tocLinks.forEach(link => link.classList.remove('active'));
+      const activeLink = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+      if (activeLink) activeLink.classList.add('active');
+    }
+  });
+}, observerOptions);
+sections.forEach(section => observer.observe(section));
+
+// Mobile TOC toggle
+document.getElementById('toc-toggle').addEventListener('click', () => {
+  document.getElementById('toc').classList.toggle('open');
+  document.getElementById('toc-overlay').classList.toggle('open');
+});
+document.getElementById('toc-overlay').addEventListener('click', () => {
+  document.getElementById('toc').classList.remove('open');
+  document.getElementById('toc-overlay').classList.remove('open');
+});
+</script>
+
+</body>
+</html>

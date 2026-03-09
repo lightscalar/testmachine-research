@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arbitrage Trading Bots — Deep Dive Research — TestMachine Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: oklch(0.18 0.005 260);
+  --bg-raised: oklch(0.21 0.005 260);
+  --bg-deeper: oklch(0.14 0.005 260);
+  --fg: oklch(0.92 0 0);
+  --fg-muted: oklch(0.65 0 0);
+  --fg-dim: oklch(0.45 0 0);
+  --border: oklch(0.32 0.005 260);
+  --border-subtle: oklch(0.25 0.005 260);
+  --accent: oklch(0.72 0.12 192);
+  --accent-hover: oklch(0.80 0.12 192);
+  --accent-glow: oklch(0.72 0.12 192 / 0.1);
+  --card-bg: oklch(0.21 0.005 260);
+  --input-bg: oklch(0.15 0.005 260);
+  --nav-bg: oklch(0.18 0.005 260 / 0.85);
+  --font-display: 'Manrope', sans-serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --font-serif: 'Source Serif 4', Charter, Georgia, serif;
+  --font: var(--font-mono);
+  --nav-h: 72px;
+  --max-w: 1120px;
+  --section-py: clamp(80px, 10vw, 140px);
+  --gap: 24px;
+  --transition: 0.25s ease;
+  --callout-orange: oklch(0.75 0.15 55);
+  --callout-red: oklch(0.65 0.2 25);
+  --callout-green: oklch(0.72 0.15 155);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); -webkit-text-size-adjust: 100%; }
+body {
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+body.menu-open { overflow: hidden; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; color: inherit; }
+ul { list-style: none; }
+::selection { background: oklch(0.72 0.12 192 / 0.25); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* ---------- Progress Bar ---------- */
+.progress-bar {
+  position: fixed; top: 0; left: 0; height: 2px; z-index: 1100; width: 0%;
+  background: linear-gradient(90deg, var(--accent), var(--callout-green));
+  transition: width 0.1s;
+}
+
+/* ---------- Navigation ---------- */
+.nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
+.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
+.toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+.toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
+.nav-container {
+  display: flex; align-items: center; justify-content: space-between;
+  height: 100%; max-width: var(--max-w); margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none;
+}
+.nav-logo-text {
+  font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em;
+}
+.nav-links { display: flex; align-items: center; gap: 32px; }
+.nav-link {
+  font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 500;
+  color: var(--fg-muted); transition: color var(--transition); position: relative;
+}
+.nav-link::after {
+  content: ''; position: absolute; bottom: -4px; left: 0;
+  width: 0; height: 1px; background: var(--accent); transition: width var(--transition);
+}
+.nav-link:hover, .nav-link.nav-link--active { color: var(--fg); }
+.nav-link:hover::after, .nav-link.nav-link--active::after { width: 100%; }
+.nav-link.nav-link--active { color: var(--accent); }
+.nav-actions { display: flex; align-items: center; gap: 12px; }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-family: var(--font-mono); font-weight: 600; font-size: 0.8125rem;
+  letter-spacing: 0.02em; padding: 14px 32px; border-radius: 0;
+  transition: all var(--transition); white-space: nowrap;
+}
+.btn:hover { transform: scale(1.02); }
+.btn:active { transform: scale(0.98); }
+.btn--primary {
+  background: var(--accent); color: oklch(0.12 0 0);
+  border: 1px solid var(--accent); font-weight: 700;
+}
+.btn--primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.btn--nav { padding: 10px 22px; font-size: 0.75rem; }
+
+/* Hamburger */
+.hamburger {
+  display: none; width: 40px; height: 40px;
+  flex-direction: column; align-items: center; justify-content: center; gap: 5px; z-index: 1001;
+}
+.hamburger span {
+  display: block; width: 20px; height: 1.5px; background: var(--fg);
+  transition: all var(--transition); transform-origin: center;
+}
+.hamburger.active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+/* Mobile Menu */
+.mobile-menu {
+  position: fixed; inset: 0; z-index: 999; background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden; transition: all 0.3s ease;
+}
+.mobile-menu.active { opacity: 1; visibility: visible; }
+.mobile-menu-inner { text-align: center; }
+.mobile-menu-link {
+  display: block; font-family: var(--font-display); font-size: clamp(1.5rem, 5vw, 2.25rem);
+  font-weight: 600; color: var(--fg-muted); padding: 14px 0; transition: color var(--transition);
+}
+.mobile-menu-link:hover { color: var(--fg); }
+.mobile-menu-link.nav-link--active { color: var(--accent); }
+.mobile-menu-cta { margin-top: 40px; padding: 0 40px; }
+
+/* ---------- TOC Sidebar ---------- */
+.toc a:hover { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+.toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+
+.toc-toggle {
+  display: none; position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200;
+  width: 48px; height: 48px; border-radius: 0; background: var(--accent); color: oklch(0.12 0 0);
+  border: none; font-size: 1.2rem; cursor: pointer;
+  box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3);
+  align-items: center; justify-content: center;
+}
+.toc-overlay { display: none; position: fixed; inset: 0; background: oklch(0 0 0 / 0.6); z-index: 150; }
+
+/* ---------- Main Content ---------- */
+.main-content {
+  margin-left: 280px; max-width: 780px; padding: calc(var(--nav-h) + 2rem) 2.5rem 4rem;
+}
+
+/* ---------- Article Header ---------- */
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: 0.8125rem; color: var(--fg-muted);
+  margin-bottom: 1.5rem; transition: color var(--transition);
+}
+.back-link:hover { color: var(--accent); }
+.article-header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border-subtle); }
+.article-tag {
+  display: inline-block; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent);
+  padding: 0.3rem 0.8rem; border: 1px solid var(--accent); border-radius: 0; margin-bottom: 1rem;
+}
+.article-header h1 {
+  font-family: var(--font-display); font-size: clamp(1.6rem, 4vw, 2.2rem);
+  font-weight: 800; line-height: 1.2; margin-bottom: 0.8rem; color: var(--fg);
+}
+.article-header .subtitle {
+  font-family: var(--font-serif); font-size: 1.1rem; color: var(--fg-muted); line-height: 1.6;
+}
+.article-header .date {
+  font-family: var(--font-mono); font-size: 0.8rem; color: var(--fg-dim); margin-top: 1rem;
+}
+
+/* ---------- Metrics ---------- */
+.metrics {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem; margin-bottom: 3rem;
+}
+.metric {
+  background: var(--card-bg); border: 1px solid var(--border-subtle);
+  border-radius: 0; padding: 1.2rem;
+}
+.metric .label {
+  font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase;
+  letter-spacing: 0.08em; color: var(--fg-dim); margin-bottom: 0.3rem;
+}
+.metric .value { font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; }
+.metric .value.red { color: var(--callout-red); }
+.metric .value.green { color: var(--callout-green); }
+.metric .value.orange { color: var(--callout-orange); }
+.metric .value.blue { color: var(--accent); }
+.metric .note { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-dim); margin-top: 0.2rem; }
+
+/* ---------- Article Body ---------- */
+.section { margin-bottom: 3rem; }
+.section p {
+  font-family: var(--font-serif); font-size: 1.1875rem; line-height: 1.9;
+  color: var(--fg-muted); margin-bottom: 1rem;
+}
+.section h2 {
+  font-family: var(--font-display); font-size: 1.5rem; font-weight: 700;
+  margin-bottom: 1.2rem; padding-top: 1rem; color: var(--fg);
+}
+.section h2 .num { color: var(--accent); margin-right: 0.4rem; }
+.section h3 {
+  font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
+  margin: 1.8rem 0 0.8rem; color: var(--fg);
+}
+.section h4 {
+  font-family: var(--font-display); font-size: 0.95rem; font-weight: 600;
+  margin: 1.2rem 0 0.5rem; color: var(--accent);
+}
+.section ul, .section ol {
+  margin: 0.5rem 0 1.2rem 1.2rem; list-style: disc;
+}
+.section ol { list-style: decimal; }
+.section li {
+  margin-bottom: 0.4rem; font-family: var(--font-serif); font-size: 1.1875rem;
+  line-height: 1.9; color: var(--fg-muted);
+}
+.section li strong { color: var(--accent); }
+
+/* ---------- Callouts ---------- */
+.callout {
+  background: var(--bg-raised); border: 1px solid var(--border-subtle);
+  border-left: 3px solid var(--accent); border-radius: 0;
+  padding: 1.2rem 1.4rem; margin: 1.5rem 0;
+}
+.callout.warning { border-left-color: var(--callout-orange); }
+.callout.danger { border-left-color: var(--callout-red); }
+.callout.success { border-left-color: var(--callout-green); }
+.callout .callout-title {
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;
+}
+.callout .callout-title.blue { color: var(--accent); }
+.callout .callout-title.green { color: var(--callout-green); }
+.callout .callout-title.orange { color: var(--callout-orange); }
+.callout .callout-title.red { color: var(--callout-red); }
+.callout p {
+  font-family: var(--font-serif); font-size: 0.95rem; line-height: 1.75; color: var(--fg-muted); margin-bottom: 0;
+}
+.callout ul {
+  margin: 0.5rem 0 0 1.2rem; list-style: disc;
+}
+.callout li {
+  margin-bottom: 0.4rem; font-family: var(--font-serif); font-size: 0.95rem;
+  line-height: 1.75; color: var(--fg-muted);
+}
+.callout li strong { color: var(--accent); }
+
+/* ---------- Tables ---------- */
+.table-wrap {
+  overflow-x: auto; margin: 1.2rem 0; border-radius: 0;
+  border: 1px solid var(--border-subtle);
+}
+table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+th {
+  background: var(--bg-deeper); color: var(--accent);
+  font-family: var(--font-mono); font-size: 0.75rem;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  padding: 0.8rem 1rem; text-align: left; white-space: nowrap;
+}
+td {
+  padding: 0.7rem 1rem; border-top: 1px solid var(--border-subtle);
+  font-family: var(--font-mono); font-size: 0.85rem; color: var(--fg-muted);
+}
+tr:hover td { background: var(--accent-glow); }
+td strong { color: var(--fg); }
+
+/* ---------- Difficulty Badges ---------- */
+.difficulty {
+  display: inline-block; padding: 0.15rem 0.5rem; border-radius: 0;
+  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;
+}
+.difficulty.extreme { background: oklch(0.65 0.2 25 / 0.12); color: var(--callout-red); }
+.difficulty.high { background: oklch(0.75 0.15 55 / 0.12); color: var(--callout-orange); }
+.difficulty.moderate { background: oklch(0.78 0.12 85 / 0.12); color: oklch(0.78 0.12 85); }
+
+/* ---------- Code ---------- */
+code {
+  background: var(--bg-raised); border: 1px solid var(--border-subtle);
+  padding: 0.15rem 0.4rem; border-radius: 0;
+  font-size: 0.85rem; font-family: var(--font-mono); color: var(--accent);
+}
+pre {
+  background: oklch(0.12 0.005 260); border: 1px solid var(--border);
+  border-radius: 0; padding: 1.2rem; margin: 1rem 0; overflow-x: auto;
+}
+pre code {
+  background: none; border: none; padding: 0;
+  font-size: 0.82rem; line-height: 1.6; color: var(--callout-green);
+}
+
+/* ---------- Timeline ---------- */
+.timeline { position: relative; padding-left: 2rem; margin: 1.5rem 0; }
+.timeline::before {
+  content: ''; position: absolute; left: 0.5rem; top: 0; bottom: 0;
+  width: 2px; background: var(--border-subtle);
+}
+.timeline-item { position: relative; margin-bottom: 1.5rem; }
+.timeline-item::before {
+  content: ''; position: absolute; left: -1.65rem; top: 0.5rem;
+  width: 10px; height: 10px; border-radius: 0;
+  background: var(--accent); border: 2px solid var(--bg);
+}
+.timeline-item .phase {
+  font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.2rem;
+}
+.timeline-item h4 {
+  font-family: var(--font-display); color: var(--fg); margin: 0 0 0.3rem; font-size: 0.95rem; font-weight: 600;
+}
+.timeline-item p {
+  font-family: var(--font-serif) !important; font-size: 0.88rem !important;
+  color: var(--fg-muted) !important; margin: 0 !important; line-height: 1.7 !important;
+}
+.timeline-item .budget {
+  font-family: var(--font-mono); font-size: 0.8rem; color: var(--callout-green); margin-top: 0.3rem;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  padding: 20px 0;
+  background: var(--bg-raised);
+  border-top: 1px solid var(--border-subtle);
+}
+
+.container {
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 28px;
+}
+
+.footer-brand .nav-logo {
+  margin-bottom: 14px;
+}
+
+.footer-address {
+  font-size: 0.8125rem;
+  color: var(--fg-dim);
+  line-height: 1.5;
+}
+
+.footer-heading {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--fg);
+  margin-bottom: 16px;
+}
+
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+}
+
+.footer-links a:hover {
+  color: var(--fg);
+}
+
+.footer-bottom { display: flex; align-items: center; justify-content: center; }
+
+.footer-bottom p { font-size: 0.7rem; color: var(--fg-dim); margin: 0; line-height: 1; }
+
+/* ---------- Responsive: 1024px ---------- */
+@media (max-width: 1024px) {
+    .toc { transform: translateX(-100%); }
+    .main, .main-content, .main-container, .article-wrapper, .content-wrapper { margin-left: 0 !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .nav-links { display: none; }
+  .hamburger { display: flex; }
+  .toc.open { transform: translateX(0); }
+  .toc-toggle { display: flex; align-items: center; justify-content: center; }
+  .toc-overlay.open { display: block; }
+  .main-content { margin-left: 0; padding: calc(var(--nav-h) + 2rem) clamp(20px, 4vw, 40px) 4rem; }
+  .footer-grid { grid-template-columns: 2fr 1fr 1fr; }
+}
+
+/* ---------- Responsive: 768px ---------- */
+@media (max-width: 768px) {
+  .article-header h1 { font-size: 1.5rem; }
+  .metrics { grid-template-columns: repeat(2, 1fr); }
+  .metric .value { font-size: 1.3rem; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-bottom { flex-direction: column; gap: 16px; align-items: flex-start; }
+}
+
+/* ---------- Responsive: 480px ---------- */
+@media (max-width: 480px) {
+  .metrics { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+
+<!-- Progress Bar -->
+<div class="progress-bar" id="progress"></div>
+
+<!-- Navigation -->
+<nav class="nav" id="navbar">
+  <div class="progress-bar" id="progressBar"></div>
+  <div style="display:flex;align-items:center;height:100%;padding:0 24px;">
+    <a href="/"><img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);"></a>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner">
+    <a href="/" class="mobile-menu-link nav-link--active">Research</a>
+    <div class="mobile-menu-cta">
+    </div>
+  </div>
+</div>
+
+<!-- TOC Toggle (mobile) -->
+<button class="toc-toggle" id="tocToggle" aria-label="Table of contents">&#9776;</button>
+<div class="toc-overlay" id="tocOverlay"></div>
+
+<!-- TOC Sidebar -->
+<nav class="toc" id="toc">
+  <h3>Contents</h3>
+  <a href="#exec">Executive Summary</a>
+  <a href="#s1">1. Opportunity Landscape</a>
+  <a href="#s1-dex" class="sub">DEX-to-DEX</a>
+  <a href="#s1-cross" class="sub">Cross-Chain</a>
+  <a href="#s1-cex-dex" class="sub">CEX-to-DEX</a>
+  <a href="#s1-stat" class="sub">Statistical Arb</a>
+  <a href="#s1-mev" class="sub">MEV</a>
+  <a href="#s1-summary" class="sub">Comparison Matrix</a>
+  <a href="#s2">2. Technical Architecture</a>
+  <a href="#s2-infra" class="sub">Infrastructure</a>
+  <a href="#s2-contracts" class="sub">Smart Contracts</a>
+  <a href="#s2-stack" class="sub">Tech Stack</a>
+  <a href="#s2-security" class="sub">Security</a>
+  <a href="#s3">3. AI/ML for Edge</a>
+  <a href="#s3-llm" class="sub">LLM Applications</a>
+  <a href="#s3-rl" class="sub">RL for Trading</a>
+  <a href="#s3-features" class="sub">Feature Engineering</a>
+  <a href="#s3-backtest" class="sub">Backtesting</a>
+  <a href="#s4">4. Capital Deployment</a>
+  <a href="#s5">5. Costs, Risks &amp; Reality</a>
+  <a href="#s5-costs" class="sub">Infrastructure Costs</a>
+  <a href="#s5-gas" class="sub">Gas Economics</a>
+  <a href="#s5-pnl" class="sub">Realistic P&amp;L</a>
+  <a href="#s5-failures" class="sub">Failure Modes</a>
+  <a href="#s6">6. Getting Started</a>
+</nav>
+
+<!-- Main Content -->
+<main class="main-content">
+
+  <!-- Back Link -->
+  <a href="index.html" class="back-link">&larr; Back to Research</a>
+
+  <!-- Article Header -->
+  <div class="article-header" id="exec">
+    <span class="article-tag">Deep Dive Research</span>
+    <h1>Arbitrage Trading Bots: A Practical Guide for Technical Operators</h1>
+    <p class="subtitle">Realistic assessment of opportunities, architecture, AI/ML edge, capital requirements, and a concrete roadmap — no hype, just numbers.</p>
+    <p class="date">February 19, 2026 &middot; Prepared for TestMachine</p>
+  </div>
+
+  <!-- Key Metrics -->
+  <div class="metrics">
+    <div class="metric">
+      <div class="label">Typical Net Margins</div>
+      <div class="value orange">0.1&ndash;0.5%</div>
+      <div class="note">Per trade, after costs</div>
+    </div>
+    <div class="metric">
+      <div class="label">Infra Costs</div>
+      <div class="value red">$2&ndash;15K/mo</div>
+      <div class="note">For competitive operations</div>
+    </div>
+    <div class="metric">
+      <div class="label">Retail Failure Rate</div>
+      <div class="value red">80%+</div>
+      <div class="note">Within first 3 months</div>
+    </div>
+    <div class="metric">
+      <div class="label">Min Serious Capital</div>
+      <div class="value blue">$100K+</div>
+      <div class="note">For meaningful operations</div>
+    </div>
+  </div>
+
+  <div class="callout danger">
+    <div class="callout-title red">Reality Check</div>
+    <p>Most arbitrage opportunities yield 0.1&ndash;0.5% after costs. Infrastructure runs $2K&ndash;15K/month. 80%+ of retail attempts fail. This is a professional quantitative finance operation, not a weekend project. Your physics/RL/security background helps, but the competitive landscape demands substantial capital and full-time dedication.</p>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section" id="s1">
+    <h2><span class="num">01</span> Arbitrage Opportunities — The Landscape</h2>
+
+    <h3 id="s1-dex">DEX-to-DEX Arbitrage (Same Chain)</h3>
+    <p>Price discrepancies between Uniswap v2/v3, SushiSwap, Curve, Balancer on the same chain. Concentrated liquidity vs. constant product inefficiencies. Token launch windows.</p>
+    <ul>
+      <li><strong>Net margins:</strong> 0.05&ndash;0.3% (pre-gas can be 0.2&ndash;1.5%, but mainnet gas destroys small trades)</li>
+      <li><strong>Capital:</strong> $25K minimum, $100K+ competitive. Flash loans give 10&ndash;50x leverage.</li>
+      <li><strong>Competition:</strong> <span class="difficulty extreme">EXTREME</span> — dominated by well-funded MEV bots, opportunities last 1&ndash;3 blocks</li>
+      <li><strong>L2 opportunity:</strong> Polygon, Arbitrum, Optimism have 0.1&ndash;0.5% net margins with much lower gas</li>
+    </ul>
+
+    <h3 id="s1-cross">Cross-Chain Arbitrage</h3>
+    <p>ETH Mainnet &#8596; Polygon &#8596; Arbitrum &#8596; Optimism &#8596; Solana. Bridge delays create temporary inefficiencies.</p>
+    <ul>
+      <li><strong>Net margins:</strong> 0.2&ndash;2% per cycle (higher due to friction)</li>
+      <li><strong>Capital:</strong> $50K minimum (need liquidity on multiple chains), $200K+ competitive. Cannot use flash loans cross-chain.</li>
+      <li><strong>Competition:</strong> <span class="difficulty high">HIGH but less saturated</span> — technical barriers limit participants</li>
+      <li><strong>Key challenge:</strong> Bridge fees (0.05&ndash;0.3%), time delays (2&ndash;30 min), multi-chain infrastructure</li>
+    </ul>
+
+    <h3 id="s1-cex-dex">CEX-to-DEX Arbitrage</h3>
+    <p>Binance/Coinbase vs. Uniswap/SushiSwap. Futures vs. spot. Funding rate arbitrage.</p>
+    <ul>
+      <li><strong>Net margins:</strong> 0.1&ndash;0.8%, higher during volatility spikes</li>
+      <li><strong>Capital:</strong> $100K minimum (need presence on both sides), $500K+ competitive</li>
+      <li><strong>Competition:</strong> <span class="difficulty high">MODERATE-HIGH</span> — limited by CEX API rate limits and KYC</li>
+      <li><strong>Advantage:</strong> Lower technical difficulty (6/10), standard REST APIs</li>
+    </ul>
+
+    <h3 id="s1-stat">Statistical Arbitrage</h3>
+    <p>Mean reversion, pairs trading (ETH/BTC), stablecoin depegs, volatility arbitrage. This is where ML/RL expertise provides the biggest edge.</p>
+    <ul>
+      <li><strong>Net margins:</strong> 0.1&ndash;1% per trade, longer holding periods</li>
+      <li><strong>Capital:</strong> $50K minimum, $250K+ competitive</li>
+      <li><strong>Competition:</strong> <span class="difficulty moderate">MODERATE</span> — requires quant expertise, less crowded</li>
+      <li><strong>Key advantage:</strong> Sustainable edge through ML, higher risk-adjusted returns</li>
+    </ul>
+
+    <h3 id="s1-mev">MEV Opportunities</h3>
+    <p>Sandwich attacks, liquidation sniping, backrunning, JIT liquidity provision.</p>
+    <ul>
+      <li><strong>Net margins:</strong> 0.5&ndash;10% per successful extraction (high variance)</li>
+      <li><strong>Capital:</strong> $100K minimum, $500K+ competitive</li>
+      <li><strong>Competition:</strong> <span class="difficulty extreme">EXTREME</span> — professional teams with $10M+ capital</li>
+    </ul>
+    <div class="callout warning">
+      <div class="callout-title orange">Ethical &amp; Reputation Risk</div>
+      <p>Sandwich attacks harm retail traders. For a Web3 security company, this carries significant reputation risk. Stick to ethical MEV: backrunning, liquidation sniping, JIT liquidity. Avoid front-running and sandwich attacks.</p>
+    </div>
+
+    <h3 id="s1-summary">Strategy Comparison Matrix</h3>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Strategy</th><th>Net Margin</th><th>Min Capital</th><th>Competition</th><th>Difficulty</th><th>ML Edge?</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>DEX-to-DEX</td><td>0.05&ndash;0.3%</td><td>$25K</td><td style="color:var(--callout-red)">Extreme</td><td>9/10</td><td>Low</td></tr>
+          <tr><td>Cross-chain</td><td>0.2&ndash;2%</td><td>$50K</td><td style="color:var(--callout-orange)">High</td><td>8.5/10</td><td>Medium</td></tr>
+          <tr><td>CEX-to-DEX</td><td>0.1&ndash;0.8%</td><td>$100K</td><td style="color:var(--callout-orange)">Mod-High</td><td>6/10</td><td>Medium</td></tr>
+          <tr><td>CEX-to-CEX</td><td>0.05&ndash;0.5%</td><td>$50K</td><td style="color:var(--callout-red)">High</td><td>5/10</td><td>Low</td></tr>
+          <tr><td>Triangular</td><td>0.01&ndash;0.2%</td><td>$100K</td><td style="color:var(--callout-red)">Extreme</td><td>7/10</td><td>Low</td></tr>
+          <tr style="background:var(--accent-glow)"><td><strong>Statistical</strong></td><td><strong>0.1&ndash;1%</strong></td><td><strong>$50K</strong></td><td style="color:oklch(0.78 0.12 85)"><strong>Moderate</strong></td><td><strong>8/10</strong></td><td><strong>High &#10003;</strong></td></tr>
+          <tr><td>MEV</td><td>0.5&ndash;10%</td><td>$100K</td><td style="color:var(--callout-red)">Extreme</td><td>10/10</td><td>Medium</td></tr>
+          <tr><td>Futures basis</td><td>0.1&ndash;1%</td><td>$500K</td><td style="color:var(--callout-orange)">High</td><td>9/10</td><td>Medium</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Statistical arbitrage highlighted — that's where your RL/ML background gives the strongest competitive advantage.</p>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section" id="s2">
+    <h2><span class="num">02</span> Technical Architecture</h2>
+
+    <h3 id="s2-infra">Infrastructure Requirements</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Component</th><th>Options</th><th>Cost/Month</th></tr></thead>
+        <tbody>
+          <tr><td>Ethereum node (self-hosted)</td><td>Geth/Nethermind on dedicated server</td><td>$500&ndash;2,000</td></tr>
+          <tr><td>RPC providers (redundant)</td><td>Alchemy + QuickNode + Infura (3+ required)</td><td>$500&ndash;2,000</td></tr>
+          <tr><td>Multi-region compute</td><td>AWS us-east-1, eu-west-1</td><td>$1,500&ndash;5,000</td></tr>
+          <tr><td>GPU for ML</td><td>A100/H100 instances</td><td>$500&ndash;5,000</td></tr>
+          <tr><td>Data feeds</td><td>Real-time + historical</td><td>$1,000&ndash;5,000</td></tr>
+          <tr><td>Monitoring</td><td>Grafana + Prometheus + alerting</td><td>$200&ndash;1,000</td></tr>
+          <tr><td><strong>Total</strong></td><td></td><td><strong>$2K&ndash;15K</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="s2-contracts">Smart Contract Components</h3>
+    <h4>Flash Loan Integration</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Provider</th><th>Fee</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Aave V3</td><td>0.09%</td><td>Most liquid, widest asset selection</td></tr>
+          <tr><td>dYdX</td><td>0%</td><td>Limited assets, but free</td></tr>
+          <tr><td>Balancer</td><td>0.25%</td><td>Good for exotic pairs</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h4>Gas Optimization</h4>
+    <ul>
+      <li>Assembly for hot-path calculations (30&ndash;50% savings)</li>
+      <li>Packed structs to minimize SSTORE operations</li>
+      <li>Batch operations where possible (40&ndash;60% savings)</li>
+      <li>Custom ERC20 transfer functions</li>
+      <li>Upgradeable proxy patterns for iteration</li>
+    </ul>
+
+    <h3 id="s2-stack">Recommended Tech Stack</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Layer</th><th>Language</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Execution engine</td><td><strong>Rust</strong> or Go</td><td>Performance, memory safety, sub-ms latency</td></tr>
+          <tr><td>Strategy development</td><td><strong>Python</strong></td><td>ML ecosystem (PyTorch, pandas, numpy)</td></tr>
+          <tr><td>Smart contracts</td><td><strong>Solidity</strong></td><td>Standard, best tooling (Foundry/Hardhat)</td></tr>
+          <tr><td>APIs &amp; integrations</td><td><strong>TypeScript</strong></td><td>Rich Ethereum ecosystem (ethers.js)</td></tr>
+          <tr><td>ML/AI</td><td><strong>Python/PyTorch</strong></td><td>RL, transformers, backtesting</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Bot Architecture: Event-Driven (Recommended)</h4>
+    <ul>
+      <li>WebSocket connections to multiple data sources</li>
+      <li>React to mempool transactions (50&ndash;200ms latency)</li>
+      <li>Flashbots/MEV-Share for private transaction submission</li>
+      <li>EIP-1559 dynamic gas pricing with priority fee optimization</li>
+      <li>Nonce management across multiple wallets</li>
+    </ul>
+
+    <h3 id="s2-security">Security</h3>
+    <ul>
+      <li><strong>Key management:</strong> HSM for signing, multi-sig for large funds, hot/cold wallet separation</li>
+      <li><strong>Smart contracts:</strong> Formal verification, multiple audits ($20K&ndash;100K each), emergency pause, timelocks</li>
+      <li><strong>Operational:</strong> VPN isolation, MFA everywhere, incident response procedures</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section" id="s3">
+    <h2><span class="num">03</span> Using AI/ML for Edge</h2>
+
+    <h3 id="s3-llm">LLM Applications</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Application</th><th>Impact</th><th>Complexity</th><th>Cost</th></tr></thead>
+        <tbody>
+          <tr><td>Social sentiment (Twitter/Reddit &rarr; FinBERT/GPT-4)</td><td>5&ndash;15% hit rate improvement</td><td>6/10</td><td>$1&ndash;5K/mo API</td></tr>
+          <tr><td>Governance proposal impact analysis</td><td>Early positioning on protocol changes</td><td>5/10</td><td>Low</td></tr>
+          <tr><td>New token launch analysis</td><td>Automated contract audit + tokenomics eval</td><td>7/10</td><td>Medium</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="s3-rl">Reinforcement Learning for Trading</h3>
+    <div class="callout success">
+      <div class="callout-title green">Your Biggest Edge</div>
+      <p>With deep RL expertise, this is where you differentiate. 10&ndash;25% improvement in risk-adjusted returns is achievable with proper implementation.</p>
+    </div>
+    <h4>Applications</h4>
+    <ul>
+      <li><strong>Optimal execution:</strong> TWAP/VWAP splitting, market impact minimization, dynamic slippage</li>
+      <li><strong>Position sizing:</strong> Kelly criterion optimization, correlation-aware limits, dynamic leverage</li>
+      <li><strong>Timing:</strong> Entry/exit for stat arb, regime identification, volatility prediction</li>
+    </ul>
+    <h4>Models That Work</h4>
+    <ul>
+      <li><strong>PPO</strong> — robust for continuous action spaces (position sizing)</li>
+      <li><strong>DQN</strong> — discrete actions (buy/sell/hold decisions)</li>
+      <li><strong>Actor-Critic</strong> — balancing exploration/exploitation in live markets</li>
+      <li><strong>Transformers</strong> — sequence modeling for multi-asset temporal patterns</li>
+    </ul>
+
+    <h4>Ensemble Approach (Recommended)</h4>
+    <pre><code>base_models = [
+    RandomForest(n_estimators=100),
+    XGBoost(max_depth=6),
+    LightGBM(num_leaves=31),
+    LSTM(hidden_size=64),
+    Transformer(d_model=128)
+]
+meta_learner = LogisticRegression()  # stacking</code></pre>
+
+    <h3 id="s3-features">Feature Engineering (More Important Than Model Choice)</h3>
+    <ul>
+      <li><strong>Technical:</strong> RSI, MACD, Bollinger bands</li>
+      <li><strong>Order book:</strong> Bid-ask spread, depth imbalance</li>
+      <li><strong>Cross-exchange:</strong> Basis, correlation breakdowns</li>
+      <li><strong>On-chain:</strong> Active addresses, tx volume, TVL changes, gas prices, mempool</li>
+      <li><strong>Sentiment:</strong> Social volume, news sentiment scores</li>
+      <li><strong>Alternative:</strong> GitHub commit activity, Google Trends, whale wallet tracking, bridge flows</li>
+    </ul>
+
+    <h4>Model Performance Reality</h4>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Task</th><th>Achievable Accuracy</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Price direction</td><td>52&ndash;58%</td><td>Enough to profit with proper sizing</td></tr>
+          <tr><td>Volatility prediction</td><td>60&ndash;70%</td><td>More reliable, high value</td></tr>
+          <tr><td>Regime change detection</td><td>Best application</td><td>Most valuable for risk management</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="s3-backtest">Backtesting — Getting It Right</h3>
+    <div class="callout warning">
+      <div class="callout-title orange">Common Pitfalls That Kill Strategies</div>
+      <ul>
+        <li><strong>Lookahead bias</strong> in feature construction</li>
+        <li><strong>Survivorship bias</strong> in asset selection</li>
+        <li><strong>Transaction cost underestimation</strong> — especially gas</li>
+        <li><strong>Slippage modeling</strong> — most backtests assume zero impact</li>
+        <li><strong>Overfitting</strong> to historical regimes</li>
+      </ul>
+    </div>
+    <p><strong>Validation methodology:</strong> Walk-forward analysis (mandatory), cross-validation with time gaps, out-of-sample testing (20&ndash;30%), Monte Carlo simulation, then paper trading before live.</p>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section" id="s4">
+    <h2><span class="num">04</span> Capital Deployment Strategy</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Seed</th><th>Allocation</th><th>Expected Annual Return</th><th>Failure Risk</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>$10K</strong></td>
+            <td>60% CEX-CEX, 30% stat arb, 10% infra</td>
+            <td style="color:var(--fg-muted)">5&ndash;15% conservative<br>10&ndash;30% aggressive</td>
+            <td style="color:var(--callout-red)">Very high (80%+)</td>
+          </tr>
+          <tr>
+            <td><strong>$50K</strong></td>
+            <td>40% DEX-DEX (L2), 30% CEX-DEX, 20% stat arb, 10% infra</td>
+            <td style="color:var(--fg-muted)">10&ndash;25% conservative<br>20&ndash;50% aggressive</td>
+            <td style="color:var(--callout-orange)">High</td>
+          </tr>
+          <tr style="background:var(--accent-glow)">
+            <td><strong>$100K</strong></td>
+            <td>30% DEX-DEX, 25% cross-chain, 25% ethical MEV, 15% ML stat arb, 5% R&amp;D</td>
+            <td style="color:var(--callout-green)">15&ndash;35% conservative<br>30&ndash;80% aggressive</td>
+            <td style="color:oklch(0.78 0.12 85)">Moderate</td>
+          </tr>
+          <tr>
+            <td><strong>$500K</strong></td>
+            <td>25% multi-chain, 20% MEV, 20% institutional arb, 20% ML alpha, 10% market making, 5% R&amp;D</td>
+            <td style="color:var(--callout-green)">20&ndash;50% conservative<br>40&ndash;150% aggressive</td>
+            <td style="color:var(--fg-muted)">Lower (but still real)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      <div class="callout-title blue">Capital Efficiency Multipliers</div>
+      <ul>
+        <li><strong>Flash loans:</strong> 10&ndash;50x leverage on same-chain arb (Aave at 0.09% fee)</li>
+        <li><strong>Cross-margining:</strong> Capital efficiency across venues</li>
+        <li><strong>Compounding:</strong> 70:30 reinvest-to-profit ratio recommended</li>
+        <li><strong>$100K is the sweet spot</strong> — enough for custom contracts, multi-chain, ML integration</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section" id="s5">
+    <h2><span class="num">05</span> Costs, Risks &amp; Realistic Economics</h2>
+
+    <h3 id="s5-costs">Monthly Infrastructure</h3>
+    <div class="metrics">
+      <div class="metric">
+        <div class="label">Nodes + RPC</div>
+        <div class="value red">$1&ndash;4K</div>
+      </div>
+      <div class="metric">
+        <div class="label">Compute + ML</div>
+        <div class="value red">$1.5&ndash;10K</div>
+      </div>
+      <div class="metric">
+        <div class="label">Data Feeds</div>
+        <div class="value orange">$1&ndash;5K</div>
+      </div>
+      <div class="metric">
+        <div class="label">Monitoring + Security</div>
+        <div class="value orange">$0.4&ndash;2K</div>
+      </div>
+    </div>
+
+    <h3 id="s5-gas">Gas Economics</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Network</th><th>Cost/Tx</th><th>Break-Even Trade Size</th></tr></thead>
+        <tbody>
+          <tr><td>Ethereum Mainnet</td><td>$5&ndash;50</td><td>$2,000&ndash;20,000</td></tr>
+          <tr style="background:var(--accent-glow)"><td><strong>Polygon</strong></td><td><strong>$0.01&ndash;0.10</strong></td><td><strong>$100&ndash;500</strong></td></tr>
+          <tr style="background:var(--accent-glow)"><td><strong>Arbitrum</strong></td><td><strong>$0.25&ndash;2.00</strong></td><td><strong>$200&ndash;1,000</strong></td></tr>
+          <tr><td>Optimism</td><td>$0.50&ndash;3.00</td><td>$300&ndash;1,500</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>L2s are where the action is for smaller operators. Mainnet requires large trade sizes to overcome gas.</p>
+
+    <h3 id="s5-pnl">Realistic P&amp;L</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tier</th><th>Annual Return</th><th>Max Drawdown</th><th>Win Rate</th></tr></thead>
+        <tbody>
+          <tr><td>Top 10% (successful)</td><td style="color:var(--callout-green)">50&ndash;200%</td><td>15&ndash;30%</td><td>55&ndash;70%</td></tr>
+          <tr><td>Top 25% (average)</td><td style="color:oklch(0.78 0.12 85)">20&ndash;80%</td><td>25&ndash;40%</td><td>50&ndash;60%</td></tr>
+          <tr><td>Bottom 75% (failed)</td><td style="color:var(--callout-red)">-50% to +10%</td><td>50&ndash;100%</td><td>30&ndash;50%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3 id="s5-failures">Common Failure Modes</h3>
+    <div class="callout danger">
+      <div class="callout-title red">Why Most People Lose Money</div>
+      <ul>
+        <li><strong>Technical:</strong> Infrastructure outages during opportunities, smart contract bugs, API rate limiting during high volume, network congestion</li>
+        <li><strong>Strategic:</strong> Overfitting to historical data, inadequate risk management, competition from better-funded operators, market regime changes</li>
+        <li><strong>Operational:</strong> Key management errors, regulatory surprises, team burnout, insufficient capital for drawdowns</li>
+      </ul>
+    </div>
+
+    <h4>Regulatory Landscape</h4>
+    <ul>
+      <li><strong>MEV:</strong> Legal gray area, increasing scrutiny</li>
+      <li><strong>Front-running:</strong> Potentially illegal in some jurisdictions</li>
+      <li><strong>Tax:</strong> Potentially mark-to-market accounting, ordinary income rates (up to 37% US), Section 475 trader status</li>
+      <li><strong>KYC/AML:</strong> Required for all CEX interactions</li>
+    </ul>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section" id="s6">
+    <h2><span class="num">06</span> Getting Started — Practical Roadmap</h2>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="phase">Phase 1 &middot; Months 1&ndash;2</div>
+        <h4>Paper Trading &amp; Backtesting Setup</h4>
+        <p>Development environment, historical data collection (1&ndash;2 years), simple strategy implementation, basic risk management framework. Study Freqtrade, Hummingbot, CCXT.</p>
+        <div class="budget">Budget: $500&ndash;2,000</div>
+      </div>
+      <div class="timeline-item">
+        <div class="phase">Phase 2 &middot; Months 3&ndash;4</div>
+        <h4>Testnet Deployment</h4>
+        <p>Smart contracts on Goerli/Sepolia, flash loan integration, multi-DEX routing, gas optimization, error recovery. Study existing repos: flashloan-arbitrage, mev-template.</p>
+        <div class="budget">Budget: $1,000&ndash;3,000</div>
+      </div>
+      <div class="timeline-item">
+        <div class="phase">Phase 3 &middot; Months 5&ndash;8</div>
+        <h4>Small-Capital Live Trading ($1K&ndash;5K)</h4>
+        <p>Mainnet deployment, monitoring dashboards, risk management (max 2% per trade), L2 focus for lower gas. Track Sharpe ratio, max drawdown, cost analysis.</p>
+        <div class="budget">Budget: $5,000&ndash;15,000</div>
+      </div>
+      <div class="timeline-item">
+        <div class="phase">Phase 4 &middot; Months 9&ndash;18</div>
+        <h4>ML/RL Integration</h4>
+        <p>Feature engineering pipeline, model ensemble training, RL for execution timing, sentiment integration, A/B testing framework. GPU infrastructure for training.</p>
+        <div class="budget">Budget: $10,000&ndash;30,000</div>
+      </div>
+      <div class="timeline-item">
+        <div class="phase">Phase 5 &middot; Months 18&ndash;24+</div>
+        <h4>Multi-Strategy Portfolio</h4>
+        <p>Strategy diversification, multi-region deployment, professional monitoring, regulatory compliance, potential team expansion. Institutional-grade operations.</p>
+        <div class="budget">Budget: $50,000&ndash;200,000+</div>
+      </div>
+    </div>
+
+    <h3>Key Open-Source Frameworks</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Framework</th><th>Best For</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Freqtrade</strong></td><td>Learning, CEX arb</td><td>Mature, good docs, active community</td></tr>
+          <tr><td><strong>Hummingbot</strong></td><td>Market making, cross-exchange</td><td>Professional grade, multi-exchange</td></tr>
+          <tr><td><strong>CCXT</strong></td><td>Exchange integration</td><td>Unified API for 100+ exchanges</td></tr>
+          <tr><td><strong>Foundry</strong></td><td>Smart contract dev</td><td>Fast, Rust-based, best testing</td></tr>
+          <tr><td><strong>The Graph</strong></td><td>On-chain data indexing</td><td>Essential for DeFi analytics</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout success">
+      <div class="callout-title green">Strategic Recommendation</div>
+      <p>Given your background, consider a <strong>hybrid approach</strong>: combine trading with your security expertise. Options include providing arbitrage infrastructure as a service, building agent security tools for trading bots (ties back to the "Policy is Law" thesis), or focusing on novel DeFi research rather than competing head-to-head with well-funded MEV operators. Your competitive advantage isn't speed — it's intelligence.</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-bottom">
+      <p>&copy; 2026 TestMachine. Internal use only.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* Progress bar */
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  document.getElementById('progress').style.width = pct + '%';
+});
+
+/* Nav scroll effect */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 20) {
+    navbar.classList.add('scrolled');
+  } else {
+    navbar.classList.remove('scrolled');
+  }
+});
+
+/* Hamburger + mobile menu */
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+hamburger.addEventListener('click', () => {
+  hamburger.classList.toggle('active');
+  mobileMenu.classList.toggle('active');
+  document.body.classList.toggle('menu-open');
+});
+mobileMenu.querySelectorAll('a').forEach(link => {
+  link.addEventListener('click', () => {
+    hamburger.classList.remove('active');
+    mobileMenu.classList.remove('active');
+    document.body.classList.remove('menu-open');
+  });
+});
+
+/* TOC toggle (mobile) */
+const tocToggle = document.getElementById('tocToggle');
+const toc = document.getElementById('toc');
+const overlay = document.getElementById('tocOverlay');
+tocToggle.addEventListener('click', () => {
+  toc.classList.toggle('open');
+  overlay.classList.toggle('open');
+});
+overlay.addEventListener('click', () => {
+  toc.classList.remove('open');
+  overlay.classList.remove('open');
+});
+toc.querySelectorAll('a').forEach(a => {
+  a.addEventListener('click', () => {
+    if (window.innerWidth <= 1024) {
+      toc.classList.remove('open');
+      overlay.classList.remove('open');
+    }
+  });
+});
+
+/* TOC active state observer */
+const sections = document.querySelectorAll('[id]');
+const tocLinks = document.querySelectorAll('.toc a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      tocLinks.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+sections.forEach(s => observer.observe(s));
+</script>
+
+<script src="confidential-toggle.js"></script>
+</body>
+</html>

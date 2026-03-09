@@ -1,0 +1,2029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Access — AI Coding Agents as TestMachine Customers — March 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+<style>
+/* ---------- Custom Properties ---------- */
+:root {
+  --bg:            oklch(0.18 0.005 260);
+  --bg-raised:     oklch(0.21 0.005 260);
+  --bg-deeper:     oklch(0.14 0.005 260);
+  --fg:            oklch(0.92 0 0);
+  --fg-muted:      oklch(0.65 0 0);
+  --fg-dim:        oklch(0.45 0 0);
+  --border:        oklch(0.32 0.005 260);
+  --border-subtle: oklch(0.25 0.005 260);
+  --accent:        oklch(0.72 0.12 192);
+  --accent-hover:  oklch(0.80 0.12 192);
+  --accent-glow:   oklch(0.72 0.12 192 / 0.1);
+  --card-bg:       oklch(0.21 0.005 260);
+  --input-bg:      oklch(0.15 0.005 260);
+  --nav-bg:        oklch(0.18 0.005 260 / 0.85);
+
+  --font-display: 'Manrope', sans-serif;
+  --font-mono:    'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --font:         var(--font-mono);
+  --font-serif:   'Source Serif 4', Charter, Georgia, serif;
+
+  --nav-h:       72px;
+  --max-w:       1120px;
+  --section-py:  clamp(80px, 10vw, 140px);
+  --gap:         24px;
+  --transition:  0.25s ease;
+
+  --callout-orange: oklch(0.75 0.15 55);
+  --callout-red:    oklch(0.65 0.2 25);
+  --callout-green:  oklch(0.65 0.15 140);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-h);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; color: inherit; }
+ul { list-style: none; }
+input, textarea, select { font-family: inherit; font-size: inherit; }
+
+/* ---------- Layout ---------- */
+.container {
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+/* ---------- Progress Bar ---------- */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), oklch(0.72 0.10 230));
+  z-index: 1100;
+  width: 0%;
+  transition: width 0.1s;
+}
+
+/* ---------- Navigation ---------- */
+.nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
+.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
+.toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+.toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width var(--transition);
+}
+
+.nav-link:hover,
+.nav-link.nav-link--active {
+  color: var(--fg);
+}
+
+.nav-link:hover::after,
+.nav-link.nav-link--active::after {
+  width: 100%;
+}
+
+.nav-link.nav-link--active {
+  color: var(--accent);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  padding: 14px 32px;
+  border-radius: 0;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.btn:hover { transform: scale(1.02); }
+.btn:active { transform: scale(0.98); }
+
+.btn--primary {
+  background: var(--accent);
+  color: oklch(0.12 0 0);
+  border: 1px solid var(--accent);
+  font-weight: 700;
+}
+
+.btn--primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn--nav {
+  padding: 10px 22px;
+  font-size: 0.75rem;
+}
+
+/* ---------- Hamburger ---------- */
+.hamburger {
+  display: none;
+  width: 40px;
+  height: 40px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  z-index: 1001;
+}
+
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--fg);
+  transition: all var(--transition);
+  transform-origin: center;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* ---------- Mobile Menu ---------- */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-menu-inner {
+  text-align: center;
+}
+
+.mobile-menu-link {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  font-weight: 600;
+  color: var(--fg-muted);
+  padding: 14px 0;
+  transition: color var(--transition);
+}
+
+.mobile-menu-link:hover {
+  color: var(--fg);
+}
+
+.mobile-menu-link.nav-link--active {
+  color: var(--accent);
+}
+
+.mobile-menu-cta {
+  margin-top: 40px;
+  padding: 0 40px;
+}
+
+/* ---------- TOC Sidebar ---------- */
+
+/* TOC Toggle Button (mobile) */
+.toc-toggle {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 200;
+  width: 48px;
+  height: 48px;
+  border-radius: 0;
+  background: var(--accent);
+  color: oklch(0.12 0 0);
+  border: none;
+  font-size: 1.2rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3);
+}
+
+/* TOC Overlay (mobile) */
+.toc-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: oklch(0 0 0 / 0.6);
+  z-index: 109;
+}
+
+.toc-overlay.open {
+  display: block;
+}
+
+/* ---------- Main Content ---------- */
+.main {
+  margin-left: 280px;
+  min-height: 100vh;
+}
+
+.main-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px) 4rem;
+}
+
+/* ---------- Article Header ---------- */
+.article-header {
+  padding-top: calc(var(--nav-h) + 32px);
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 3rem;
+}
+
+.back-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  margin-bottom: 1.5rem;
+  transition: color var(--transition);
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+.article-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-muted);
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  margin-bottom: 1rem;
+}
+
+.article-date {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  margin-bottom: 1rem;
+}
+
+.article-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin-bottom: 1rem;
+}
+
+.article-subtitle {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  color: var(--fg-muted);
+  line-height: 1.6;
+}
+
+/* ---------- Hero Stats ---------- */
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.hero-stat {
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  padding: 1.2rem;
+  text-align: center;
+  transition: border-color var(--transition), transform var(--transition);
+}
+
+.hero-stat:hover {
+  border-color: var(--border);
+  transform: translateY(-2px);
+}
+
+.hero-stat .value {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.hero-stat .label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hero-stat.critical .value {
+  color: var(--callout-red);
+}
+
+.hero-stat.warning .value {
+  color: var(--callout-orange);
+}
+
+.hero-stat.positive .value {
+  color: var(--callout-green);
+}
+
+/* ---------- Article Body ---------- */
+.article-body {
+  font-family: var(--font-serif);
+}
+
+.article-body .section {
+  margin: 3rem 0;
+  padding: 0 0 2rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.article-body .section:last-child {
+  border-bottom: none;
+}
+
+.article-body p {
+  font-family: var(--font-serif);
+  font-size: 1.1875rem;
+  line-height: 1.9;
+  color: var(--fg-muted);
+  margin-bottom: 1.5em;
+}
+
+.article-body h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 700;
+  color: var(--fg);
+  margin-top: 2.5em;
+  margin-bottom: 1rem;
+  line-height: 1.25;
+}
+
+.article-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-top: 2em;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.article-body h4 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-top: 1.5em;
+  margin-bottom: 0.5rem;
+}
+
+.article-body strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.article-body ul,
+.article-body ol {
+  margin-bottom: 1.5em;
+  padding-left: 1.5em;
+}
+
+.article-body ul {
+  list-style: disc;
+}
+
+.article-body ol {
+  list-style: decimal;
+}
+
+.article-body li {
+  font-family: var(--font-serif);
+  font-size: 1.1875rem;
+  line-height: 1.9;
+  color: var(--fg-muted);
+  margin-bottom: 0.5rem;
+}
+
+.article-body a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--transition);
+}
+
+.article-body a:hover {
+  color: var(--accent-hover);
+}
+
+/* ---------- Callout / Highlight Boxes ---------- */
+.highlight {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  border-left: 3px solid var(--accent);
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.highlight strong:first-child {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.highlight.warning {
+  border-left-color: var(--callout-orange);
+}
+
+.highlight.warning strong:first-child {
+  color: var(--callout-orange);
+}
+
+.highlight.danger {
+  border-left-color: var(--callout-red);
+}
+
+.highlight.danger strong:first-child {
+  color: var(--callout-red);
+}
+
+.highlight.success {
+  border-left-color: var(--callout-green);
+}
+
+.highlight.success strong:first-child {
+  color: var(--callout-green);
+}
+
+/* ---------- Code ---------- */
+code {
+  background: var(--bg-deeper);
+  padding: 0.15rem 0.4rem;
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+
+pre {
+  background: var(--bg-deeper);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 1.2rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: var(--fg);
+}
+
+/* ---------- Tables ---------- */
+.table-container {
+  overflow-x: auto;
+  margin: 2rem 0;
+  border: 1px solid var(--border);
+  border-radius: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: var(--bg-deeper);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  padding: 0.7rem 1rem;
+  text-align: left;
+}
+
+td {
+  padding: 0.7rem 1rem;
+  border-top: 1px solid var(--border-subtle);
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  color: var(--fg-muted);
+}
+
+tbody tr:hover td {
+  background: var(--accent-glow);
+}
+
+/* Strategy table */
+.strategy-table .critical { color: var(--callout-red); font-weight: 600; }
+.strategy-table .warning { color: var(--callout-orange); font-weight: 600; }
+.strategy-table .success { color: var(--callout-green); font-weight: 600; }
+.strategy-table .muted { color: var(--fg-dim); }
+
+/* ---------- Action Items ---------- */
+.action-items {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.action-item {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-left: 4px solid var(--accent);
+  padding: 1.2rem;
+}
+
+.action-item.urgent {
+  border-left-color: var(--callout-red);
+}
+
+.action-item.important {
+  border-left-color: var(--callout-orange);
+}
+
+.action-item h4 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-bottom: 0.5rem;
+}
+
+.action-item p {
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--fg-muted);
+  margin: 0;
+}
+
+.action-item .meta {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--fg-dim);
+  margin-top: 0.5rem;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  padding: 20px 0;
+  background: var(--bg-raised);
+  border-top: 1px solid var(--border-subtle);
+  margin-left: 280px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 28px;
+}
+
+.footer-brand .nav-logo {
+  margin-bottom: 14px;
+}
+
+.footer-address {
+  font-size: 0.8125rem;
+  color: var(--fg-dim);
+  line-height: 1.5;
+}
+
+.footer-heading {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--fg);
+  margin-bottom: 16px;
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+}
+
+.footer-links a:hover {
+  color: var(--fg);
+}
+
+.footer-bottom { display: flex; align-items: center; justify-content: center; }
+
+.footer-bottom p { font-size: 0.7rem; color: var(--fg-dim); margin: 0; line-height: 1; }
+
+/* ---------- Focus & Selection ---------- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: oklch(0.72 0.12 192 / 0.25);
+}
+
+/* ---------- Responsive: Tablet (1024px) ---------- */
+@media (max-width: 1024px) {
+    .toc { transform: translateX(-100%); }
+    .main, .main-content, .main-container, .article-wrapper, .content-wrapper { margin-left: 0 !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .nav-links {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .toc.open {
+    transform: translateX(0);
+  }
+
+  .toc-toggle {
+    display: block;
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .footer {
+    margin-left: 0;
+  }
+}
+
+/* ---------- Responsive: Mobile (768px) ---------- */
+@media (max-width: 768px) {
+  .main-container {
+    padding: 0 1rem 3rem;
+  }
+
+  .article-title {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+  }
+
+  .hero-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .article-header {
+    padding-top: calc(var(--nav-h) + 20px);
+  }
+
+  .action-items {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .hamburger {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+
+<body>
+
+  <div class="progress-bar" id="progress-bar"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="navbar">
+    <div class="progress-bar" id="progressBar"></div>
+    <div style="display:flex;align-items:center;height:100%;padding:0 24px;">
+      <a href="/"><img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);"></a>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-inner">
+      <a href="/" class="mobile-menu-link nav-link--active">Research</a>
+      <div class="mobile-menu-cta">
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC Toggle (mobile) -->
+  <button class="toc-toggle" id="toc-toggle" aria-label="Toggle table of contents">&#9776;</button>
+  <div class="toc-overlay" id="toc-overlay"></div>
+
+  <!-- TOC Sidebar -->
+  <nav class="toc" id="toc">
+    <h3>Contents</h3>
+    <ul>
+      <li><a href="#executive-summary">Executive Summary</a></li>
+      <li><a href="#the-problem">The Problem</a></li>
+      <li><a href="#the-opportunity">The Opportunity</a></li>
+      <li><a href="#why-now">Why Now</a></li>
+      <li><a href="#architecture">Architecture</a></li>
+      <li><a href="#competitive-moat">Competitive Moat</a></li>
+      <li><a href="#business-model">Business Model</a></li>
+      <li><a href="#market-sizing">Market Sizing</a></li>
+      <li><a href="#strategic-implications">Strategic Implications</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="main-container">
+
+      <!-- Article Header -->
+      <header class="article-header">
+        <a href="index.html" class="back-link">&larr; Back to Research</a>
+        <span class="article-tag">Market Opportunity</span>
+        <span class="article-date">March 6, 2026</span>
+        <h1 class="article-title">Agent Access</h1>
+        <p class="article-subtitle">
+          Why the next million smart contract audits won't be ordered by humans — and how TestMachine captures the AI coding agent market
+        </p>
+
+        <div class="hero-stats">
+          <div class="hero-stat warning">
+            <div class="value">Rising Fast</div>
+            <div class="label">Agent-Written Contracts</div>
+          </div>
+          <div class="hero-stat critical">
+            <div class="value">Critical</div>
+            <div class="label">Security Gap</div>
+          </div>
+          <div class="hero-stat positive">
+            <div class="value">12-18 mo</div>
+            <div class="label">Market Window</div>
+          </div>
+          <div class="hero-stat">
+            <div class="value">Greenfield</div>
+            <div class="label">Competitive Landscape</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Article Body -->
+      <div class="article-body">
+
+        <section class="section" id="executive-summary">
+          <h2>Executive Summary</h2>
+
+          <p>
+            AI coding agents are increasingly writing smart contracts. <strong>They have no built-in security analysis.</strong> TestMachine should expose its security analysis engine as an API that agents call during development, creating a continuous security feedback loop that transforms contract development from "write → audit → fix" to "write → analyze → fix → ship clean."
+          </p>
+
+          <div class="highlight success">
+            <strong>The Thesis:</strong> TestMachine becomes the security linter that every AI coding agent calls automatically — like how developers run tests, agents run TM analysis. This transforms TM from services company to infrastructure company.
+          </div>
+
+          <p>
+            The opportunity is <strong>agent-native security infrastructure</strong> — not human-readable PDFs, but structured JSON findings that agents can parse, understand, and act on immediately. The market timing is perfect: agent coding tools are exploding, contract TVL is growing, and no one has built this product yet.
+          </p>
+
+          <h3>Key Market Indicators</h3>
+          <ul>
+            <li><strong>SolAgent</strong> (Jan 2026) — multi-agent framework specifically for Solidity generation</li>
+            <li><strong>Academic validation</strong> — "Evaluating the Vulnerability Landscape of LLM-Generated Smart Contracts" (arXiv, Feb 2026)</li>
+            <li><strong>LISA framework</strong> — agentic smart contract auditing already emerging</li>
+            <li><strong>MCP adoption</strong> — Model Context Protocol becoming standard for agent-tool integration</li>
+            <li><strong>Volume gap</strong> — 100x more AI-generated contracts than human audits possible</li>
+          </ul>
+
+          <p>
+            <strong>Revenue model:</strong> Per-analysis pricing + subscriptions. Conservative target: if 10% of AI-generated contracts use automated security analysis, that's a substantial recurring revenue stream at much higher margins than traditional audits.
+          </p>
+
+        </section>
+
+        <section class="section" id="the-problem">
+          <h2>The Problem: Agents Writing Contracts Blind</h2>
+
+          <p>
+            Large language models are generating Solidity at unprecedented scale. Claude Code, GPT-4, Codex, Cursor, Devin, and dozens of other AI coding tools are shipping smart contracts every day. But they're doing it completely blind to security implications.
+          </p>
+
+          <h3>The Research Evidence</h3>
+
+          <p>
+            Recent academic work confirms what the industry suspected: <strong>LLM-generated smart contracts contain systematic vulnerability patterns.</strong> The February 2026 paper "Evaluating the Vulnerability Landscape of LLM-Generated Smart Contracts" found that AI-generated code exhibits higher rates of reentrancy vulnerabilities, access control issues, and integer overflow problems compared to human-written contracts.
+          </p>
+
+          <div class="highlight warning">
+            <strong>The SolAgent Problem:</strong> The January 2026 SolAgent framework demonstrates sophisticated multi-agent Solidity generation. It can write complex DeFi protocols, governance systems, and tokenomics contracts. But it has no security analysis capability — it ships code without knowing if it's vulnerable.
+          </div>
+
+          <h3>Current Workflow: Broken by Design</h3>
+
+          <p>
+            The traditional smart contract development workflow was designed for humans working slowly:
+          </p>
+
+          <ol>
+            <li><strong>Write</strong> contract (weeks of development)</li>
+            <li><strong>Deploy</strong> to testnet</li>
+            <li><strong>Audit</strong> (human auditor, 2-4 weeks, $15-50K)</li>
+            <li><strong>Fix</strong> identified issues</li>
+            <li><strong>Re-audit</strong> changes</li>
+            <li><strong>Deploy</strong> to mainnet</li>
+          </ol>
+
+          <p>
+            This workflow breaks down completely when agents generate contracts in minutes, not weeks. The feedback cycle is too slow, too expensive, and doesn't scale to the volume agents can produce.
+          </p>
+
+          <div class="highlight danger">
+            <strong>Volume Mismatch:</strong> AI agents can generate 1000+ contracts per day. The entire smart contract audit industry processes ~500 contracts per month. There's a 60x volume gap and growing.
+          </div>
+
+          <h3>The Blind Spot</h3>
+
+          <p>
+            Current AI coding agents optimize for:
+          </p>
+          <ul>
+            <li>Syntactic correctness (does it compile?)</li>
+            <li>Functional requirements (does it do what was asked?)</li>
+            <li>Gas efficiency (is it optimized?)</li>
+          </ul>
+
+          <p>
+            But they have no concept of:
+          </p>
+          <ul>
+            <li>Reentrancy vulnerabilities</li>
+            <li>Access control patterns</li>
+            <li>Integer overflow/underflow</li>
+            <li>Front-running resistance</li>
+            <li>Denial-of-service vectors</li>
+          </ul>
+
+          <p>
+            <strong>The result:</strong> Agents are shipping functional but vulnerable contracts at scale, creating systemic risk in the ecosystem.
+          </p>
+
+        </section>
+
+        <section class="section" id="the-opportunity">
+          <h2>The Opportunity: Security-as-a-Tool</h2>
+
+          <p>
+            The solution is <strong>agent-native security analysis</strong> — exposing TestMachine's analysis engine as a tool that agents can call during development. Not human-readable audit reports, but structured, machine-parseable findings that agents can act on immediately.
+          </p>
+
+          <h3>The Vision: Continuous Security</h3>
+
+          <p>
+            Imagine every AI coding agent having instant access to enterprise-grade security analysis:
+          </p>
+
+          <ol>
+            <li><strong>Agent writes</strong> contract function</li>
+            <li><strong>Agent calls</strong> TestMachine API</li>
+            <li><strong>TM returns</strong> structured findings: vulnerability type, severity, line number, fix suggestion</li>
+            <li><strong>Agent iterates</strong> based on feedback</li>
+            <li><strong>Process repeats</strong> until clean</li>
+            <li><strong>Agent ships</strong> secure contract</li>
+          </ol>
+
+          <p>
+            This is the <strong>IDE-linter model</strong> for smart contract security, but designed for agents instead of humans.
+          </p>
+
+          <div class="highlight success">
+            <strong>The Paradigm Shift:</strong> From "write once, audit once" to "write iteratively, analyze continuously." Security becomes part of the development loop, not a separate phase.
+          </div>
+
+          <h3>API-First Architecture</h3>
+
+          <p>
+            The agent-native security API would differ fundamentally from human-focused audit reports:
+          </p>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Human Audits</th>
+                  <th>Agent API</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Output Format</td>
+                  <td>PDF narrative report</td>
+                  <td class="success">JSON structured findings</td>
+                </tr>
+                <tr>
+                  <td>Response Time</td>
+                  <td>2-4 weeks</td>
+                  <td class="success">< 30 seconds</td>
+                </tr>
+                <tr>
+                  <td>Cost per Analysis</td>
+                  <td>$15,000-50,000</td>
+                  <td class="success">$1-10</td>
+                </tr>
+                <tr>
+                  <td>Scalability</td>
+                  <td class="critical">Human bottleneck</td>
+                  <td class="success">Unlimited parallel</td>
+                </tr>
+                <tr>
+                  <td>Remediation Guidance</td>
+                  <td>General suggestions</td>
+                  <td class="success">Specific code fixes</td>
+                </tr>
+                <tr>
+                  <td>Integration</td>
+                  <td>Manual process</td>
+                  <td class="success">MCP/API native</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Example API Flow</h3>
+
+          <p>
+            A Claude Code session building a DeFi lending protocol:
+          </p>
+
+          <pre><code>{
+  "contract_source": "...",
+  "analysis_level": "comprehensive",
+  "focus_areas": ["reentrancy", "access_control", "oracle_manipulation"]
+}
+
+→ TestMachine Analysis Engine →
+
+{
+  "findings": [
+    {
+      "id": "TM-R-001",
+      "type": "reentrancy",
+      "severity": "high",
+      "line": 47,
+      "function": "withdraw",
+      "description": "External call before state update",
+      "remediation": "Use checks-effects-interactions pattern",
+      "code_fix": "balances[msg.sender] = 0; // Move before external call"
+    }
+  ],
+  "gas_analysis": { ... },
+  "confidence_score": 0.94
+}</code></pre>
+
+          <p>
+            The agent receives this structured feedback and can immediately apply the suggested fixes, re-analyze, and iterate until the contract is secure.
+          </p>
+
+        </section>
+
+        <section class="section" id="why-now">
+          <h2>Why Now: Perfect Storm of Market Forces</h2>
+
+          <p>
+            Multiple trends are converging to create a unique window for agent-native security infrastructure:
+          </p>
+
+          <h3>1. Agent Coding Tools Explosion</h3>
+
+          <p>
+            The AI coding agent market has exploded in the past 18 months:
+          </p>
+
+          <ul>
+            <li><strong>Claude Code</strong> — Anthropic's coding-focused model with tool use</li>
+            <li><strong>GitHub Copilot</strong> — 1.8M+ paid subscribers, expanding to full development workflows</li>
+            <li><strong>Cursor</strong> — AI-first IDE with 100K+ developers</li>
+            <li><strong>Devin</strong> — Cognition Labs' autonomous software engineer</li>
+            <li><strong>Windsurf</strong> — Codeium's agentic IDE</li>
+            <li><strong>Bolt</strong> — StackBlitz's AI web development tool</li>
+          </ul>
+
+          <p>
+            All of these tools can write Solidity. None have built-in security analysis.
+          </p>
+
+          <h3>2. MCP Adoption Accelerating</h3>
+
+          <p>
+            The Model Context Protocol is becoming the standard for agent-tool integration. Anthropic, Google, and OpenAI all support MCP, making it trivial for agents to call external APIs and services.
+          </p>
+
+          <div class="highlight">
+            <strong>Integration Advantage:</strong> A TestMachine MCP server would be instantly available to every MCP-compatible agent — no custom integrations needed.
+          </div>
+
+          <h3>3. Smart Contract TVL Growth</h3>
+
+          <p>
+            Despite crypto volatility, smart contract total value locked continues growing:
+          </p>
+
+          <ul>
+            <li><strong>DeFi TVL</strong> — $180B+ across all chains (March 2026)</li>
+            <li><strong>RWA tokenization</strong> — $2.3T projected by 2030</li>
+            <li><strong>Enterprise adoption</strong> — Major banks launching tokenized securities</li>
+            <li><strong>L2 proliferation</strong> — 50+ production L2s, each needing secure contracts</li>
+          </ul>
+
+          <h3>4. Academic Validation</h3>
+
+          <p>
+            The academic community is catching up to industry needs. Recent papers in late 2025/early 2026:
+          </p>
+
+          <ul>
+            <li><strong>LLMBugScanner</strong> — LLM-based smart contract vulnerability detection</li>
+            <li><strong>ParaVul</strong> — Parallel LLM framework for vulnerability detection</li>
+            <li><strong>FLAMES</strong> — Fine-tuning LLMs to synthesize security invariants</li>
+            <li><strong>SmartPoC</strong> — Generating executable proof-of-concepts for bugs</li>
+          </ul>
+
+          <p>
+            The research validates both the problem (LLMs write vulnerable contracts) and potential solutions (LLM-based security analysis).
+          </p>
+
+          <h3>5. No Incumbent Solutions</h3>
+
+          <p>
+            Current smart contract analysis tools are all designed for human consumption:
+          </p>
+
+          <ul>
+            <li><strong>Slither</strong> — Great tool, human-readable output</li>
+            <li><strong>Mythril</strong> — Open source, CLI focused</li>
+            <li><strong>CertiK</strong> — Enterprise audits, human-centric process</li>
+            <li><strong>Trail of Bits</strong> — Security consulting, not API-driven</li>
+          </ul>
+
+          <p>
+            <strong>None have built agent-native security analysis.</strong> The market is completely greenfield.
+          </p>
+
+        </section>
+
+        <section class="section" id="architecture">
+          <h2>Architecture: How It Would Work</h2>
+
+          <p>
+            A TestMachine agent-access system would consist of multiple integration points, from simple API endpoints to sophisticated agent frameworks.
+          </p>
+
+          <h3>Core API Layer</h3>
+
+          <p>
+            The foundation is a RESTful API that accepts contract source code and returns structured security analysis:
+          </p>
+
+          <pre><code>POST /api/v1/analyze
+{
+  "source_code": "pragma solidity ^0.8.0; contract MyContract { ... }",
+  "analysis_options": {
+    "level": "comprehensive",
+    "focus_areas": ["reentrancy", "access_control"],
+    "gas_analysis": true,
+    "formal_verification": false
+  }
+}
+
+Response:
+{
+  "analysis_id": "tm-a1b2c3d4",
+  "timestamp": "2026-03-06T17:43:00Z",
+  "findings": [...],
+  "gas_report": {...},
+  "overall_score": 87,
+  "confidence": 0.92,
+  "suggested_fixes": [...]
+}</code></pre>
+
+          <h3>MCP Server Integration</h3>
+
+          <p>
+            A TestMachine MCP server would expose security analysis as a native tool for any MCP-compatible agent:
+          </p>
+
+          <pre><code>{
+  "name": "testmachine_analyze",
+  "description": "Analyze smart contract for security vulnerabilities",
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "source_code": { "type": "string" },
+      "analysis_level": { "enum": ["basic", "comprehensive", "formal"] }
+    }
+  }
+}</code></pre>
+
+          <p>
+            Claude Code, GPT-4, and other agents could then call this tool directly during development sessions.
+          </p>
+
+          <h3>Continuous Analysis Modes</h3>
+
+          <p>
+            Beyond one-shot analysis, the system could support continuous monitoring:
+          </p>
+
+          <ul>
+            <li><strong>Watch mode</strong> — Monitor a directory, re-analyze on file changes</li>
+            <li><strong>Git hooks</strong> — Automatic analysis on commits/PRs</li>
+            <li><strong>IDE plugins</strong> — Real-time analysis as developers type</li>
+            <li><strong>CI/CD integration</strong> — Block deploys if critical vulnerabilities found</li>
+          </ul>
+
+          <h3>Agent-Optimized Output</h3>
+
+          <p>
+            The key differentiator is output format optimized for machine consumption:
+          </p>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Finding Element</th>
+                  <th>Human Format</th>
+                  <th>Agent Format</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Vulnerability Description</td>
+                  <td>"The withdraw function contains a potential reentrancy vulnerability..."</td>
+                  <td><code>{"type": "reentrancy", "pattern": "external_call_before_state_update"}</code></td>
+                </tr>
+                <tr>
+                  <td>Location</td>
+                  <td>"Line 47 in withdraw function"</td>
+                  <td><code>{"line": 47, "column": 12, "function": "withdraw", "severity": "high"}</code></td>
+                </tr>
+                <tr>
+                  <td>Fix Suggestion</td>
+                  <td>"Consider using the checks-effects-interactions pattern"</td>
+                  <td><code>{"action": "move_line", "from": 47, "to": 45, "rationale": "state_before_external"}</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Integration Patterns</h3>
+
+          <p>
+            Different agents would integrate in different ways:
+          </p>
+
+          <ul>
+            <li><strong>Claude Code</strong> — MCP tool call during development sessions</li>
+            <li><strong>GitHub Copilot</strong> — Extension that auto-analyzes generated code</li>
+            <li><strong>Cursor</strong> — Built-in security panel showing real-time analysis</li>
+            <li><strong>Custom agents</strong> — Direct API integration for specialized workflows</li>
+          </ul>
+
+        </section>
+
+        <section class="section" id="competitive-moat">
+          <h2>Competitive Moat: Why TestMachine Wins</h2>
+
+          <p>
+            The competitive advantage isn't just being first to market — it's having the right foundation and building the right product-market fit.
+          </p>
+
+          <h3>Technical Moats</h3>
+
+          <h4>1. Analysis Engine Sophistication</h4>
+          <p>
+            TestMachine's analysis engine is already more sophisticated than open-source alternatives. The transition to API-driven output leverages existing technical assets while creating new ones.
+          </p>
+
+          <h4>2. Agent-Native Output Format</h4>
+          <p>
+            Human-readable reports can't be easily machine-parsed. Agent-native JSON with structured remediation suggestions is a fundamentally different product that incumbents would have to rebuild from scratch.
+          </p>
+
+          <h4>3. Context Awareness</h4>
+          <p>
+            Agents need different analysis based on context — DeFi protocols vs. governance contracts vs. NFT collections. TestMachine can build context-aware analysis that provides relevant findings for different contract types.
+          </p>
+
+          <div class="highlight">
+            <strong>Example:</strong> A DeFi lending protocol needs deep analysis of oracle manipulation and liquidation logic. An NFT collection needs metadata validation and royalty enforcement checks. One-size-fits-all tools miss these nuances.
+          </div>
+
+          <h3>Business Model Moats</h3>
+
+          <h4>1. Network Effects</h4>
+          <p>
+            Every contract analyzed improves the engine:
+          </p>
+          <ul>
+            <li>New vulnerability patterns discovered and catalogued</li>
+            <li>False positive rates reduced through machine learning</li>
+            <li>Context-specific rules refined through usage patterns</li>
+            <li>Fix suggestions validated through outcome tracking</li>
+          </ul>
+
+          <h4>2. Switching Costs</h4>
+          <p>
+            Once agents integrate TestMachine analysis into their workflows, switching becomes costly:
+          </p>
+          <ul>
+            <li>Custom output format integration</li>
+            <li>Historical analysis data</li>
+            <li>Team familiarity with findings format</li>
+            <li>CI/CD pipeline integration</li>
+          </ul>
+
+          <h4>3. Volume Economics</h4>
+          <p>
+            Traditional audits don't scale. API-driven analysis has massive scale advantages:
+          </p>
+          <ul>
+            <li>Marginal cost per analysis approaches zero</li>
+            <li>Higher volume → better margins → more R&D investment</li>
+            <li>Can undercut traditional audits while maintaining profitability</li>
+          </ul>
+
+          <h3>Market Position Moats</h3>
+
+          <h4>1. First-Mover Advantage</h4>
+          <p>
+            The agent coding market is exploding right now. Being first to market with agent-native security means:
+          </p>
+          <ul>
+            <li>Setting the de facto standard for security API output</li>
+            <li>Building relationships with key agent developers</li>
+            <li>Capturing early adopter feedback to refine product-market fit</li>
+          </ul>
+
+          <h4>2. Ecosystem Integration</h4>
+          <p>
+            TestMachine can build the entire agent security ecosystem:
+          </p>
+          <ul>
+            <li>MCP server (standard protocol integration)</li>
+            <li>IDE extensions (VS Code, Cursor, etc.)</li>
+            <li>CI/CD plugins (GitHub Actions, GitLab CI)</li>
+            <li>Custom agent frameworks (specialized security agents)</li>
+          </ul>
+
+          <div class="highlight success">
+            <strong>Platform Play:</strong> Instead of just providing analysis, TestMachine becomes the platform that agent developers build on top of — the AWS of smart contract security.
+          </div>
+
+        </section>
+
+        <section class="section" id="business-model">
+          <h2>Business Model: From Services to Infrastructure</h2>
+
+          <p>
+            Agent access fundamentally transforms TestMachine's business model from professional services (high-touch, human-dependent) to infrastructure (high-scale, technology-dependent).
+          </p>
+
+          <h3>Pricing Models</h3>
+
+          <h4>1. Per-Analysis Pricing</h4>
+          <p>
+            Micro-transaction model similar to cloud computing:
+          </p>
+          <ul>
+            <li><strong>Basic analysis:</strong> $0.10-1.00 per contract</li>
+            <li><strong>Comprehensive analysis:</strong> $1.00-5.00 per contract</li>
+            <li><strong>Formal verification:</strong> $10-25 per contract</li>
+            <li><strong>Volume discounts:</strong> 50% off at 1000+ analyses/month</li>
+          </ul>
+
+          <h4>2. Subscription Tiers</h4>
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Tier</th>
+                  <th>Price</th>
+                  <th>Analyses/Month</th>
+                  <th>Features</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Developer</td>
+                  <td>$29/mo</td>
+                  <td>100</td>
+                  <td>Basic analysis, API access</td>
+                </tr>
+                <tr>
+                  <td>Team</td>
+                  <td>$199/mo</td>
+                  <td>1,000</td>
+                  <td>+ Custom rules, priority support</td>
+                </tr>
+                <tr>
+                  <td>Enterprise</td>
+                  <td>$999/mo</td>
+                  <td>Unlimited</td>
+                  <td>+ Private deployment, SLA</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4>3. Enterprise/White-Label</h4>
+          <p>
+            For large organizations or agent platform companies:
+          </p>
+          <ul>
+            <li><strong>Private cloud deployment:</strong> $50K-200K setup + $10K-50K/month</li>
+            <li><strong>White-label API:</strong> Revenue sharing 20-30%</li>
+            <li><strong>Custom integration:</strong> Professional services + recurring licensing</li>
+          </ul>
+
+          <h3>Unit Economics</h3>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Traditional Audits</th>
+                  <th>Agent API</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Average Revenue</td>
+                  <td>$35,000</td>
+                  <td>$2.50</td>
+                </tr>
+                <tr>
+                  <td>Marginal Cost</td>
+                  <td>$20,000 (human time)</td>
+                  <td>$0.15 (compute)</td>
+                </tr>
+                <tr>
+                  <td>Gross Margin</td>
+                  <td>43%</td>
+                  <td>94%</td>
+                </tr>
+                <tr>
+                  <td>Delivery Time</td>
+                  <td>3 weeks</td>
+                  <td>30 seconds</td>
+                </tr>
+                <tr>
+                  <td>Capacity Limit</td>
+                  <td>~20/month</td>
+                  <td>100K+/month</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            The unit economics are fundamentally superior: higher margins, infinite scale, instant delivery.
+          </p>
+
+          <h3>Revenue Projections</h3>
+
+          <p>
+            Conservative growth model based on agent adoption:
+          </p>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Scenario</th>
+                  <th>Year 1</th>
+                  <th>Year 2</th>
+                  <th>Year 3</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Conservative</td>
+                  <td>$180K ARR</td>
+                  <td>$750K ARR</td>
+                  <td>$2.1M ARR</td>
+                </tr>
+                <tr>
+                  <td>Base Case</td>
+                  <td>$420K ARR</td>
+                  <td>$1.8M ARR</td>
+                  <td>$5.2M ARR</td>
+                </tr>
+                <tr>
+                  <td>Aggressive</td>
+                  <td>$850K ARR</td>
+                  <td>$4.2M ARR</td>
+                  <td>$12.8M ARR</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            Key assumptions:
+          </p>
+          <ul>
+            <li>10-30% of AI-generated contracts use security analysis</li>
+            <li>Average revenue per contract analyzed: $1-5</li>
+            <li>50-80% gross margins</li>
+            <li>Enterprise upsell captures 20% of volume customers</li>
+          </ul>
+
+        </section>
+
+        <section class="section" id="market-sizing">
+          <h2>Market Sizing: Quantifying the Opportunity</h2>
+
+          <p>
+            The agent access market sits at the intersection of three growing markets: smart contract development, AI coding tools, and security analysis. Each provides a different lens on sizing the opportunity.
+          </p>
+
+          <h3>Top-Down: AI Coding Market</h3>
+
+          <p>
+            The AI-assisted software development market is experiencing explosive growth:
+          </p>
+
+          <ul>
+            <li><strong>GitHub Copilot:</strong> 1.8M paid seats × $10-20/month = $216-432M ARR</li>
+            <li><strong>Cursor:</strong> 100K+ developers, growing 15% monthly</li>
+            <li><strong>Claude Code:</strong> Part of $1B+ Anthropic valuation</li>
+            <li><strong>Market size:</strong> $2.9B (2024) → $17.9B (2030) — Precedence Research</li>
+          </ul>
+
+          <div class="highlight">
+            <strong>Smart Contract Subset:</strong> If 5-10% of AI-assisted development involves smart contracts, and 20-30% of those developers pay for security analysis, the addressable market is $30-120M annually.
+          </div>
+
+          <h3>Bottom-Up: Contract Analysis Volume</h3>
+
+          <p>
+            Estimating from observable smart contract deployment data:
+          </p>
+
+          <ul>
+            <li><strong>Ethereum mainnet:</strong> ~50K new contracts deployed monthly</li>
+            <li><strong>All EVM chains:</strong> ~500K new contracts deployed monthly</li>
+            <li><strong>AI-generated percentage:</strong> 15-30% (conservative estimate)</li>
+            <li><strong>Analysis adoption:</strong> 10-25% of AI-generated contracts</li>
+          </ul>
+
+          <p>
+            <strong>Volume calculation:</strong> 500K × 25% × 20% = 25K analyses/month = 300K/year
+          </p>
+          <p>
+            <strong>Revenue at $2.50/analysis:</strong> $750K ARR from volume alone
+          </p>
+          <p>
+            <strong>Plus enterprise deals:</strong> 10-20 enterprise customers at $50-200K each = $500K-4M additional ARR
+          </p>
+
+          <h3>Adjacent: Traditional Audit Market</h3>
+
+          <p>
+            The existing smart contract audit market provides context:
+          </p>
+
+          <ul>
+            <li><strong>Total addressable market:</strong> $1.5-2B annually</li>
+            <li><strong>Current volume:</strong> ~500 major audits per month</li>
+            <li><strong>Average contract value:</strong> $25-50K per audit</li>
+            <li><strong>Growth rate:</strong> 25-35% annually</li>
+          </ul>
+
+          <div class="highlight warning">
+            <strong>Volume Gap:</strong> AI agents can generate 100x more contracts than humans can audit. Agent-native analysis is the only way to bridge this gap.
+          </div>
+
+          <h3>Emerging: Agentic Security TAM</h3>
+
+          <p>
+            From our previous research on agentic AI security market:
+          </p>
+
+          <ul>
+            <li><strong>Agentic AI security TAM:</strong> $64.5B by 2030</li>
+            <li><strong>Smart contract subset:</strong> 5-8% of agentic workloads</li>
+            <li><strong>Agent security addressable market:</strong> $3.2-5.2B by 2030</li>
+          </ul>
+
+          <p>
+            This represents the eventual scale if agents become the primary way smart contracts are developed.
+          </p>
+
+          <h3>Realistic Market Scenario</h3>
+
+          <p>
+            Conservative 5-year projection:
+          </p>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Year</th>
+                  <th>Agent-Generated Contracts</th>
+                  <th>Analysis Adoption %</th>
+                  <th>Total Analyses</th>
+                  <th>Revenue Potential</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>2026</td>
+                  <td>200K</td>
+                  <td>8%</td>
+                  <td>16K</td>
+                  <td>$40K</td>
+                </tr>
+                <tr>
+                  <td>2027</td>
+                  <td>800K</td>
+                  <td>15%</td>
+                  <td>120K</td>
+                  <td>$300K</td>
+                </tr>
+                <tr>
+                  <td>2028</td>
+                  <td>2.0M</td>
+                  <td>25%</td>
+                  <td>500K</td>
+                  <td>$1.25M</td>
+                </tr>
+                <tr>
+                  <td>2029</td>
+                  <td>4.5M</td>
+                  <td>35%</td>
+                  <td>1.58M</td>
+                  <td>$3.95M</td>
+                </tr>
+                <tr>
+                  <td>2030</td>
+                  <td>8.0M</td>
+                  <td>45%</td>
+                  <td>3.60M</td>
+                  <td>$9.0M</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            This is just the volume business. Enterprise deals, white-label partnerships, and premium features could add 2-5x multiplier.
+          </p>
+
+        </section>
+
+        <section class="section" id="strategic-implications">
+          <h2>Strategic Implications for TestMachine</h2>
+
+          <p>
+            Pursuing agent access isn't just a product addition — it's a fundamental business model transformation that affects every aspect of TestMachine's strategy.
+          </p>
+
+          <h3>Business Model Evolution</h3>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Aspect</th>
+                  <th>Current (Services)</th>
+                  <th>Future (Infrastructure)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Revenue Model</td>
+                  <td>Project-based fees</td>
+                  <td class="success">Recurring subscriptions + usage</td>
+                </tr>
+                <tr>
+                  <td>Scalability</td>
+                  <td class="warning">Limited by human capacity</td>
+                  <td class="success">Software-driven scale</td>
+                </tr>
+                <tr>
+                  <td>Gross Margins</td>
+                  <td>40-50%</td>
+                  <td class="success">85-95%</td>
+                </tr>
+                <tr>
+                  <td>Customer Acquisition</td>
+                  <td>High-touch sales</td>
+                  <td class="success">Product-led growth</td>
+                </tr>
+                <tr>
+                  <td>Competitive Moat</td>
+                  <td>Brand + expertise</td>
+                  <td class="success">Network effects + switching costs</td>
+                </tr>
+                <tr>
+                  <td>Capital Requirements</td>
+                  <td class="warning">Hire more auditors</td>
+                  <td class="success">Invest in infrastructure</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Data Flywheel Creation</h3>
+
+          <p>
+            Agent access creates a powerful data flywheel that traditional audits can't match:
+          </p>
+
+          <ol>
+            <li><strong>Volume analysis</strong> → More vulnerability patterns discovered</li>
+            <li><strong>Pattern recognition</strong> → Better automated detection</li>
+            <li><strong>Lower false positives</strong> → Higher agent adoption</li>
+            <li><strong>More usage</strong> → More training data</li>
+            <li><strong>Better product</strong> → Higher willingness to pay</li>
+          </ol>
+
+          <div class="highlight success">
+            <strong>Competitive Advantage:</strong> Each analysis makes the product better. Competitors starting later face an insurmountable data disadvantage.
+          </div>
+
+          <h3>Natural Upsell Path</h3>
+
+          <p>
+            Agent access creates organic leads for traditional audit services:
+          </p>
+
+          <ul>
+            <li><strong>Automated screening:</strong> Agent analysis identifies critical issues</li>
+            <li><strong>Human escalation:</strong> Complex findings require expert review</li>
+            <li><strong>Audit recommendation:</strong> High-value contracts get flagged for professional audit</li>
+            <li><strong>Seamless transition:</strong> Agent findings inform human auditor focus areas</li>
+          </ul>
+
+          <p>
+            This creates a two-tier service model: automated analysis for volume, human expertise for complexity.
+          </p>
+
+          <h3>Platform Ecosystem Strategy</h3>
+
+          <p>
+            TestMachine could build the entire agent security ecosystem:
+          </p>
+
+          <h4>Core Platform</h4>
+          <ul>
+            <li>Security analysis API</li>
+            <li>MCP server for agent integration</li>
+            <li>Dashboard for human oversight</li>
+          </ul>
+
+          <h4>Developer Tools</h4>
+          <ul>
+            <li>IDE extensions (VS Code, Cursor)</li>
+            <li>CI/CD plugins (GitHub Actions)</li>
+            <li>Custom agent frameworks</li>
+          </ul>
+
+          <h4>Enterprise Services</h4>
+          <ul>
+            <li>Private cloud deployment</li>
+            <li>Custom rule development</li>
+            <li>Security team training</li>
+          </ul>
+
+          <div class="highlight">
+            <strong>Platform Play:</strong> Instead of competing with other tools, TestMachine becomes the infrastructure that all agent security tools build on.
+          </div>
+
+          <h3>Risk Considerations</h3>
+
+          <h4>Technical Risks</h4>
+          <ul>
+            <li><strong>False positive rates:</strong> Agents are less tolerant of noise than humans</li>
+            <li><strong>API latency:</strong> Sub-30s response time required for good UX</li>
+            <li><strong>Scalability:</strong> Need to handle 100x more volume than current audits</li>
+          </ul>
+
+          <h4>Market Risks</h4>
+          <ul>
+            <li><strong>Incumbent response:</strong> CertiK, Trail of Bits could build competing APIs</li>
+            <li><strong>Agent evolution:</strong> Future agents might have built-in security analysis</li>
+            <li><strong>Regulation:</strong> New rules could slow AI-generated contract adoption</li>
+          </ul>
+
+          <h4>Execution Risks</h4>
+          <ul>
+            <li><strong>Resource allocation:</strong> Building API while maintaining audit quality</li>
+            <li><strong>Talent requirements:</strong> Need both security experts and API engineers</li>
+            <li><strong>Timing:</strong> Too early = no agent demand; too late = competitors establish lead</li>
+          </ul>
+
+          <h3>Success Metrics</h3>
+
+          <p>
+            Key metrics for tracking agent access success:
+          </p>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>6 Months</th>
+                  <th>12 Months</th>
+                  <th>24 Months</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>API Analyses/Month</td>
+                  <td>1,000</td>
+                  <td>10,000</td>
+                  <td>50,000</td>
+                </tr>
+                <tr>
+                  <td>Active Agent Integrations</td>
+                  <td>3</td>
+                  <td>8</td>
+                  <td>15</td>
+                </tr>
+                <tr>
+                  <td>Monthly Recurring Revenue</td>
+                  <td>$5K</td>
+                  <td>$25K</td>
+                  <td>$150K</td>
+                </tr>
+                <tr>
+                  <td>Enterprise Customers</td>
+                  <td>1</td>
+                  <td>3</td>
+                  <td>8</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="highlight success">
+            <strong>The Big Picture:</strong> Agent access isn't just a new product line — it's TestMachine's path to becoming the AWS of smart contract security. The question isn't whether to build it, but how quickly to move while the window is still wide open.
+          </div>
+
+        </section>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo">
+            <span class="nav-logo-text">TestMachine Research</span>
+          </div>
+          <div class="footer-address">
+            Strategic analysis and market intelligence<br>
+            for the future of smart contract security
+          </div>
+        </div>
+        <div>
+          <h3 class="footer-heading">Research</h3>
+          <ul class="footer-links">
+            <li><a href="index.html">All Reports</a></li>
+            <li><a href="#market">Market Analysis</a></li>
+            <li><a href="#technical">Technical Deep Dives</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer-heading">Company</h3>
+          <ul class="footer-links">
+            <li><a href="https://testmachine.ai">TestMachine</a></li>
+            <li><a href="mailto:research@testmachine.ai">Contact</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer-heading">Connect</h3>
+          <ul class="footer-links">
+            <li><a href="https://twitter.com/testmachine_ai">Twitter</a></li>
+            <li><a href="https://github.com/testmachine-ai">GitHub</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 TestMachine Research. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = (winScroll / height) * 100;
+  document.getElementById('progress-bar').style.width = scrolled + '%';
+});
+
+// TOC highlighting
+const sections = document.querySelectorAll('section[id]');
+const tocLinks = document.querySelectorAll('.toc a[href^="#"]');
+
+const observerOptions = {
+  rootMargin: '-20% 0px -70% 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      tocLinks.forEach(link => link.classList.remove('active'));
+      const activeLink = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+      if (activeLink) activeLink.classList.add('active');
+    }
+  });
+}, observerOptions);
+
+sections.forEach(section => observer.observe(section));
+
+// Mobile TOC toggle
+document.getElementById('toc-toggle').addEventListener('click', () => {
+  document.getElementById('toc').classList.toggle('open');
+  document.getElementById('toc-overlay').classList.toggle('open');
+});
+
+document.getElementById('toc-overlay').addEventListener('click', () => {
+  document.getElementById('toc').classList.remove('open');
+  document.getElementById('toc-overlay').classList.remove('open');
+});
+</script>
+
+</body>
+</html>

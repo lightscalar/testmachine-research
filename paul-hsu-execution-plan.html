@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Execution Plan — Addressing Board Feedback on Pipeline, Dashboards, Product Costing &amp; Conversion — March 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+<style>
+/* ---------- Custom Properties ---------- */
+:root {
+  --bg:            oklch(0.18 0.005 260);
+  --bg-raised:     oklch(0.21 0.005 260);
+  --bg-deeper:     oklch(0.14 0.005 260);
+  --fg:            oklch(0.92 0 0);
+  --fg-muted:      oklch(0.65 0 0);
+  --fg-dim:        oklch(0.45 0 0);
+  --border:        oklch(0.32 0.005 260);
+  --border-subtle: oklch(0.25 0.005 260);
+  --accent:        oklch(0.72 0.12 192);
+  --accent-hover:  oklch(0.80 0.12 192);
+  --accent-glow:   oklch(0.72 0.12 192 / 0.1);
+  --card-bg:       oklch(0.21 0.005 260);
+  --input-bg:      oklch(0.15 0.005 260);
+  --nav-bg:        oklch(0.18 0.005 260 / 0.85);
+
+  --font-display: 'Manrope', sans-serif;
+  --font-mono:    'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --font:         var(--font-mono);
+  --font-serif:   'Source Serif 4', Charter, Georgia, serif;
+
+  --nav-h:       72px;
+  --max-w:       1120px;
+  --section-py:  clamp(80px, 10vw, 140px);
+  --gap:         24px;
+  --transition:  0.25s ease;
+
+  --callout-orange: oklch(0.75 0.15 55);
+  --callout-red:    oklch(0.65 0.2 25);
+  --callout-green:  oklch(0.65 0.15 140);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); -webkit-text-size-adjust: 100%; }
+body { font-family: var(--font); font-size: 17px; line-height: 1.7; color: var(--fg); background: var(--bg); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; }
+body.menu-open { overflow: hidden; }
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; color: inherit; }
+ul { list-style: none; }
+input, textarea, select { font-family: inherit; font-size: inherit; }
+
+/* ---------- Layout ---------- */
+.container { width: 100%; max-width: var(--max-w); margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px); }
+
+/* ---------- Progress Bar ---------- */
+.progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--accent), oklch(0.72 0.10 230)); z-index: 1100; width: 0%; transition: width 0.1s; }
+
+/* ---------- Navigation ---------- */
+.nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
+.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
+.toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+.toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
+
+.nav-container { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: var(--max-w); margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px); }
+.nav-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.nav-logo-text { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+
+/* ---------- Hamburger ---------- */
+.hamburger { display: none; width: 40px; height: 40px; flex-direction: column; align-items: center; justify-content: center; gap: 5px; z-index: 1001; }
+.hamburger span { display: block; width: 20px; height: 1.5px; background: var(--fg); transition: all var(--transition); transform-origin: center; }
+
+/* ---------- TOC Toggle (mobile) ---------- */
+.toc-toggle { display: none; position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200; width: 48px; height: 48px; border-radius: 0; background: var(--accent); color: oklch(0.12 0 0); border: none; font-size: 1.2rem; font-family: var(--font-mono); font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3); }
+.toc-overlay { display: none; position: fixed; inset: 0; background: oklch(0 0 0 / 0.6); z-index: 109; }
+.toc-overlay.open { display: block; }
+
+/* ---------- Main Content ---------- */
+.main { margin-left: 280px; min-height: 100vh; }
+.main-container { max-width: 900px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px) 4rem; }
+
+/* ---------- Article Header ---------- */
+.article-header { padding-top: calc(var(--nav-h) + 32px); padding-bottom: 2rem; border-bottom: 1px solid var(--border-subtle); margin-bottom: 3rem; }
+.back-link { display: inline-block; font-family: var(--font-mono); font-size: 0.8125rem; color: var(--fg-muted); margin-bottom: 1.5rem; transition: color var(--transition); }
+.back-link:hover { color: var(--accent); }
+.article-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fg-muted); padding: 3px 10px; border: 1px solid var(--border); border-radius: 0; margin-bottom: 1rem; }
+.article-date { display: block; font-family: var(--font-mono); font-size: 0.75rem; color: var(--fg-dim); margin-bottom: 1rem; }
+.article-title { font-family: var(--font-display); font-size: clamp(1.875rem, 4vw, 2.75rem); font-weight: 800; line-height: 1.12; letter-spacing: -0.025em; color: var(--fg); margin-bottom: 1rem; }
+.article-subtitle { font-family: var(--font-serif); font-size: 1.125rem; color: var(--fg-muted); line-height: 1.6; }
+
+/* ---------- Hero Stats ---------- */
+.hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+.hero-stat { border: 1px solid var(--border-subtle); border-radius: 0; padding: 1.2rem; text-align: center; transition: border-color var(--transition), transform var(--transition); }
+.hero-stat:hover { border-color: var(--border); transform: translateY(-2px); }
+.hero-stat .value { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; color: var(--accent); margin-bottom: 0.3rem; }
+.hero-stat .label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.hero-stat.critical .value { color: var(--callout-red); }
+.hero-stat.warning .value { color: var(--callout-orange); }
+.hero-stat.positive .value { color: var(--callout-green); }
+
+/* ---------- Article Body ---------- */
+.article-body { font-family: var(--font-serif); }
+.article-body .section { margin: 3rem 0; padding: 0 0 2rem; border-bottom: 1px solid var(--border-subtle); }
+.article-body .section:last-child { border-bottom: none; }
+.article-body p { font-family: var(--font-serif); font-size: 1.1875rem; line-height: 1.9; color: var(--fg-muted); margin-bottom: 1.5em; }
+.article-body h2 { font-family: var(--font-display); font-size: clamp(1.25rem, 2vw, 1.5rem); font-weight: 700; color: var(--fg); margin-top: 2.5em; margin-bottom: 1rem; line-height: 1.25; }
+.article-body h3 { font-family: var(--font-display); font-size: 1.125rem; font-weight: 700; color: var(--fg); margin-top: 2em; margin-bottom: 0.75rem; line-height: 1.3; }
+.article-body h4 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--fg); margin-top: 1.5em; margin-bottom: 0.5rem; }
+.article-body strong { color: var(--fg); font-weight: 600; }
+.article-body ul, .article-body ol { margin-bottom: 1.5em; padding-left: 1.5em; }
+.article-body ul { list-style: disc; }
+.article-body ol { list-style: decimal; }
+.article-body li { font-family: var(--font-serif); font-size: 1.1875rem; line-height: 1.9; color: var(--fg-muted); margin-bottom: 0.5rem; }
+.article-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; transition: color var(--transition); }
+.article-body a:hover { color: var(--accent-hover); }
+
+/* ---------- Callout / Highlight Boxes ---------- */
+.highlight { background: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: 0; border-left: 3px solid var(--accent); padding: 1.5rem; margin: 2rem 0; }
+.highlight strong:first-child { display: block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 0.5rem; }
+.highlight.warning { border-left-color: var(--callout-orange); }
+.highlight.warning strong:first-child { color: var(--callout-orange); }
+.highlight.danger { border-left-color: var(--callout-red); }
+.highlight.danger strong:first-child { color: var(--callout-red); }
+.highlight.success { border-left-color: var(--callout-green); }
+.highlight.success strong:first-child { color: var(--callout-green); }
+
+/* ---------- Code ---------- */
+code { background: var(--bg-deeper); padding: 0.15rem 0.4rem; border-radius: 0; font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); }
+
+/* ---------- Tables ---------- */
+.table-container { overflow-x: auto; margin: 2rem 0; border: 1px solid var(--border); border-radius: 0; }
+table { width: 100%; border-collapse: collapse; }
+th { background: var(--bg-deeper); font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); padding: 0.7rem 1rem; text-align: left; }
+td { padding: 0.7rem 1rem; border-top: 1px solid var(--border-subtle); font-family: var(--font-serif); font-size: 0.9375rem; color: var(--fg-muted); }
+tbody tr:hover td { background: var(--accent-glow); }
+.strategy-table .critical { color: var(--callout-red); font-weight: 600; }
+.strategy-table .warning { color: var(--callout-orange); font-weight: 600; }
+.strategy-table .success { color: var(--callout-green); font-weight: 600; }
+.strategy-table .muted { color: var(--fg-dim); }
+
+/* ---------- Action Items ---------- */
+.action-items { display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 2rem 0; }
+.action-item { background: var(--bg-raised); border: 1px solid var(--border-subtle); border-left: 4px solid var(--accent); padding: 1.2rem; }
+.action-item.urgent { border-left-color: var(--callout-red); }
+.action-item.important { border-left-color: var(--callout-orange); }
+.action-item h4 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--fg); margin-bottom: 0.5rem; }
+.action-item p { font-family: var(--font-serif); font-size: 0.95rem; line-height: 1.6; color: var(--fg-muted); margin: 0; }
+.action-item .meta { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-dim); margin-top: 0.5rem; }
+
+/* ---------- Footer ---------- */
+.footer { padding: 20px 0; background: var(--bg-raised); border-top: 1px solid var(--border-subtle); margin-left: 280px; }
+.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 28px; }
+.footer-brand .nav-logo { margin-bottom: 14px; }
+.footer-address { font-size: 0.8125rem; color: var(--fg-dim); line-height: 1.5; }
+.footer-heading { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg); margin-bottom: 16px; }
+.footer-links { list-style: none; }
+.footer-links li { margin-bottom: 10px; }
+.footer-links a { font-size: 0.8125rem; color: var(--fg-muted); transition: color var(--transition); }
+.footer-links a:hover { color: var(--fg); }
+.footer-bottom { display: flex; align-items: center; justify-content: center; }
+.footer-bottom p { font-size: 0.7rem; color: var(--fg-dim); margin: 0; line-height: 1; }
+
+/* ---------- Focus & Selection ---------- */
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+::selection { background: oklch(0.72 0.12 192 / 0.25); }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .toc { transform: translateX(-100%); }
+  .main, .main-content, .main-container, .article-wrapper, .content-wrapper { margin-left: 0 !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .hamburger { display: flex; }
+  .toc.open { transform: translateX(0); }
+  .toc-toggle { display: block; }
+  .main { margin-left: 0; }
+  .footer { margin-left: 0; }
+}
+
+@media (max-width: 768px) {
+  .main-container { padding: 0 1rem 3rem; }
+  .article-title { font-size: clamp(1.5rem, 6vw, 2rem); }
+  .hero-stats { grid-template-columns: 1fr; }
+  .article-header { padding-top: calc(var(--nav-h) + 20px); }
+  .action-items { grid-template-columns: 1fr; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-bottom { flex-direction: column; gap: 16px; align-items: flex-start; }
+}
+
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+
+<body>
+
+  <div class="progress-bar" id="progress-bar"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="navbar">
+    <div style="display:flex;align-items:center;height:100%;padding:0 24px;">
+      <a href="/"><img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);"></a>
+    </div>
+  </nav>
+
+  <!-- TOC Toggle (mobile) -->
+  <button class="toc-toggle" id="toc-toggle" aria-label="Toggle table of contents">&#9776;</button>
+  <div class="toc-overlay" id="toc-overlay"></div>
+
+  <!-- TOC Sidebar -->
+  <nav class="toc" id="toc">
+    <h3>Contents</h3>
+    <ul>
+      <li><a href="#diagnosis">Paul's Diagnosis</a></li>
+      <li><a href="#point-1">1. Weighted Pipeline</a></li>
+      <li><a href="#point-2">2. Marketing Dashboard</a></li>
+      <li><a href="#point-3">3. Product Revenue &amp; Costing</a></li>
+      <li><a href="#point-4">4. Conversion Processes</a></li>
+      <li><a href="#pipeline-template">Pipeline Template</a></li>
+      <li><a href="#timeline">Execution Timeline</a></li>
+      <li><a href="#reforecast">Reforecast Framework</a></li>
+      <li><a href="#accountability">Accountability Model</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="main-container">
+
+      <!-- Article Header -->
+      <header class="article-header">
+        <a href="index.html" class="back-link">&larr; Back to Research</a>
+        <span class="article-tag">Execution Plan</span>
+        <span class="article-date">March 6, 2026 — Derived from March 5 Board Call</span>
+        <h1 class="article-title">Closing the Execution Gap</h1>
+        <p class="article-subtitle">
+          A concrete plan addressing Paul Hsu's four structural requirements: weighted pipeline by product line, marketing-to-conversion dashboards, revenue-linked product roadmap, and founder-led sales conversion processes.
+        </p>
+
+        <div class="hero-stats">
+          <div class="hero-stat critical">
+            <div class="value">4 Gaps</div>
+            <div class="label">Structural Issues Identified</div>
+          </div>
+          <div class="hero-stat warning">
+            <div class="value">24 hrs</div>
+            <div class="label">Paul's Expected Turnaround</div>
+          </div>
+          <div class="hero-stat positive">
+            <div class="value">25%</div>
+            <div class="label">Acceptable Haircut (Not 75%)</div>
+          </div>
+          <div class="hero-stat">
+            <div class="value">80</div>
+            <div class="label">Data Points to Capture</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Article Body -->
+      <div class="article-body">
+
+        <!-- ==================== DIAGNOSIS ==================== -->
+        <section class="section" id="diagnosis">
+          <h2>Paul's Diagnosis: What He Actually Said</h2>
+
+          <p>
+            The March 5 call was not a typical board check-in. Paul came prepared, had read the revised financial model, and delivered a pointed assessment. The core message: <strong>this is a people and process problem, not a product problem.</strong>
+          </p>
+
+          <div class="highlight danger">
+            <strong>The Central Indictment:</strong>
+            "You're presenting a 12-month deferral and a 75% revenue haircut. But if your features ship faster than your sales cycle, the product pause doesn't explain the gap. You should be at a 25% haircut — a 3-month delay — not 75%."
+          </div>
+
+          <p>
+            Paul identified a pattern where multiple explanations for the revenue miss were offered — "we paused for product," "we just started selling two weeks ago," "we've been selling all along" — and none were internally consistent. His word: <strong>"alibi stories."</strong> He's not questioning the team's talent or the product's quality. He's questioning whether the CEO is managing toward revenue with the same rigor applied to product engineering.
+          </p>
+
+          <h3>The Four Structural Requirements</h3>
+
+          <p>
+            Paul distilled his feedback into four concrete asks. These aren't suggestions — they're conditions for maintaining board confidence:
+          </p>
+
+          <ol>
+            <li><strong>Consolidated weighted pipeline by product line</strong> — one place, all accounts, with budget/buyer/timing data to calculate probability-weighted revenue</li>
+            <li><strong>Common dashboard for marketing outreach</strong> — but reoriented from click-tracking to conversion-tracking; stop measuring what doesn't lead to money</li>
+            <li><strong>Product pipeline with revenue and costing</strong> — every sprint item must show revenue impact and engineering cost; John needs to own this</li>
+            <li><strong>Conversion process upgrades</strong> — shift from digital marketing to founder-led selling, personal connections, in-person meetings, and systematic capture of deal intelligence</li>
+          </ol>
+
+          <div class="highlight warning">
+            <strong>The Meta-Message:</strong>
+            Paul explicitly said: "I could look at this very quickly and say, hey, we're going to miss your revised downward plan too. I know it already." He's telling you the current trajectory doesn't hit even the bear case — and the only way to change that is structural process changes, not more product work.
+          </div>
+
+        </section>
+
+        <!-- ==================== POINT 1 ==================== -->
+        <section class="section" id="point-1">
+          <h2>Point 1: Consolidated Weighted Pipeline by Product Line</h2>
+
+          <h3>What Paul Asked For</h3>
+
+          <p>
+            A single view where every prospect account has the data needed to calculate a probability-weighted revenue forecast. Specifically, Paul walked through adding these columns live on the call:
+          </p>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Required Column</th>
+                  <th>What It Is</th>
+                  <th>Why It Matters</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>TM Contact</strong></td>
+                  <td>Matt, James, or both</td>
+                  <td>Founder-led selling accountability — who owns the relationship?</td>
+                </tr>
+                <tr>
+                  <td><strong>Budget Owner</strong></td>
+                  <td>Named person + title</td>
+                  <td>"Senior software engineer can only sign off on $1K/mo. A director can sign off on $20K." You need the right person.</td>
+                </tr>
+                <tr>
+                  <td><strong>Budget Size</strong></td>
+                  <td>Dollar amount per month</td>
+                  <td>Can't forecast revenue without knowing what each deal is worth. Estimate if you don't know exactly.</td>
+                </tr>
+                <tr>
+                  <td><strong>Timing of Close</strong></td>
+                  <td>Expected date</td>
+                  <td>Without this, you can't build a time-phased revenue projection</td>
+                </tr>
+                <tr>
+                  <td><strong>Last Contacted</strong></td>
+                  <td>Date of last meaningful interaction</td>
+                  <td>Staleness detection — if it's been >2 weeks, the deal is cooling</td>
+                </tr>
+                <tr>
+                  <td><strong>Product Line</strong></td>
+                  <td>Token Custody / Azimuth / Risk Insurance</td>
+                  <td>Paul explicitly said: separate these. You can't mix and match.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>The Execution Plan</h3>
+
+          <div class="action-items">
+            <div class="action-item urgent">
+              <h4>1A. Build the Pipeline Spreadsheet — TODAY</h4>
+              <p>Take the existing prospect list from Notion. Export it. Add the six columns above. Go through each of the ~20 priority accounts and fill in what you know. Estimate where you don't know. Paul said: "It's 80 data points. It shouldn't take more than 20 minutes."</p>
+              <div class="meta">Owner: James | Deadline: March 7 | Dependencies: None</div>
+            </div>
+
+            <div class="action-item urgent">
+              <h4>1B. Segment by Product Line</h4>
+              <p>Three separate tabs or filtered views: Token Custody, Azimuth, Risk Insurance. Paul was clear: "I'm just focused on token custody right now because then you just apply it to the other ones." Start with Token Custody.</p>
+              <div class="meta">Owner: James | Deadline: March 7 | Dependencies: 1A</div>
+            </div>
+
+            <div class="action-item important">
+              <h4>1C. Calculate Weighted Pipeline</h4>
+              <p>For each deal: <code>Budget Size × Probability of Close = Weighted Revenue</code>. Probability based on: has buyer (25%), has budget confirmed (25%), has timeline (25%), had recent contact (25%). Sum across all deals = total weighted pipeline. Paul needs this to see 3x pipeline coverage against revised targets.</p>
+              <div class="meta">Owner: Matt + James | Deadline: March 7 | Dependencies: 1B</div>
+            </div>
+
+            <div class="action-item">
+              <h4>1D. Migrate to Real CRM Within 2 Weeks</h4>
+              <p>Paul specifically mentioned Copper ($20/seat/month). Notion is free but data extraction is painful — James admitted this on the call. Move to a lightweight CRM that gives instant pipeline views. Alternatives: Copper, Attio, HubSpot free tier, Close.com.</p>
+              <div class="meta">Owner: James + Elaine | Deadline: March 21 | Dependencies: None</div>
+            </div>
+          </div>
+
+          <h3>What the Kraken Example Taught Us</h3>
+
+          <p>
+            Paul walked through Kraken as a live exercise. Here's what he extracted in 60 seconds of questions that should already be in the pipeline:
+          </p>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Field</th>
+                  <th>Kraken Data</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>TM Contact</td>
+                  <td>Matt + James (both)</td>
+                </tr>
+                <tr>
+                  <td>Budget Owner</td>
+                  <td>Michael Bay, Head of Security</td>
+                </tr>
+                <tr>
+                  <td>Budget Size</td>
+                  <td>$30-60K/month ($360-720K/year)</td>
+                </tr>
+                <tr>
+                  <td>Timing</td>
+                  <td>Before IPO — target May 2026</td>
+                </tr>
+                <tr>
+                  <td>Last Contacted</td>
+                  <td>Last week (in trial)</td>
+                </tr>
+                <tr>
+                  <td>Stage</td>
+                  <td>Trial — they have credentials, evaluating</td>
+                </tr>
+                <tr>
+                  <td>Key Insight</td>
+                  <td>"AI has failed for us" — skeptical but engaged</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            <strong>Matt had all this information.</strong> It just wasn't captured anywhere Paul could see it. That's the process problem. The data exists — it's in meeting transcripts, in people's heads, in scattered Notion pages. It needs to be in one structured, queryable place.
+          </p>
+
+        </section>
+
+        <!-- ==================== POINT 2 ==================== -->
+        <section class="section" id="point-2">
+          <h2>Point 2: Common Dashboard for Marketing Outreach</h2>
+
+          <h3>Paul's Critique</h3>
+
+          <p>
+            Paul looked at the marketing data and said: <strong>"You're tracking product clicks when there's no buy button."</strong> The current metrics — LinkedIn impressions, email open rates, website visits — are vanity metrics in a high-touch sales model. They don't predict revenue.
+          </p>
+
+          <div class="highlight warning">
+            <strong>The Disconnect Paul Identified:</strong>
+            "The transition from API to platform with services-oriented sales doesn't lead well to the current strategy you're describing. Or there's a disconnect."
+          </div>
+
+          <p>
+            Token Custody is not a self-serve product (yet). It has a 3-6 month enterprise sales cycle. Measuring it with digital marketing metrics is like measuring a surgeon's performance by how many people visited the hospital website.
+          </p>
+
+          <h3>What the Dashboard Should Actually Track</h3>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Stop Tracking (Vanity)</th>
+                  <th>Start Tracking (Revenue-Leading)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>LinkedIn post impressions</td>
+                  <td class="success">Qualified meetings booked this week</td>
+                </tr>
+                <tr>
+                  <td>Email open rates</td>
+                  <td class="success">Responses from named accounts</td>
+                </tr>
+                <tr>
+                  <td>Website page views</td>
+                  <td class="success">Demo requests from target firms</td>
+                </tr>
+                <tr>
+                  <td>Twitter engagement</td>
+                  <td class="success">Warm intros from investors/network</td>
+                </tr>
+                <tr>
+                  <td>Ad click-through rates</td>
+                  <td class="success">Pipeline stage progression (week-on-week)</td>
+                </tr>
+                <tr>
+                  <td>Newsletter subscribers</td>
+                  <td class="success">Trial activations from target accounts</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>The Execution Plan</h3>
+
+          <div class="action-items">
+            <div class="action-item important">
+              <h4>2A. Redefine Elaine's KPIs</h4>
+              <p>Elaine's success metric should not be "engagement" or "reach." It should be: qualified meetings set with named accounts. Every marketing action should be evaluated against: "Does this get us closer to a meeting with a buyer?" If not, it's waste.</p>
+              <div class="meta">Owner: Matt | Deadline: March 10 | Dependencies: None</div>
+            </div>
+
+            <div class="action-item important">
+              <h4>2B. Build a Weekly Activity Report</h4>
+              <p>Paul said he can show pipeline activity "week on week change within two seconds." Build a simple weekly report: new contacts reached, meetings held, proposals sent, deals advanced, deals stalled, deals lost. This is the dashboard Paul wants to see.</p>
+              <div class="meta">Owner: James + Elaine | Deadline: March 14 | Dependencies: 1A</div>
+            </div>
+
+            <div class="action-item">
+              <h4>2C. Share Prospect List with Investors for Warm Intros</h4>
+              <p>Paul specifically said: "Aggressively ask us — Paul, who on this list do you guys know?" Take the top 20 exchange targets, send the list to Paul, Blockchain Capital, UDHC, and every investor. Ask who they can introduce. This was described as obvious and overdue.</p>
+              <div class="meta">Owner: James + Matt | Deadline: March 7 | Dependencies: 1A</div>
+            </div>
+          </div>
+
+          <div class="highlight success">
+            <strong>Paul's Suggested Tactic:</strong>
+            "Go to DAS [Digital Asset Summit], set up a dinner. It's $2K. Get five of these contacts into that room and boom, you got the relationship going. It's not flying to Bahrain or some crazy thing."
+          </div>
+
+          <p>
+            The marketing dashboard isn't about more software. It's about tracking the right things — human connections, meeting cadence, deal progression — and making that visible to the CEO and board weekly.
+          </p>
+
+        </section>
+
+        <!-- ==================== POINT 3 ==================== -->
+        <section class="section" id="point-3">
+          <h2>Point 3: Product Pipeline Needs Revenue and Costing</h2>
+
+          <h3>What Paul Found</h3>
+
+          <p>
+            James showed the product ideas dashboard during the call — it has owner, strategic link, customer segment, problem statement, hypothesis, impact/effort scoring, sprint assignment. Paul scanned it and immediately asked: <strong>"What's missing from this dashboard?"</strong>
+          </p>
+
+          <p>
+            James answered correctly: <strong>"What revenue it could generate."</strong>
+          </p>
+
+          <p>
+            Paul's follow-up was equally pointed: the product pipeline was also heavily skewed toward Azimuth, with nothing visible for Token Custody or Risk Insurance. Whether that was a filter issue or a real prioritization gap, the optics were terrible.
+          </p>
+
+          <div class="highlight danger">
+            <strong>Paul's Board-Meeting Observation:</strong>
+            "I mentioned [revenue and costing] to John on the board call. When you don't look at it from a revenue perspective, that's why you're in two products that may not be the largest revenue drivers."
+          </div>
+
+          <h3>What the Product Pipeline Needs</h3>
+
+          <p>
+            Two new columns, minimum:
+          </p>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>New Column</th>
+                  <th>Definition</th>
+                  <th>How to Calculate</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Revenue Impact</strong></td>
+                  <td>Estimated annual revenue this feature enables or unblocks</td>
+                  <td>Sum of weighted pipeline deals that require this feature × deal size. If Kraken needs audit logs to close at $360K/yr, audit logs have $360K revenue impact.</td>
+                </tr>
+                <tr>
+                  <td><strong>Engineering Cost</strong></td>
+                  <td>Story points or person-weeks to ship</td>
+                  <td>Standard sprint estimation. Convert to dollar cost using loaded engineer rate.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            With these two columns, every sprint planning session becomes a <strong>revenue-per-engineering-dollar</strong> optimization problem instead of a "what feels important" gut call.
+          </p>
+
+          <h3>The Execution Plan</h3>
+
+          <div class="action-items">
+            <div class="action-item urgent">
+              <h4>3A. Add Revenue Impact Column to Product Board — Tomorrow's Sprint Shaping</h4>
+              <p>Matt mentioned sprint shaping is tomorrow (March 7). This is the first item on the agenda: every idea on the board gets a revenue impact estimate. Even rough estimates ($0, $50K, $200K+) are better than nothing. John owns this column going forward.</p>
+              <div class="meta">Owner: John + Matt | Deadline: March 7 | Dependencies: 1C (pipeline data feeds estimates)</div>
+            </div>
+
+            <div class="action-item important">
+              <h4>3B. Add Engineering Cost Column</h4>
+              <p>Each product idea needs person-weeks estimate. This enables ROI calculation: revenue impact ÷ engineering cost = priority score. Replaces the current "impact/effort" scoring with something grounded in money.</p>
+              <div class="meta">Owner: John | Deadline: March 7 | Dependencies: None</div>
+            </div>
+
+            <div class="action-item important">
+              <h4>3C. Self-Serve Purchasing into Next Sprint</h4>
+              <p>Paul specifically said: "Get John on self-serve. Get that going. You'll be surprised. Just get the money in." If the team isn't good at enterprise sales, product-led growth with a buy button is the hedge. This should be in the March 7 sprint shaping as a high-priority item.</p>
+              <div class="meta">Owner: John + Matt | Deadline: Sprint starting March 7 | Dependencies: None</div>
+            </div>
+
+            <div class="action-item">
+              <h4>3D. Product Pipeline by Product Line</h4>
+              <p>Fix the filter issue James mentioned — or if it's real, rebalance. The board should see engineering effort allocated across Token Custody, Azimuth, and Risk Insurance proportional to their revenue potential. If Token Custody is the nearest revenue, it should get the most engineering.</p>
+              <div class="meta">Owner: John | Deadline: March 14 | Dependencies: 3A</div>
+            </div>
+          </div>
+
+          <h3>The Feature Request Pipeline from Sales</h3>
+
+          <p>
+            Paul described a feedback loop that isn't currently working:
+          </p>
+
+          <ol>
+            <li>Sales has a meeting with Kraken</li>
+            <li>Kraken says "we need audit logs and SOC2 compliance reporting"</li>
+            <li>That feature request should immediately appear in the product pipeline with Kraken's deal value attached</li>
+            <li>John and the team debate: "Is building this worth $360K/year?"</li>
+            <li>If yes, it goes into the sprint. If no, find another way to close without it.</li>
+          </ol>
+
+          <p>
+            Right now, sales feedback goes into Notion somewhere. It doesn't carry dollar signs. Without dollar signs, engineering makes priority decisions in a revenue vacuum.
+          </p>
+
+        </section>
+
+        <!-- ==================== POINT 4 ==================== -->
+        <section class="section" id="point-4">
+          <h2>Point 4: Conversion Process Upgrades</h2>
+
+          <h3>Paul's Core Message</h3>
+
+          <p>
+            This was the sharpest feedback of the call. Paul's diagnosis:
+          </p>
+
+          <div class="highlight danger">
+            <strong>Direct Quote:</strong>
+            "You're still in denial that you have to close sales. Common dashboard for marketing outreach isn't going to help you. You have a lot of leads. What you're afraid to do is have a dinner and meet people face to face to go ask them the three questions: How much budget do you have? When do you need to spend it? And are you the decision maker?"
+          </div>
+
+          <p>
+            The conversion problem isn't lead generation. It's <strong>converting leads into revenue</strong>. The team has named accounts, email contacts, demo links. What's missing is the final mile: asking for the money.
+          </p>
+
+          <h3>Paul's Three Conversion Questions</h3>
+
+          <p>
+            Every sales conversation should capture these three data points. If you leave a meeting without them, the meeting was incomplete:
+          </p>
+
+          <ol>
+            <li><strong>Who is the budget owner?</strong> — Named person, title, authority level</li>
+            <li><strong>What is the budget?</strong> — Dollar amount, annual or monthly</li>
+            <li><strong>What is the timeline?</strong> — When do they need to decide by?</li>
+          </ol>
+
+          <h3>Founder-Led Selling</h3>
+
+          <p>
+            Paul was unequivocal: <strong>"Matt, you're in founder-led selling. You and James have to be selling."</strong> Specifically:
+          </p>
+
+          <ul>
+            <li>Every account over $100K/month should have Matt <em>and</em> James on it</li>
+            <li>Consultants and contractors haven't worked for exchange sales — the founders need to be the face</li>
+            <li>The follow-up with Kraken was good (30-minute turnaround, transcript analysis, team email) — do this for every major account</li>
+            <li>But also: go beyond email. Set up in-person meetings. Attend events. Host dinners.</li>
+          </ul>
+
+          <h3>The Execution Plan</h3>
+
+          <div class="action-items">
+            <div class="action-item urgent">
+              <h4>4A. Capture Paul's Three Questions for All Active Deals — TODAY</h4>
+              <p>Go through the top 20 accounts. For each: do you know the budget owner, budget size, and timeline? If not, your next touchpoint with that account MUST capture these. Schedule follow-up calls specifically to get this data.</p>
+              <div class="meta">Owner: Matt + James | Deadline: March 7 | Dependencies: 1A</div>
+            </div>
+
+            <div class="action-item urgent">
+              <h4>4B. Send Prospect List to All Investors for Warm Intros</h4>
+              <p>Paul: "Aggressively ask us." Take the list, send it to Paul, Blockchain Capital, UDHC, every board member, every advisor. Ask: "Who do you know at these firms? Can you intro us?" This is the highest-leverage action item on this list.</p>
+              <div class="meta">Owner: James | Deadline: March 7 | Dependencies: 1A</div>
+            </div>
+
+            <div class="action-item important">
+              <h4>4C. Schedule In-Person Meetings at DAS / ETH NYC</h4>
+              <p>James mentioned Ethereum events in NYC. Plan a dinner around one of these — Paul said $2K budget, get 5 target contacts in a room. This is how high-touch enterprise deals close, not through LinkedIn ads.</p>
+              <div class="meta">Owner: James | Deadline: March 14 | Dependencies: Event schedules</div>
+            </div>
+
+            <div class="action-item important">
+              <h4>4D. Post-Meeting Intelligence Capture</h4>
+              <p>After every demo/call: within 30 minutes, update the pipeline with budget owner, budget, timeline, key objections, next steps, and features requested. Matt is already doing the transcript analysis — pipe the output directly into the CRM/pipeline sheet.</p>
+              <div class="meta">Owner: Matt + James | Deadline: Ongoing | Dependencies: 1D (CRM)</div>
+            </div>
+
+            <div class="action-item">
+              <h4>4E. Win/Loss Analysis</h4>
+              <p>Paul: "You should learn more from your losses than your wins." For every deal that goes cold or says no: document why. Was it product gap? Price? Timing? Competition? This data feeds back into product prioritization (Point 3).</p>
+              <div class="meta">Owner: James | Deadline: Ongoing | Dependencies: None</div>
+            </div>
+
+            <div class="action-item">
+              <h4>4F. Light Scan / Self-Serve on Landing Page</h4>
+              <p>James mentioned this as a sprint item — adding a light scan capability to the landing page so visitors can experience value immediately. This is the product-led growth play Paul endorsed: "Just get the money in." Bridge the gap between marketing traffic and product experience.</p>
+              <div class="meta">Owner: John + Engineering | Deadline: Current Sprint | Dependencies: None</div>
+            </div>
+          </div>
+
+        </section>
+
+        <!-- ==================== PIPELINE TEMPLATE ==================== -->
+        <section class="section" id="pipeline-template">
+          <h2>Pipeline Template: What Paul Walked Through Live</h2>
+
+          <p>
+            During the call, Paul had James pull up the pipeline and walked through adding columns in real time. Here's the template that emerged — this is exactly what he expects to see:
+          </p>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Account</th>
+                  <th>Product</th>
+                  <th>TM Contact</th>
+                  <th>Budget Owner</th>
+                  <th>$ Budget/Mo</th>
+                  <th>Timing</th>
+                  <th>Last Contact</th>
+                  <th>Stage</th>
+                  <th>Weighted Rev</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Kraken</strong></td>
+                  <td>Custody</td>
+                  <td>Matt + James</td>
+                  <td>Michael Bay, Head of Security</td>
+                  <td class="success">$30K</td>
+                  <td>May 2026 (pre-IPO)</td>
+                  <td>Last week</td>
+                  <td>Trial</td>
+                  <td>$270K (75%)</td>
+                </tr>
+                <tr>
+                  <td><strong>Coinbase</strong></td>
+                  <td>Custody</td>
+                  <td>Matt</td>
+                  <td>[TBD]</td>
+                  <td class="success">[Current]</td>
+                  <td>Active</td>
+                  <td>Ongoing</td>
+                  <td>Customer</td>
+                  <td>[Actual]</td>
+                </tr>
+                <tr>
+                  <td><strong>Binance</strong></td>
+                  <td>Custody</td>
+                  <td>James</td>
+                  <td>[TBD]</td>
+                  <td class="warning">[TBD]</td>
+                  <td>[TBD]</td>
+                  <td>[TBD]</td>
+                  <td>Demo Given</td>
+                  <td class="muted">—</td>
+                </tr>
+                <tr>
+                  <td><strong>Bitget</strong></td>
+                  <td>Custody</td>
+                  <td>James</td>
+                  <td>[TBD]</td>
+                  <td class="warning">[TBD]</td>
+                  <td>[TBD]</td>
+                  <td>[TBD]</td>
+                  <td>Demo Given</td>
+                  <td class="muted">—</td>
+                </tr>
+                <tr>
+                  <td><strong>Gemini</strong></td>
+                  <td>Custody</td>
+                  <td>—</td>
+                  <td>Iris / Chris Bracket</td>
+                  <td class="warning">[TBD]</td>
+                  <td>[TBD]</td>
+                  <td>[TBD]</td>
+                  <td>Contact</td>
+                  <td class="muted">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <p>
+            Every <code>[TBD]</code> in this table is a gap that needs to be filled. The accounts with data filled in will get weighted. The accounts with <code>[TBD]</code> everywhere can't be weighted — they don't count toward pipeline coverage.
+          </p>
+
+          <div class="highlight">
+            <strong>Weighting Formula:</strong>
+            <code>Budget/Mo × 12 × Probability = Weighted Annual Revenue</code><br><br>
+            Probability guide: Has buyer (25%) + Has budget (25%) + Has timeline (25%) + Recent contact (25%) = sum for probability. Kraken has all four = 75-90% probability. An account with only a name and no contact = 10%.
+          </div>
+
+        </section>
+
+        <!-- ==================== TIMELINE ==================== -->
+        <section class="section" id="timeline">
+          <h2>Execution Timeline</h2>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Deadline</th>
+                  <th>Deliverable</th>
+                  <th>Owner</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>March 7</strong></td>
+                  <td>Pipeline spreadsheet with 6 columns, all 20 accounts populated</td>
+                  <td>James + Matt</td>
+                  <td class="critical">Due tomorrow</td>
+                </tr>
+                <tr>
+                  <td><strong>March 7</strong></td>
+                  <td>Weighted pipeline calculation by product line</td>
+                  <td>James</td>
+                  <td class="critical">Due tomorrow</td>
+                </tr>
+                <tr>
+                  <td><strong>March 7</strong></td>
+                  <td>Prospect list sent to all investors for warm intros</td>
+                  <td>James</td>
+                  <td class="critical">Due tomorrow</td>
+                </tr>
+                <tr>
+                  <td><strong>March 7</strong></td>
+                  <td>Revenue impact + costing columns added to product board</td>
+                  <td>John + Matt</td>
+                  <td class="critical">Sprint shaping tomorrow</td>
+                </tr>
+                <tr>
+                  <td><strong>March 7</strong></td>
+                  <td>Self-serve purchasing scoped and prioritized in sprint</td>
+                  <td>John</td>
+                  <td class="warning">Sprint shaping tomorrow</td>
+                </tr>
+                <tr>
+                  <td><strong>March 10</strong></td>
+                  <td>Elaine's KPIs redefined around conversion metrics</td>
+                  <td>Matt</td>
+                  <td class="warning">Monday</td>
+                </tr>
+                <tr>
+                  <td><strong>March 10</strong></td>
+                  <td>Follow-up email to Paul with completed pipeline + weighted forecast</td>
+                  <td>Matt</td>
+                  <td class="warning">Monday</td>
+                </tr>
+                <tr>
+                  <td><strong>March 14</strong></td>
+                  <td>First weekly activity report (meetings, stages, progression)</td>
+                  <td>James + Elaine</td>
+                  <td class="muted">Week 2</td>
+                </tr>
+                <tr>
+                  <td><strong>March 14</strong></td>
+                  <td>DAS / ETH NYC dinner planned and contacts invited</td>
+                  <td>James</td>
+                  <td class="muted">Week 2</td>
+                </tr>
+                <tr>
+                  <td><strong>March 21</strong></td>
+                  <td>CRM migration (Copper or equivalent) live</td>
+                  <td>James + Elaine</td>
+                  <td class="muted">Week 3</td>
+                </tr>
+                <tr>
+                  <td><strong>March 21</strong></td>
+                  <td>Self-serve purchasing MVP shipped</td>
+                  <td>John + Engineering</td>
+                  <td class="muted">End of sprint</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="highlight danger">
+            <strong>Paul's Expectation:</strong>
+            "24 hours. Come on, man. Why can't you do this just right after this call? It shouldn't be that hard. These are on your Notion. It's just query or AI and get two or four data fields into your pipeline."
+          </div>
+
+        </section>
+
+        <!-- ==================== REFORECAST ==================== -->
+        <section class="section" id="reforecast">
+          <h2>Reforecast Framework</h2>
+
+          <p>
+            Paul's math was simple and damning:
+          </p>
+
+          <ul>
+            <li><strong>October board plan:</strong> $4M revenue for 2026</li>
+            <li><strong>Current revised plan:</strong> ~$1M (a 75% haircut)</li>
+            <li><strong>Paul's acceptable range:</strong> $3M (a 25% haircut — "3-month hiccup")</li>
+          </ul>
+
+          <p>
+            The gap between $1M and $3M is the "execution improvement" Paul is asking for. He's not saying the $4M was easy — he's saying a team that made product improvements, gained Coinbase as a customer, and has a market tailwind should not be reforecasting down 75%.
+          </p>
+
+          <h3>How to Build a Credible Reforecast</h3>
+
+          <ol>
+            <li><strong>Start with the weighted pipeline</strong> (Point 1). Sum it up. That's your floor.</li>
+            <li><strong>Add conversion from current leads.</strong> If you have 50 exchanges in your pipeline and historically close 5-10%, apply that rate.</li>
+            <li><strong>Add self-serve revenue.</strong> If light scan goes live and 1% of landing page visitors convert at $X/month, model it.</li>
+            <li><strong>Add Azimuth.</strong> Separate product line, separate forecast.</li>
+            <li><strong>Present three scenarios:</strong> Bear (weighted pipeline only), Base (pipeline + conversion), Bull (pipeline + conversion + self-serve + new product).</li>
+          </ol>
+
+          <div class="highlight success">
+            <strong>The Story Paul Wants to Hear:</strong>
+            "Paul, here's our weighted pipeline: $X. Here's what we're doing to expand it. We had a 3-month product-building period. We learned from it — we now ship features in 2 weeks, not 2 months. Our revised forecast is $Y, which is [XX]% of the original plan. Here's the backup data."
+          </div>
+
+          <p>
+            <strong>Key principle from Paul:</strong> "Most top performers love stretch goals. They love the pursuit. And if they fall short, they're still much better off. I believe you have a strong team. If you don't shoot large, you're just not tapping into the potential."
+          </p>
+
+        </section>
+
+        <!-- ==================== ACCOUNTABILITY ==================== -->
+        <section class="section" id="accountability">
+          <h2>Accountability Model</h2>
+
+          <p>
+            Paul's recurring theme: <strong>who owns what?</strong> The current state has everyone vaguely responsible for everything, which means nobody is specifically accountable for sales conversion.
+          </p>
+
+          <h3>Ownership Matrix</h3>
+
+          <div class="table-container">
+            <table class="strategy-table">
+              <thead>
+                <tr>
+                  <th>Area</th>
+                  <th>Owner</th>
+                  <th>Metric</th>
+                  <th>Cadence</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Sales Pipeline (Token Custody)</td>
+                  <td><strong>Matt + James</strong></td>
+                  <td>Weighted pipeline value, deals closed</td>
+                  <td>Weekly review</td>
+                </tr>
+                <tr>
+                  <td>Sales Pipeline (Azimuth)</td>
+                  <td><strong>Matt + James</strong></td>
+                  <td>Weighted pipeline value, trials started</td>
+                  <td>Weekly review</td>
+                </tr>
+                <tr>
+                  <td>Pipeline Data Integrity</td>
+                  <td><strong>James</strong></td>
+                  <td>All 6 columns populated for top 20</td>
+                  <td>Daily check</td>
+                </tr>
+                <tr>
+                  <td>Marketing → Conversion</td>
+                  <td><strong>Elaine</strong></td>
+                  <td>Qualified meetings booked, not clicks</td>
+                  <td>Weekly report</td>
+                </tr>
+                <tr>
+                  <td>Product Revenue Impact</td>
+                  <td><strong>John</strong></td>
+                  <td>Revenue $ tied to each sprint item</td>
+                  <td>Every sprint shaping</td>
+                </tr>
+                <tr>
+                  <td>Self-Serve Revenue</td>
+                  <td><strong>John</strong></td>
+                  <td>Sign-ups, conversions, MRR</td>
+                  <td>Weekly once live</td>
+                </tr>
+                <tr>
+                  <td>Board Communication</td>
+                  <td><strong>Matt</strong></td>
+                  <td>Timely, data-backed updates</td>
+                  <td>Weekly email to Paul</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Weekly Rhythm</h3>
+
+          <p>
+            Paul runs one-week sprints at Decasonic. He reviews deal pipelines weekly. TestMachine should match that cadence:
+          </p>
+
+          <ul>
+            <li><strong>Monday:</strong> Pipeline review — what moved, what stalled, what's new</li>
+            <li><strong>Wednesday:</strong> Sprint check — are we building what drives revenue?</li>
+            <li><strong>Friday:</strong> Weekly summary to Paul — 3 bullets: pipeline delta, key meetings, sprint output</li>
+          </ul>
+
+          <div class="highlight">
+            <strong>Paul's Parting Words:</strong>
+            "Iterate faster with me. I'm tremendously busy, dude. I gotta work late now on my other stuff. I'm carving out time to try and get this over. Lean into it, take accountability, and I'm along here to help you guys out."
+          </div>
+
+          <h3>The Relationship Dynamic</h3>
+
+          <p>
+            Paul ended the call with a critical point that should not be missed: <strong>"I'll always poke and prod for the service of the company and being better."</strong> He's not hostile — he's frustrated because he sees potential being wasted. The team needs to lean into his expertise rather than defending against his questions.
+          </p>
+
+          <p>
+            The most productive dynamic going forward:
+          </p>
+
+          <ul>
+            <li><strong>Proactive updates</strong> — don't wait for Paul to ask. Send the data before the meeting.</li>
+            <li><strong>Honest gaps</strong> — "Paul, I don't know how to do this. Help me." is a valid and welcome statement.</li>
+            <li><strong>Fast iteration</strong> — 24-hour turnarounds, not 2-week delays. Show responsiveness.</li>
+            <li><strong>Stretch targets</strong> — present ambitious goals with clear execution plans. Fall short with dignity, not with excuses.</li>
+          </ul>
+
+          <div class="highlight success">
+            <strong>The Opportunity:</strong>
+            Paul said he has "a little bit more confidence than before. At least it's trending in the right direction." The process changes in this plan are straightforward — 80 data points, a few new columns, a CRM, and a shift from marketing metrics to sales metrics. None of this is hard. It just needs to get done. Starting now.
+          </div>
+
+        </section>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="nav-logo">
+            <span class="nav-logo-text">TestMachine Research</span>
+          </div>
+          <div class="footer-address">
+            Internal strategy document<br>
+            Derived from March 5, 2026 board call
+          </div>
+        </div>
+        <div>
+          <h3 class="footer-heading">Research</h3>
+          <ul class="footer-links">
+            <li><a href="index.html">All Reports</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer-heading">Company</h3>
+          <ul class="footer-links">
+            <li><a href="https://testmachine.ai">TestMachine</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3 class="footer-heading">Connect</h3>
+          <ul class="footer-links">
+            <li><a href="https://twitter.com/testmachine_ai">Twitter</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 TestMachine Research. Internal use only.</p>
+      </div>
+    </div>
+  </footer>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = (winScroll / height) * 100;
+  document.getElementById('progress-bar').style.width = scrolled + '%';
+});
+
+// TOC highlighting
+const sections = document.querySelectorAll('section[id]');
+const tocLinks = document.querySelectorAll('.toc a[href^="#"]');
+const observerOptions = { rootMargin: '-20% 0px -70% 0px' };
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      tocLinks.forEach(link => link.classList.remove('active'));
+      const activeLink = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
+      if (activeLink) activeLink.classList.add('active');
+    }
+  });
+}, observerOptions);
+sections.forEach(section => observer.observe(section));
+
+// Mobile TOC toggle
+document.getElementById('toc-toggle').addEventListener('click', () => {
+  document.getElementById('toc').classList.toggle('open');
+  document.getElementById('toc-overlay').classList.toggle('open');
+});
+document.getElementById('toc-overlay').addEventListener('click', () => {
+  document.getElementById('toc').classList.remove('open');
+  document.getElementById('toc-overlay').classList.remove('open');
+});
+</script>
+
+</body>
+</html>

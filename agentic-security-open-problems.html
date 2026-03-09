@@ -1,0 +1,1574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agentic Security — Open Problems & Market Landscape — TestMachine Research</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
+<style>
+/* ---------- Custom Properties ---------- */
+:root {
+  --bg:            oklch(0.18 0.005 260);
+  --bg-raised:     oklch(0.21 0.005 260);
+  --bg-deeper:     oklch(0.14 0.005 260);
+  --fg:            oklch(0.92 0 0);
+  --fg-muted:      oklch(0.65 0 0);
+  --fg-dim:        oklch(0.45 0 0);
+  --border:        oklch(0.32 0.005 260);
+  --border-subtle: oklch(0.25 0.005 260);
+  --accent:        oklch(0.72 0.12 192);
+  --accent-hover:  oklch(0.80 0.12 192);
+  --accent-glow:   oklch(0.72 0.12 192 / 0.1);
+  --card-bg:       oklch(0.21 0.005 260);
+  --input-bg:      oklch(0.15 0.005 260);
+  --nav-bg:        oklch(0.18 0.005 260 / 0.85);
+
+  --font-display: 'Manrope', sans-serif;
+  --font-mono:    'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --font:         var(--font-mono);
+  --font-serif:   'Source Serif 4', Charter, Georgia, serif;
+
+  --nav-h:       72px;
+  --max-w:       1120px;
+  --section-py:  clamp(80px, 10vw, 140px);
+  --gap:         24px;
+  --transition:  0.25s ease;
+
+  --callout-orange: oklch(0.75 0.15 55);
+  --callout-red:    oklch(0.65 0.2 25);
+}
+
+/* ---------- Reset ---------- */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--nav-h);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font);
+  font-size: 17px;
+  line-height: 1.7;
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+body.menu-open {
+  overflow: hidden;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+a { color: inherit; text-decoration: none; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; color: inherit; }
+ul { list-style: none; }
+input, textarea, select { font-family: inherit; font-size: inherit; }
+
+/* ---------- Layout ---------- */
+.container {
+  width: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+/* ---------- Progress Bar ---------- */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), oklch(0.72 0.10 230));
+  z-index: 1100;
+  width: 0%;
+  transition: width 0.1s;
+}
+
+/* ---------- Navigation ---------- */
+.nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
+.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
+.toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+.toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
+
+.nav-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px);
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.nav-logo-text {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+  position: relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width var(--transition);
+}
+
+.nav-link:hover,
+.nav-link.nav-link--active {
+  color: var(--fg);
+}
+
+.nav-link:hover::after,
+.nav-link.nav-link--active::after {
+  width: 100%;
+}
+
+.nav-link.nav-link--active {
+  color: var(--accent);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.8125rem;
+  letter-spacing: 0.02em;
+  padding: 14px 32px;
+  border-radius: 0;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.btn:hover { transform: scale(1.02); }
+.btn:active { transform: scale(0.98); }
+
+.btn--primary {
+  background: var(--accent);
+  color: oklch(0.12 0 0);
+  border: 1px solid var(--accent);
+  font-weight: 700;
+}
+
+.btn--primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.btn--nav {
+  padding: 10px 22px;
+  font-size: 0.75rem;
+}
+
+/* ---------- Hamburger ---------- */
+.hamburger {
+  display: none;
+  width: 40px;
+  height: 40px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  z-index: 1001;
+}
+
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 1.5px;
+  background: var(--fg);
+  transition: all var(--transition);
+  transform-origin: center;
+}
+
+.hamburger.active span:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+
+.hamburger.active span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.active span:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* ---------- Mobile Menu ---------- */
+.mobile-menu {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-menu-inner {
+  text-align: center;
+}
+
+.mobile-menu-link {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  font-weight: 600;
+  color: var(--fg-muted);
+  padding: 14px 0;
+  transition: color var(--transition);
+}
+
+.mobile-menu-link:hover {
+  color: var(--fg);
+}
+
+.mobile-menu-link.nav-link--active {
+  color: var(--accent);
+}
+
+.mobile-menu-cta {
+  margin-top: 40px;
+  padding: 0 40px;
+}
+
+/* ---------- TOC Sidebar ---------- */
+
+/* TOC Toggle Button (mobile) */
+.toc-toggle {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 200;
+  width: 48px;
+  height: 48px;
+  border-radius: 0;
+  background: var(--accent);
+  color: oklch(0.12 0 0);
+  border: none;
+  font-size: 1.2rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3);
+}
+
+/* TOC Overlay (mobile) */
+.toc-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: oklch(0 0 0 / 0.6);
+  z-index: 109;
+}
+
+.toc-overlay.open {
+  display: block;
+}
+
+/* ---------- Main Content ---------- */
+.main {
+  margin-left: 280px;
+  min-height: 100vh;
+}
+
+.main-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 4vw, 40px) 4rem;
+}
+
+/* ---------- Article Header ---------- */
+.article-header {
+  padding-top: calc(var(--nav-h) + 32px);
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 3rem;
+}
+
+.back-link {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  margin-bottom: 1.5rem;
+  transition: color var(--transition);
+}
+
+.back-link:hover {
+  color: var(--accent);
+}
+
+.article-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--fg-muted);
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 0;
+  margin-bottom: 1rem;
+}
+
+.article-date {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-dim);
+  margin-bottom: 1rem;
+}
+
+.article-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.875rem, 4vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.12;
+  letter-spacing: -0.025em;
+  color: var(--fg);
+  margin-bottom: 1rem;
+}
+
+.article-subtitle {
+  font-family: var(--font-serif);
+  font-size: 1.125rem;
+  color: var(--fg-muted);
+  line-height: 1.6;
+}
+
+/* ---------- Hero Stats ---------- */
+.hero-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.hero-stat {
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  padding: 1.2rem;
+  text-align: center;
+  transition: border-color var(--transition), transform var(--transition);
+}
+
+.hero-stat:hover {
+  border-color: var(--border);
+  transform: translateY(-2px);
+}
+
+.hero-stat .value {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 0.3rem;
+}
+
+.hero-stat .label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--fg-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ---------- Article Body ---------- */
+.article-body {
+  font-family: var(--font-serif);
+}
+
+.article-body .section {
+  margin: 3rem 0;
+  padding: 0 0 2rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.article-body .section:last-child {
+  border-bottom: none;
+}
+
+.article-body p {
+  font-family: var(--font-serif);
+  font-size: 1.1875rem;
+  line-height: 1.9;
+  color: var(--fg-muted);
+  margin-bottom: 1.5em;
+}
+
+.article-body h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 2vw, 1.5rem);
+  font-weight: 700;
+  color: var(--fg);
+  margin-top: 2.5em;
+  margin-bottom: 1rem;
+  line-height: 1.25;
+}
+
+.article-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-top: 2em;
+  margin-bottom: 0.75rem;
+  line-height: 1.3;
+}
+
+.article-body h4 {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--fg);
+  margin-top: 1.5em;
+  margin-bottom: 0.5rem;
+}
+
+.article-body strong {
+  color: var(--fg);
+  font-weight: 600;
+}
+
+.article-body ul,
+.article-body ol {
+  margin-bottom: 1.5em;
+  padding-left: 1.5em;
+}
+
+.article-body ul {
+  list-style: disc;
+}
+
+.article-body ol {
+  list-style: decimal;
+}
+
+.article-body li {
+  font-family: var(--font-serif);
+  font-size: 1.1875rem;
+  line-height: 1.9;
+  color: var(--fg-muted);
+  margin-bottom: 0.5rem;
+}
+
+.article-body a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  transition: color var(--transition);
+}
+
+.article-body a:hover {
+  color: var(--accent-hover);
+}
+
+/* ---------- Callout / Highlight Boxes ---------- */
+.highlight {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  border-left: 3px solid var(--accent);
+  padding: 1.5rem;
+  margin: 2rem 0;
+}
+
+.highlight strong:first-child {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.highlight.warning {
+  border-left-color: var(--callout-orange);
+}
+
+.highlight.warning strong:first-child {
+  color: var(--callout-orange);
+}
+
+.highlight.danger {
+  border-left-color: var(--callout-red);
+}
+
+.highlight.danger strong:first-child {
+  color: var(--callout-red);
+}
+
+/* ---------- Code ---------- */
+code {
+  background: var(--bg-deeper);
+  padding: 0.15rem 0.4rem;
+  border-radius: 0;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+
+pre {
+  background: var(--bg-deeper);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  padding: 1.2rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  color: var(--fg);
+}
+
+/* ---------- Tables ---------- */
+.table-container {
+  overflow-x: auto;
+  margin: 2rem 0;
+  border: 1px solid var(--border);
+  border-radius: 0;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: var(--bg-deeper);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  padding: 0.7rem 1rem;
+  text-align: left;
+}
+
+td {
+  padding: 0.7rem 1rem;
+  border-top: 1px solid var(--border-subtle);
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  color: var(--fg-muted);
+}
+
+tbody tr:hover td {
+  background: var(--accent-glow);
+}
+
+/* CVE table */
+.cve-table .cvss {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+
+.cve-table .cvss.high { color: var(--callout-red); }
+.cve-table .cvss.medium { color: var(--callout-orange); }
+
+/* ---------- Companies Grid ---------- */
+.companies-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.company-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border-subtle);
+  border-radius: 0;
+  padding: 1.5rem;
+  transition: border-color var(--transition), transform var(--transition);
+}
+
+.company-card:hover {
+  border-color: var(--border);
+  transform: translateY(-2px);
+}
+
+.company-card h4 {
+  font-family: var(--font-display);
+  color: var(--accent);
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 0.8rem;
+}
+
+.company-card p {
+  font-family: var(--font-serif);
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--fg-muted);
+}
+
+.company-card .tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  color: var(--fg-muted);
+  padding: 3px 10px;
+  border: 1px solid var(--border);
+  border-radius: 0;
+}
+
+.tag.category-security { border-color: var(--callout-red); color: var(--callout-red); }
+.tag.category-governance { border-color: oklch(0.65 0.15 310); color: oklch(0.65 0.15 310); }
+.tag.category-infrastructure { border-color: oklch(0.65 0.12 250); color: oklch(0.65 0.12 250); }
+.tag.category-auditing { border-color: var(--accent); color: var(--accent); }
+
+/* ---------- Footer ---------- */
+.footer {
+  padding: 20px 0;
+  background: var(--bg-raised);
+  border-top: 1px solid var(--border-subtle);
+  margin-left: 280px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 28px;
+}
+
+.footer-brand .nav-logo {
+  margin-bottom: 14px;
+}
+
+.footer-address {
+  font-size: 0.8125rem;
+  color: var(--fg-dim);
+  line-height: 1.5;
+}
+
+.footer-heading {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--fg);
+  margin-bottom: 16px;
+}
+
+.footer-links {
+  list-style: none;
+}
+
+.footer-links li {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  font-size: 0.8125rem;
+  color: var(--fg-muted);
+  transition: color var(--transition);
+}
+
+.footer-links a:hover {
+  color: var(--fg);
+}
+
+.footer-bottom { display: flex; align-items: center; justify-content: center; }
+
+.footer-bottom p { font-size: 0.7rem; color: var(--fg-dim); margin: 0; line-height: 1; }
+
+/* ---------- Focus & Selection ---------- */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+::selection {
+  background: oklch(0.72 0.12 192 / 0.25);
+}
+
+/* ---------- Responsive: Tablet (1024px) ---------- */
+@media (max-width: 1024px) {
+    .toc { transform: translateX(-100%); }
+    .main, .main-content, .main-container, .article-wrapper, .content-wrapper { margin-left: 0 !important; padding-left: 1rem !important; padding-right: 1rem !important; }
+  .nav-links {
+    display: none;
+  }
+
+  .hamburger {
+    display: flex;
+  }
+
+  .toc.open {
+    transform: translateX(0);
+  }
+
+  .toc-toggle {
+    display: block;
+  }
+
+  .main {
+    margin-left: 0;
+  }
+
+  .footer {
+    margin-left: 0;
+  }
+}
+
+/* ---------- Responsive: Mobile (768px) ---------- */
+@media (max-width: 768px) {
+  .main-container {
+    padding: 0 1rem 3rem;
+  }
+
+  .article-title {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+  }
+
+  .hero-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .article-header {
+    padding-top: calc(var(--nav-h) + 20px);
+  }
+
+  .companies-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 28px;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .hamburger {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------- Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+
+<body>
+
+  <div class="progress-bar" id="progress-bar"></div>
+
+  <!-- Navigation -->
+  <nav class="nav" id="navbar">
+  <div class="progress-bar" id="progressBar"></div>
+  <div style="display:flex;align-items:center;height:100%;padding:0 24px;">
+    <a href="/"><img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);"></a>
+  </div>
+</nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-inner">
+      <a href="/" class="mobile-menu-link nav-link--active">Research</a>
+      <div class="mobile-menu-cta">
+      </div>
+    </div>
+  </div>
+
+  <!-- TOC Toggle (mobile) -->
+  <button class="toc-toggle" id="toc-toggle" aria-label="Toggle table of contents">&#9776;</button>
+  <div class="toc-overlay" id="toc-overlay"></div>
+
+  <!-- TOC Sidebar -->
+  <nav class="toc" id="toc">
+    <h3>Contents</h3>
+    <ul>
+      <li><a href="#executive-summary">Executive Summary</a></li>
+      <li><a href="#threat-taxonomy">Threat Taxonomy</a></li>
+      <li><a href="#on-chain-risks">On-Chain Agent Risks</a></li>
+      <li><a href="#open-problems">Open Problems</a></li>
+      <li><a href="#market-landscape">Market Landscape</a></li>
+      <li><a href="#testmachine-opportunity">TestMachine Opportunity</a></li>
+      <li><a href="#conclusions">Conclusions</a></li>
+    </ul>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main">
+    <div class="main-container">
+
+      <!-- Article Header -->
+      <header class="article-header">
+        <a href="index.html" class="back-link">&larr; Back to Research</a>
+        <span class="article-tag">Research Report</span>
+        <span class="article-date">February 2026</span>
+        <h1 class="article-title">Agentic Security</h1>
+        <p class="article-subtitle">
+          Open Problems &amp; Market Landscape Analysis &mdash;
+          From deterministic code execution to autonomous agent decision-making
+        </p>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="value">$64.5B</div>
+            <div class="label">AI Security Market (2030)</div>
+          </div>
+          <div class="hero-stat">
+            <div class="value">30+ CVEs</div>
+            <div class="label">AI Coding Tools (Dec 2025)</div>
+          </div>
+          <div class="hero-stat">
+            <div class="value">87%</div>
+            <div class="label">Multi-Agent Cascade Failure Rate</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Article Body -->
+      <div class="article-body">
+
+        <section class="section" id="executive-summary">
+          <h2>Executive Summary</h2>
+
+          <p>
+            Agentic AI systems—autonomous agents that can plan, reason, and execute tasks with tools—represent a fundamental shift in the attack surface of software systems. Unlike traditional applications where vulnerabilities require exploiting memory corruption or injection flaws, agentic systems can be compromised through <strong>natural language</strong>.
+          </p>
+
+          <div class="highlight">
+            <strong>Core Thesis:</strong> The transition from deterministic code execution to autonomous agent decision-making creates a new category of security challenges that existing frameworks cannot address. The attack surface is no longer just code—it's any text the agent processes.
+          </div>
+
+          <p>
+            In December 2025, OWASP released the first <strong>Top 10 for Agentic Applications</strong>, documenting real-world exploits including:
+          </p>
+
+          <ul>
+            <li><strong>EchoLeak (CVE-2025-32711):</strong> Zero-click data exfiltration in Microsoft 365 Copilot via crafted emails</li>
+            <li><strong>GitHub Copilot Worm (CVE-2025-53773):</strong> Self-replicating malicious instructions spread through repository comments</li>
+            <li><strong>Amazon Q Compromise:</strong> Malicious code injection affecting nearly one million developers</li>
+          </ul>
+
+          <p>
+            The cybersecurity agentic AI market is projected to reach <strong>$64.5 billion by 2030</strong>, driven by the fundamental mismatch between traditional security tools designed for deterministic systems and the non-deterministic nature of AI agents.
+          </p>
+        </section>
+
+        <section class="section" id="threat-taxonomy">
+          <h2>Agent Security Threat Taxonomy</h2>
+
+          <p>
+            The OWASP Agentic Top 10 provides a comprehensive framework for understanding autonomous AI security risks. Each vulnerability represents a fundamental breakdown in the traditional security model:
+          </p>
+
+          <h3>ASI01: Agent Goal Hijack</h3>
+          <p>
+            Unlike traditional software where attackers need to modify code, AI agents can be redirected through natural language. Any text the agent processes—emails, documents, web pages, calendar invites—can contain hidden instructions that hijack the agent's goals.
+          </p>
+
+          <div class="highlight danger">
+            <strong>Critical Insight:</strong> The attack surface is no longer just code, but any text the agent reads. This fundamentally breaks the traditional security model where the boundary between instructions and data was clear.
+          </div>
+
+          <h4>Real-World Incidents:</h4>
+          <ul>
+            <li><strong>EchoLeak:</strong> Microsoft 365 Copilot tricked into data exfiltration via crafted email (CVSS 9.3)</li>
+            <li><strong>AGENTS.MD Hijacking:</strong> VS Code Chat auto-includes AGENTS.MD, treating it as instruction set</li>
+            <li><strong>GitHub Copilot YOLO Mode:</strong> Wormable RCE enabling "auto-approve all tool calls"</li>
+          </ul>
+
+          <h3>ASI02: Tool Misuse</h3>
+          <p>
+            AI agents are granted powerful tools—filesystem access, email capabilities, database queries, API calls. When compromised, these features become weapons. The more powerful the agent, the more dangerous it becomes when compromised.
+          </p>
+
+          <h3>ASI03: Identity &amp; Privilege Abuse</h3>
+          <p>
+            Agents often operate with significant privileges. When compromised, the attacker inherits all permissions. This creates a <strong>privilege inheritance problem</strong> where the agent's access scope becomes the attacker's access scope.
+          </p>
+
+          <h3>ASI04: Supply Chain Vulnerabilities</h3>
+          <p>
+            Agentic supply chain attacks target what agents load dynamically: MCP servers, plugins, external tools. The first malicious MCP server was discovered in September 2025—an npm package that secretly BCC'd all emails to attackers.
+          </p>
+
+          <div class="highlight warning">
+            <strong>Supply Chain Reality:</strong> Over 500+ npm packages were compromised in the "Shai-Hulud Worm" attack. MCP servers run with the same privileges as AI assistants but bypass every security control.
+          </div>
+
+          <h3>ASI05: Unexpected Code Execution</h3>
+          <p>
+            Many agentic systems generate and execute code in real-time. Over <strong>30 CVEs</strong> were discovered across major AI coding platforms in December 2025 alone. The challenge: ensuring agents only execute code aligned with user intent, not instructions embedded in untrusted input.
+          </p>
+
+          <h3>ASI06-10: Systemic Risks</h3>
+          <p>
+            The remaining categories address systemic risks unique to autonomous systems:
+          </p>
+          <ul>
+            <li><strong>Memory &amp; Context Poisoning:</strong> Persistent compromise across sessions</li>
+            <li><strong>Insecure Inter-Agent Communication:</strong> Spoofed messages between agent networks</li>
+            <li><strong>Cascading Failures:</strong> Single compromise spreads to entire agent clusters</li>
+            <li><strong>Human-Agent Trust Exploitation:</strong> Manipulated agents present malicious actions with perfect confidence</li>
+            <li><strong>Rogue Agents:</strong> Autonomous misalignment without external attackers</li>
+          </ul>
+
+          <div class="table-container">
+            <table class="cve-table">
+              <thead>
+                <tr>
+                  <th>CVE</th>
+                  <th>Product</th>
+                  <th>Risk</th>
+                  <th>CVSS</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>CVE-2025-32711</td>
+                  <td>Microsoft 365 Copilot</td>
+                  <td>Zero-click data exfiltration (EchoLeak)</td>
+                  <td><span class="cvss high">9.3</span></td>
+                </tr>
+                <tr>
+                  <td>CVE-2025-53773</td>
+                  <td>GitHub Copilot</td>
+                  <td>Wormable RCE via prompt injection</td>
+                  <td><span class="cvss high">7.8</span></td>
+                </tr>
+                <tr>
+                  <td>CVE-2025-54135</td>
+                  <td>Cursor IDE</td>
+                  <td>RCE via MCP auto-start (CurXecute)</td>
+                  <td><span class="cvss high">8.6</span></td>
+                </tr>
+                <tr>
+                  <td>CVE-2025-6514</td>
+                  <td>MCP Remote</td>
+                  <td>Arbitrary OS command execution</td>
+                  <td><span class="cvss high">9.6</span></td>
+                </tr>
+                <tr>
+                  <td>CVE-2025-8217</td>
+                  <td>Amazon Q</td>
+                  <td>Supply chain compromise, destructive commands</td>
+                  <td><span class="cvss medium">&mdash;</span></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="section" id="on-chain-risks">
+          <h2>On-Chain Agent Risks</h2>
+
+          <p>
+            The intersection of AI agents and blockchain creates unique security challenges. When autonomous systems manage cryptographic keys, execute transactions, and interact with smart contracts, the stakes increase exponentially.
+          </p>
+
+          <h3>Agentic Wallets &amp; Key Management</h3>
+          <p>
+            Coinbase's "Agentic Wallets" initiative exemplifies the trend toward AI agents managing crypto assets directly. Built on the x402 protocol, these wallets enable autonomous crypto payments "without human intervention." The security implications are profound:
+          </p>
+
+          <ul>
+            <li><strong>Private Key Exposure:</strong> Agents require access to cryptographic keys to sign transactions</li>
+            <li><strong>Transaction Verification:</strong> How do we ensure agent-initiated transactions align with intended outcomes?</li>
+            <li><strong>MEV Exploitation:</strong> Malicious agents can engage in maximum extractable value attacks</li>
+            <li><strong>Cross-Chain Risks:</strong> Agents operating across multiple chains amplify attack surfaces</li>
+          </ul>
+
+          <div class="highlight">
+            <strong>Key Insight:</strong> Traditional smart contract security assumes deterministic execution. Agentic interactions introduce non-deterministic decision-making at the transaction level, breaking fundamental assumptions about blockchain security.
+          </div>
+
+          <h3>DeFi Agent Ecosystem</h3>
+          <p>
+            AI agents are increasingly prevalent in DeFi, with applications ranging from automated yield optimization to complex trading strategies. Notable developments include:
+          </p>
+
+          <ul>
+            <li><strong>ai16z DAO:</strong> AI-driven investment decisions with autonomous asset management</li>
+            <li><strong>Trading Agents:</strong> Platforms like @lola_onchain achieved 200 trades with multiple 20x+ returns</li>
+            <li><strong>Yield Optimization:</strong> Automated rebalancing across liquidity pools and protocols</li>
+            <li><strong>Governance Participation:</strong> Agents voting on protocol upgrades and parameters</li>
+          </ul>
+
+          <h3>Smart Contract Audit vs. Agent Policy Audit</h3>
+          <p>
+            Traditional smart contract auditing focuses on <strong>code correctness</strong>—ensuring the contract does what it's supposed to do. Agent security requires <strong>policy auditing</strong>—ensuring the agent's decision-making aligns with intended behavior even in edge cases.
+          </p>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Traditional Smart Contracts</th>
+                  <th>Agentic Smart Contracts</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Deterministic execution</td>
+                  <td>Non-deterministic decision-making</td>
+                </tr>
+                <tr>
+                  <td>Code is law</td>
+                  <td>Policy is law</td>
+                </tr>
+                <tr>
+                  <td>Static analysis sufficient</td>
+                  <td>Behavioral analysis required</td>
+                </tr>
+                <tr>
+                  <td>One-time audit</td>
+                  <td>Continuous monitoring</td>
+                </tr>
+                <tr>
+                  <td>Focus on vulnerabilities</td>
+                  <td>Focus on alignment</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>EVMbench: Agent Security Evaluation</h3>
+          <p>
+            OpenAI's EVMbench represents the first systematic approach to evaluating AI agents on smart contract security tasks. The framework measures agents' ability to detect, patch, and exploit fund-draining vulnerabilities—providing crucial insights into the current state of agent security capabilities.
+          </p>
+
+          <p>
+            Early results suggest that while agents can identify obvious vulnerabilities, they struggle with complex multi-step exploits and often miss subtle economic attack vectors that human auditors routinely catch.
+          </p>
+        </section>
+
+        <section class="section" id="open-problems">
+          <h2>Open Unsolved Problems</h2>
+
+          <p>
+            Agentic security faces fundamental challenges that current cybersecurity frameworks cannot address. These open problems represent both technical hurdles and market opportunities.
+          </p>
+
+          <h3>1. Agent Identity &amp; Authentication Standards</h3>
+          <p>
+            No standardized framework exists for agent identity verification. When Agent A communicates with Agent B, how do we ensure authentic identity and prevent impersonation attacks? Current approaches are ad-hoc and protocol-specific.
+          </p>
+
+          <div class="highlight">
+            <strong>Open Problem:</strong> Develop cryptographically verifiable agent identity standards that work across protocols and platforms. This could include "AgentCards" with public key authentication and behavioral attestations.
+          </div>
+
+          <h3>2. Formal Verification of Agent Behavior</h3>
+          <p>
+            Smart contracts can be formally verified to prove mathematical properties about their execution. No equivalent exists for agent behavior. How do we prove that an agent will behave correctly across all possible input scenarios?
+          </p>
+
+          <h3>3. Intent-vs-Action Gap</h3>
+          <p>
+            The most challenging problem in agentic security: ensuring agent actions align with user intent. Unlike traditional programming where intent is encoded directly in code, agents interpret natural language instructions that are inherently ambiguous.
+          </p>
+
+          <ul>
+            <li><strong>Specification Gap:</strong> Users cannot precisely specify desired behavior</li>
+            <li><strong>Interpretation Variance:</strong> Same instruction may yield different actions across models</li>
+            <li><strong>Context Drift:</strong> Agent understanding evolves over time</li>
+            <li><strong>Edge Case Handling:</strong> How should agents behave in unprecedented situations?</li>
+          </ul>
+
+          <h3>4. Monitoring &amp; Observability</h3>
+          <p>
+            Traditional security monitoring focuses on network traffic, system calls, and log analysis. Agent monitoring requires understanding <strong>reasoning patterns</strong>, <strong>decision chains</strong>, and <strong>behavioral drift</strong>.
+          </p>
+
+          <div class="highlight warning">
+            <strong>Observability Challenge:</strong> Agent decision-making often occurs in "black box" neural networks. How do we monitor what we cannot directly observe?
+          </div>
+
+          <h3>5. Legal Liability &amp; Accountability</h3>
+          <p>
+            When an autonomous agent causes harm, who is liable? The agent developer? The user who deployed it? The cloud provider hosting it? Legal frameworks lag behind technology by years, creating a massive uncertainty for enterprise adoption.
+          </p>
+
+          <h3>6. Sandboxing &amp; Isolation Frameworks</h3>
+          <p>
+            Traditional sandboxing restricts system resources. Agent sandboxing must restrict <strong>decision-making authority</strong> and <strong>tool access</strong> while preserving functionality. This requires new approaches to capability management.
+          </p>
+
+          <h3>7. Audit Trail &amp; Explainability</h3>
+          <p>
+            Regulatory compliance requires clear audit trails. Agent decisions often emerge from complex neural network computations that are difficult to explain. How do we create compliant audit trails for non-deterministic systems?
+          </p>
+
+          <div class="highlight">
+            <strong>Regulatory Reality:</strong> Financial services regulators are beginning to require explainable AI decisions. Agents managing crypto assets will face similar scrutiny.
+          </div>
+        </section>
+
+        <section class="section" id="market-landscape">
+          <h2>Market Landscape</h2>
+
+          <p>
+            The agentic security market is nascent but rapidly expanding, driven by the gap between traditional security tools and autonomous system requirements.
+          </p>
+
+          <h3>Market Sizing &amp; Growth</h3>
+          <ul>
+            <li><strong>AI Cybersecurity Market:</strong> $19.2B (2024) &rarr; $64.5B (2030)</li>
+            <li><strong>Agentic AI Subset:</strong> Estimated 15-25% of total by 2030</li>
+            <li><strong>Venture Funding:</strong> $500M+ invested in AI security startups (2024-2025)</li>
+            <li><strong>Enterprise Adoption:</strong> 75% of Fortune 500 expected to deploy agents by 2030</li>
+          </ul>
+
+          <h3>Regulatory Frameworks</h3>
+          <p>
+            Existing frameworks are being adapted for agentic systems:
+          </p>
+
+          <ul>
+            <li><strong>NIST AI Risk Management Framework:</strong> Provides high-level guidance but lacks specific technical controls</li>
+            <li><strong>OWASP LLM Top 10:</strong> Covers basic language model security but not autonomous agents</li>
+            <li><strong>OWASP Agentic Top 10:</strong> First framework specifically targeting autonomous systems</li>
+            <li><strong>EU AI Act:</strong> May require conformity assessments for high-risk AI systems</li>
+          </ul>
+
+          <h3>Key Market Players</h3>
+
+          <div class="companies-grid">
+            <div class="company-card">
+              <h4>Cyvers</h4>
+              <p>Real-time AI-powered detection and prevention of crypto attacks. Focuses on behavioral anomaly detection across blockchain networks.</p>
+              <div class="tags">
+                <span class="tag category-security">Security</span>
+                <span class="tag">Blockchain</span>
+              </div>
+            </div>
+
+            <div class="company-card">
+              <h4>Hypernative Labs</h4>
+              <p>AI-driven smart contract auditing and vulnerability scanning. Automated security analysis for DeFi protocols.</p>
+              <div class="tags">
+                <span class="tag category-auditing">Auditing</span>
+                <span class="tag">DeFi</span>
+              </div>
+            </div>
+
+            <div class="company-card">
+              <h4>Phylax Systems</h4>
+              <p>AI-driven security system for vulnerability scans and exploit monitoring. Runtime protection for smart contract applications.</p>
+              <div class="tags">
+                <span class="tag category-security">Security</span>
+                <span class="tag">Monitoring</span>
+              </div>
+            </div>
+
+            <div class="company-card">
+              <h4>AuditOne DAO</h4>
+              <p>Decentralized AI auditing services for vulnerability scans. Community-driven security analysis platform.</p>
+              <div class="tags">
+                <span class="tag category-auditing">Auditing</span>
+                <span class="tag category-governance">DAO</span>
+              </div>
+            </div>
+
+            <div class="company-card">
+              <h4>Gaianet AI</h4>
+              <p>Platform for creating and monetizing AI agents with built-in security controls. Focus on agent-to-agent interactions.</p>
+              <div class="tags">
+                <span class="tag category-infrastructure">Infrastructure</span>
+                <span class="tag">Agents</span>
+              </div>
+            </div>
+
+            <div class="company-card">
+              <h4>OLAS (Autonolas)</h4>
+              <p>Platform for deploying AI agents with multi-agent coordination. Provides security frameworks for autonomous systems.</p>
+              <div class="tags">
+                <span class="tag category-infrastructure">Infrastructure</span>
+                <span class="tag">Multi-Agent</span>
+              </div>
+            </div>
+          </div>
+
+          <h3>Investment &amp; Funding Trends</h3>
+          <p>
+            Venture capital is flowing into agentic security, with investors recognizing the fundamental mismatch between traditional security tools and autonomous systems:
+          </p>
+
+          <ul>
+            <li><strong>Pre-Seed/Seed Focus:</strong> Most companies are early-stage, with significant opportunity for market leaders</li>
+            <li><strong>Enterprise Demand:</strong> Large enterprises seeking solutions for AI governance and risk management</li>
+            <li><strong>Regulatory Pressure:</strong> Upcoming compliance requirements driving enterprise spending</li>
+            <li><strong>Cross-Over Opportunity:</strong> Traditional cybersecurity firms acquiring AI security startups</li>
+          </ul>
+
+          <div class="highlight">
+            <strong>Market Gap:</strong> Despite growing demand, no dominant player exists in agentic security. The market is wide open for a technical leader with domain expertise.
+          </div>
+        </section>
+
+        <section class="section" id="testmachine-opportunity">
+          <h2>TestMachine Opportunity</h2>
+
+          <p>
+            TestMachine's expertise in smart contract auditing provides unique advantages in the emerging agentic security market. The skills, methodologies, and trust required for smart contract security translate directly to agent security challenges.
+          </p>
+
+          <h3>Core Skill Translation</h3>
+
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Smart Contract Auditing</th>
+                  <th>Agent Security Auditing</th>
+                  <th>TestMachine Advantage</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Economic attack vectors</td>
+                  <td>Agent goal misalignment</td>
+                  <td>Deep understanding of incentive structures</td>
+                </tr>
+                <tr>
+                  <td>Multi-step exploit chains</td>
+                  <td>Cascading agent failures</td>
+                  <td>Experience tracing complex attack paths</td>
+                </tr>
+                <tr>
+                  <td>Formal verification</td>
+                  <td>Agent behavior verification</td>
+                  <td>Mathematical rigor in security analysis</td>
+                </tr>
+                <tr>
+                  <td>Economic modeling</td>
+                  <td>Agent decision modeling</td>
+                  <td>Understanding of game theory and mechanism design</td>
+                </tr>
+                <tr>
+                  <td>Protocol integration risks</td>
+                  <td>Multi-agent system risks</td>
+                  <td>Expertise in complex protocol interactions</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3>Market Entry Strategy</h3>
+
+          <h4>Phase 1: Agent Policy Auditing (0-6 months)</h4>
+          <p>
+            Start with manual auditing services for high-value agentic applications. Focus on DeFi protocols deploying autonomous agents for yield optimization, trading, and governance.
+          </p>
+
+          <ul>
+            <li><strong>Target Clients:</strong> DeFi protocols, AI agent platforms, enterprise deployments</li>
+            <li><strong>Service Model:</strong> Traditional audit engagement (2-4 weeks per agent system)</li>
+            <li><strong>Pricing:</strong> Premium rates ($150-300K per engagement) due to specialized expertise</li>
+            <li><strong>Deliverables:</strong> Agent behavior analysis, policy compliance verification, risk assessment</li>
+          </ul>
+
+          <h4>Phase 2: Automated Agent Security Platform (6-18 months)</h4>
+          <p>
+            Develop automated tools for continuous agent monitoring and policy enforcement. Leverage machine learning to detect behavioral anomalies and policy violations.
+          </p>
+
+          <ul>
+            <li><strong>Product:</strong> SaaS platform for agent security monitoring</li>
+            <li><strong>Features:</strong> Behavioral analysis, policy enforcement, anomaly detection, compliance reporting</li>
+            <li><strong>Business Model:</strong> Subscription-based ($10K-100K annually per organization)</li>
+            <li><strong>Competitive Advantage:</strong> Deep technical expertise combined with automated tooling</li>
+          </ul>
+
+          <h4>Phase 3: Agent Security Standards &amp; Certification (18+ months)</h4>
+          <p>
+            Establish TestMachine as the authority on agent security through standards development and certification programs.
+          </p>
+
+          <ul>
+            <li><strong>Standards Development:</strong> Contribute to OWASP, NIST, and ISO standards for agent security</li>
+            <li><strong>Certification Program:</strong> "TestMachine Certified" label for secure agent implementations</li>
+            <li><strong>Training &amp; Education:</strong> Courses and workshops on agent security best practices</li>
+            <li><strong>Market Position:</strong> Thought leader and standard-setter in agentic security</li>
+          </ul>
+
+          <h3>Technical Differentiation</h3>
+          <p>
+            TestMachine's unique value proposition combines:
+          </p>
+
+          <ul>
+            <li><strong>Mathematical Rigor:</strong> Formal methods and verification techniques from smart contract auditing</li>
+            <li><strong>Economic Understanding:</strong> Deep knowledge of incentive structures and attack economics</li>
+            <li><strong>Protocol Expertise:</strong> Experience with complex multi-component systems</li>
+            <li><strong>Blockchain Integration:</strong> Understanding of on-chain agent deployment and risks</li>
+            <li><strong>Regulatory Awareness:</strong> Knowledge of compliance requirements and audit standards</li>
+          </ul>
+
+          <div class="highlight">
+            <strong>Competitive Moat:</strong> The intersection of AI security expertise and blockchain/crypto domain knowledge creates a natural barrier to entry that traditional cybersecurity firms cannot easily cross.
+          </div>
+
+          <h3>Revenue Projections</h3>
+          <p>
+            Conservative estimates based on market size and TestMachine's positioning:
+          </p>
+
+          <ul>
+            <li><strong>Year 1:</strong> $2-4M revenue (8-15 major audits, average $250K)</li>
+            <li><strong>Year 2:</strong> $8-15M revenue (platform launch, 20-50 enterprise clients)</li>
+            <li><strong>Year 3:</strong> $20-40M revenue (market leadership, standards adoption)</li>
+            <li><strong>TAM:</strong> $10-16B addressable market by 2030 (25% of $64.5B AI security market)</li>
+          </ul>
+        </section>
+
+        <section class="section" id="conclusions">
+          <h2>Conclusions</h2>
+
+          <p>
+            Agentic security represents a fundamental shift in cybersecurity, moving from protecting deterministic code to securing autonomous decision-making systems. The market opportunity is significant, the technical challenges are substantial, and the timing favors early movers.
+          </p>
+
+          <h3>Key Takeaways</h3>
+
+          <ol>
+            <li>
+              <strong>Paradigm Shift:</strong> Traditional security models break when applied to autonomous agents. Natural language becomes the primary attack vector, not code exploits.
+            </li>
+            <li>
+              <strong>Market Timing:</strong> The agentic security market is nascent with no dominant players. Early entrants can establish market-leading positions.
+            </li>
+            <li>
+              <strong>Technical Opportunity:</strong> TestMachine's smart contract auditing expertise provides unique advantages in understanding agent security challenges.
+            </li>
+            <li>
+              <strong>Regulatory Tailwinds:</strong> Emerging compliance requirements will drive enterprise demand for agent security solutions.
+            </li>
+            <li>
+              <strong>Revenue Potential:</strong> Premium pricing for specialized expertise, with path to platform-based recurring revenue.
+            </li>
+          </ol>
+
+          <h3>Critical Success Factors</h3>
+
+          <ul>
+            <li><strong>Technical Depth:</strong> Deep understanding of both AI/ML systems and security principles</li>
+            <li><strong>Domain Expertise:</strong> Knowledge of blockchain/crypto applications where agents manage real assets</li>
+            <li><strong>Standards Leadership:</strong> Active participation in framework development and industry standards</li>
+            <li><strong>Tool Development:</strong> Automated platforms that scale beyond manual audit services</li>
+            <li><strong>Market Timing:</strong> Enter market before competition consolidates around incumbent solutions</li>
+          </ul>
+
+          <div class="highlight">
+            <strong>Strategic Recommendation:</strong> TestMachine should immediately begin developing agent security capabilities, starting with manual auditing services and evolving toward automated platform solutions. The window for market leadership is open but won't remain so indefinitely.
+          </div>
+
+          <p>
+            The transition from "Code is Law" to "Policy is Law" creates both challenges and opportunities. Organizations that successfully navigate this transition will define the security standards for the autonomous future.
+          </p>
+        </section>
+
+      </div><!-- /.article-body -->
+    </div><!-- /.main-container -->
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-bottom">
+        <p>&copy; 2026 TestMachine. Internal use only.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Progress bar
+    function updateProgressBar() {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.getElementById('progress-bar').style.width = scrolled + '%';
+    }
+
+    // Nav scroll handler
+    const nav = document.getElementById('navbar');
+    function handleNavScroll() {
+      if (window.scrollY > 10) {
+        nav.classList.add('scrolled');
+      } else {
+        nav.classList.remove('scrolled');
+      }
+    }
+
+    // Active section highlighting
+    function highlightActiveSection() {
+      const sections = document.querySelectorAll('.section');
+      const navLinks = document.querySelectorAll('.toc a');
+
+      let currentSection = '';
+      sections.forEach(function(section) {
+        const sectionTop = section.getBoundingClientRect().top;
+        const sectionHeight = section.offsetHeight;
+        if (sectionTop <= 100 && sectionTop + sectionHeight > 100) {
+          currentSection = section.id;
+        }
+      });
+
+      navLinks.forEach(function(link) {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === '#' + currentSection) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', function() {
+      updateProgressBar();
+      handleNavScroll();
+      highlightActiveSection();
+    });
+
+    // Hamburger toggle
+    var hamburger = document.getElementById('hamburger');
+    var mobileMenu = document.getElementById('mobile-menu');
+    hamburger.addEventListener('click', function() {
+      hamburger.classList.toggle('active');
+      mobileMenu.classList.toggle('active');
+      document.body.classList.toggle('menu-open');
+    });
+
+    // Mobile TOC toggle
+    document.getElementById('toc-toggle').onclick = function() {
+      var toc = document.getElementById('toc');
+      var overlay = document.getElementById('toc-overlay');
+      toc.classList.toggle('open');
+      overlay.classList.toggle('open');
+    };
+
+    document.getElementById('toc-overlay').onclick = function() {
+      var toc = document.getElementById('toc');
+      var overlay = document.getElementById('toc-overlay');
+      toc.classList.remove('open');
+      overlay.classList.remove('open');
+    };
+
+    // Smooth scrolling for TOC links
+    document.querySelectorAll('.toc a').forEach(function(anchor) {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        var targetId = this.getAttribute('href').substring(1);
+        var targetSection = document.getElementById(targetId);
+
+        if (targetSection) {
+          targetSection.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+
+        // Close mobile TOC
+        var toc = document.getElementById('toc');
+        var overlay = document.getElementById('toc-overlay');
+        toc.classList.remove('open');
+        overlay.classList.remove('open');
+      });
+    });
+
+    // Initialize
+    updateProgressBar();
+    handleNavScroll();
+  </script>
+<script src="confidential-toggle.js"></script>
+</body>
+</html>
