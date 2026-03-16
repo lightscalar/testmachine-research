@@ -3,1031 +3,961 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TestMachine — Urgent Strategic Pivot Plan — TestMachine Research</title>
+<title>TestMachine Strategic Pivot — Stop Pushing Boulders Uphill — February 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,300;1,8..60,400;1,8..60,500&display=swap" rel="stylesheet">
 <style>
-/* ── Tokens ── */
+/* ---------- Custom Properties ---------- */
 :root {
-  --bg: oklch(0.18 0.005 260);
-  --bg-raised: oklch(0.21 0.005 260);
-  --bg-deeper: oklch(0.14 0.005 260);
-  --fg: oklch(0.92 0 0);
-  --fg-muted: oklch(0.65 0 0);
-  --fg-dim: oklch(0.45 0 0);
-  --border: oklch(0.32 0.005 260);
+  --bg:            oklch(0.18 0.005 260);
+  --bg-raised:     oklch(0.21 0.005 260);
+  --bg-deeper:     oklch(0.14 0.005 260);
+  --fg:            oklch(0.92 0 0);
+  --fg-muted:      oklch(0.65 0 0);
+  --fg-dim:        oklch(0.45 0 0);
+  --border:        oklch(0.32 0.005 260);
   --border-subtle: oklch(0.25 0.005 260);
-  --accent: oklch(0.72 0.12 192);
-  --accent-hover: oklch(0.80 0.12 192);
-  --accent-glow: oklch(0.72 0.12 192 / 0.1);
-  --card-bg: oklch(0.21 0.005 260);
-  --input-bg: oklch(0.15 0.005 260);
-  --nav-bg: oklch(0.18 0.005 260 / 0.85);
+  --accent:        oklch(0.72 0.12 192);
+  --accent-hover:  oklch(0.80 0.12 192);
+  --accent-glow:   oklch(0.72 0.12 192 / 0.1);
+  --card-bg:       oklch(0.21 0.005 260);
+  --input-bg:      oklch(0.15 0.005 260);
+  --nav-bg:        oklch(0.18 0.005 260 / 0.85);
+
   --font-display: 'Manrope', sans-serif;
-  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
-  --font-serif: 'Source Serif 4', Charter, Georgia, serif;
-  --font: var(--font-mono);
-  --nav-h: 72px;
-  --max-w: 1120px;
-  --section-py: clamp(80px, 10vw, 140px);
-  --gap: 24px;
-  --transition: 0.25s ease;
+  --font-mono:    'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --font:         var(--font-mono);
+  --font-serif:   'Source Serif 4', Charter, Georgia, serif;
+
+  --nav-h:       72px;
+  --max-w:       1120px;
+  --section-py:  clamp(80px, 10vw, 140px);
+  --gap:         24px;
+  --transition:  0.25s ease;
+
   --callout-orange: oklch(0.75 0.15 55);
-  --callout-red: oklch(0.65 0.2 25);
-  --callout-green: oklch(0.72 0.15 155);
-  --callout-blue: oklch(0.65 0.15 250);
+  --callout-red:    oklch(0.65 0.2 25);
+  --callout-green:  oklch(0.65 0.15 140);
 }
 
-/* ── Reset ── */
+/* ---------- Reset ---------- */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { font-size: 16px; scroll-behavior: smooth; scroll-padding-top: var(--nav-h); -webkit-text-size-adjust: 100%; }
-body {
-  font-family: var(--font);
-  font-size: 17px;
-  line-height: 1.7;
-  color: var(--fg);
-  background: var(--bg);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-}
+html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); -webkit-text-size-adjust: 100%; }
+body { font-family: var(--font); font-size: 17px; line-height: 1.7; color: var(--fg); background: var(--bg); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; }
 body.menu-open { overflow: hidden; }
 img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; text-decoration: none; }
 button { border: none; background: none; cursor: pointer; font-family: inherit; color: inherit; }
 ul { list-style: none; }
+input, textarea, select { font-family: inherit; font-size: inherit; }
 
-/* ── Progress Bar ── */
-.progress-bar {
-  position: fixed; top: 0; left: 0; height: 2px; z-index: 1100;
-  background: linear-gradient(90deg, var(--accent), var(--callout-orange));
-  width: 0%; transition: width 0.1s;
-}
+/* ---------- Layout ---------- */
+.container { width: 100%; max-width: var(--max-w); margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px); }
 
-/* ── Navigation ── */
+/* ---------- Progress Bar ---------- */
+.progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--accent), oklch(0.72 0.10 230)); z-index: 1100; width: 0%; transition: width 0.1s; }
+
+/* ---------- Navigation ---------- */
 .nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
-.toc-toggle { display: none; position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200; width: 48px; height: 48px; border-radius: 0; background: var(--accent); color: var(--bg); border: none; font-size: 1.2rem; cursor: pointer; font-family: var(--font-mono); font-weight: 700; box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3); }
-  .toc-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 150; }
-  .toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 320px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
 .toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
-.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
+.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; line-height: 1.4; word-wrap: break-word; }
 .toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
 .toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
-.nav-container {
-  display: flex; align-items: center; justify-content: space-between;
-  height: 100%; max-width: var(--max-w); margin: 0 auto;
-  padding: 0 clamp(20px, 4vw, 40px);
-}
-.nav-logo {
-  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
-}
-.nav-logo-text {
-  font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em;
-}
-.nav-links { display: flex; align-items: center; gap: 32px; }
-.nav-link {
-  font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 500;
-  color: var(--fg-muted); transition: color var(--transition); position: relative;
-}
-.nav-link::after {
-  content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px;
-  background: var(--accent); transition: width var(--transition);
-}
-.nav-link:hover, .nav-link.nav-link--active { color: var(--fg); }
-.nav-link:hover::after, .nav-link.nav-link--active::after { width: 100%; }
-.nav-link.nav-link--active { color: var(--accent); }
-.nav-actions { display: flex; align-items: center; gap: 12px; }
-.btn {
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  font-family: var(--font-mono); font-weight: 600; font-size: 0.8125rem;
-  letter-spacing: 0.02em; padding: 14px 32px; border-radius: 0;
-  transition: all var(--transition); white-space: nowrap;
-}
-.btn:hover { transform: scale(1.02); }
-.btn:active { transform: scale(0.98); }
-.btn--primary {
-  background: var(--accent); color: oklch(0.12 0 0);
-  border: 1px solid var(--accent); font-weight: 700;
-}
-.btn--primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
-.btn--nav { padding: 10px 22px; font-size: 0.75rem; }
 
-/* Hamburger */
-.hamburger {
-  display: none; width: 40px; height: 40px; flex-direction: column;
-  align-items: center; justify-content: center; gap: 5px; z-index: 1001;
-}
-.hamburger span {
-  display: block; width: 20px; height: 1.5px; background: var(--fg);
-  transition: all var(--transition); transform-origin: center;
-}
-.hamburger.active span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
-.hamburger.active span:nth-child(2) { opacity: 0; }
-.hamburger.active span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+.nav-container { display: flex; align-items: center; justify-content: space-between; height: 100%; position: relative; }
+.nav-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; position: absolute; left: 24px; }
+.nav-right { margin-left: auto; margin-right: clamp(20px, 4vw, 40px); }
+.nav-logo img { flex-shrink: 0; }
+.nav-logo-text { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; color: var(--fg); }
+.nav-link { font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 500; color: var(--fg-muted); transition: color var(--transition); }
+.nav-link:hover { color: var(--fg); }
 
-/* Mobile Menu */
-.mobile-menu {
-  position: fixed; inset: 0; z-index: 999; background: var(--bg);
-  display: flex; align-items: center; justify-content: center;
-  opacity: 0; visibility: hidden; transition: all 0.3s ease;
-}
-.mobile-menu.active { opacity: 1; visibility: visible; }
-.mobile-menu-inner { text-align: center; }
-.mobile-menu-link {
-  display: block; font-family: var(--font-display);
-  font-size: clamp(1.5rem, 5vw, 2.25rem); font-weight: 600;
-  color: var(--fg-muted); padding: 14px 0; transition: color var(--transition);
-}
-.mobile-menu-link:hover { color: var(--fg); }
-.mobile-menu-link.nav-link--active { color: var(--accent); }
-.mobile-menu-cta { margin-top: 40px; padding: 0 40px; }
+/* ---------- TOC Toggle Button ---------- */
+.toc-toggle { display: none; position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200; width: 48px; height: 48px; border-radius: 0; background: var(--accent); color: oklch(0.12 0 0); border: none; font-size: 1.2rem; font-family: var(--font-mono); font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3); }
 
-/* ── TOC Sidebar ── */
+/* ---------- TOC Overlay ---------- */
+.toc-overlay { display: none; position: fixed; inset: 0; background: oklch(0 0 0 / 0.6); z-index: 109; }
+.toc-overlay.open { display: block; }
 
-/* ── Main Content ── */
-.main-content {
-  margin-left: 280px; max-width: 780px; padding: calc(var(--nav-h) + 32px) 2.5rem 4rem;
-}
+/* ---------- Main Content ---------- */
+.main { margin-left: 320px; min-height: 100vh; }
+.main-container { max-width: 900px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px) 4rem; }
 
-/* ── Article Header ── */
-.back-link {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 500;
-  color: var(--fg-muted); margin-bottom: 2rem; transition: color var(--transition);
-}
-.back-link:hover { color: var(--accent); }
+/* ---------- Article Header ---------- */
+.article-header { padding-top: calc(var(--nav-h) + 32px); padding-bottom: 2rem; border-bottom: 1px solid var(--border-subtle); margin-bottom: 3rem; }
+.article-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fg-muted); padding: 3px 10px; border: 1px solid var(--border); border-radius: 0; margin-bottom: 1rem; }
+.article-date { display: block; font-family: var(--font-mono); font-size: 0.75rem; color: var(--fg-dim); margin-bottom: 1rem; }
+.article-title { font-family: var(--font-display); font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight: 800; line-height: 1.12; letter-spacing: -0.025em; color: var(--fg); margin-bottom: 1rem; }
+.article-subtitle { font-family: var(--font-serif); font-size: 1.125rem; color: var(--fg-muted); line-height: 1.6; margin-bottom: 2.5rem; }
 
-.article-header { margin-bottom: 3rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border-subtle); }
-.article-tag {
-  display: inline-block; font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.08em; color: var(--callout-red);
-  padding: 0.3rem 0.8rem; border-radius: 0; margin-bottom: 1rem;
-  border: 1px solid var(--callout-red); background: oklch(0.65 0.2 25 / 0.1);
-}
-.article-header h1 {
-  font-family: var(--font-display); font-size: 2.2rem; font-weight: 800;
-  line-height: 1.2; margin-bottom: 0.8rem; color: var(--fg); letter-spacing: -0.02em;
-}
-.article-header .subtitle {
-  font-family: var(--font-serif); font-size: 1.1rem; color: var(--fg-muted); line-height: 1.5;
-}
-.article-header .date {
-  font-family: var(--font-mono); font-size: 0.8rem; color: var(--fg-dim); margin-top: 1rem;
-}
+/* ---------- Hero Stats ---------- */
+.hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
+.hero-stat { border: 1px solid var(--border-subtle); border-radius: 0; padding: 1.2rem; text-align: center; transition: border-color var(--transition), transform var(--transition); }
+.hero-stat:hover { border-color: var(--border); transform: translateY(-2px); }
+.hero-stat .value { font-family: var(--font-display); font-size: 1.4rem; font-weight: 800; color: var(--accent); margin-bottom: 0.3rem; }
+.hero-stat .label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--fg-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.hero-stat.critical .value { color: var(--callout-red); }
+.hero-stat.warning .value { color: var(--callout-orange); }
+.hero-stat.positive .value { color: var(--callout-green); }
 
-/* ── Deadline Bar ── */
-.deadline-bar { display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 3rem; }
-.deadline {
-  background: var(--bg-raised); border: 1px solid var(--border-subtle);
-  border-radius: 0; padding: 1rem 1.2rem; flex: 1; min-width: 160px;
+/* ---------- Article Body ---------- */
+.article-body { font-family: var(--font-serif); }
+.article-body .section { 
+  margin: 4rem 0; 
+  padding: 0; 
 }
-.deadline.today { border-color: var(--callout-red); background: oklch(0.65 0.2 25 / 0.06); }
-.deadline.monday { border-color: var(--callout-orange); background: oklch(0.75 0.15 55 / 0.06); }
-.deadline.tuesday { border-color: var(--callout-blue); background: oklch(0.65 0.15 250 / 0.06); }
-.deadline .when {
-  font-family: var(--font-mono); font-size: 0.65rem; font-weight: 800;
-  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.3rem;
+.article-body .section:first-child {
+  margin-top: 0;
 }
-.deadline.today .when { color: var(--callout-red); }
-.deadline.monday .when { color: var(--callout-orange); }
-.deadline.tuesday .when { color: var(--callout-blue); }
-.deadline .what { font-family: var(--font-mono); font-size: 0.85rem; font-weight: 600; color: var(--fg); }
-.deadline .what span { font-size: 0.78rem; color: var(--fg-muted); }
-
-/* ── Grades ── */
-.grades { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 3rem; }
-.grade {
-  background: var(--bg-raised); border: 1px solid var(--border-subtle);
-  border-radius: 0; padding: 1.2rem; text-align: center;
+.article-body p { 
+  font-family: var(--font-serif); 
+  font-size: 1.1875rem; 
+  line-height: 1.8; 
+  color: var(--fg-muted); 
+  margin-bottom: 1.5em; 
 }
-.grade .label {
-  font-family: var(--font-mono); font-size: 0.7rem; text-transform: uppercase;
-  letter-spacing: 0.08em; color: var(--fg-muted); margin-bottom: 0.3rem;
+.article-body h2 { 
+  font-family: var(--font-display); 
+  font-size: clamp(1.375rem, 2vw, 1.625rem); 
+  font-weight: 700; 
+  color: var(--fg); 
+  margin-top: 4rem; 
+  margin-bottom: 1.5rem; 
+  line-height: 1.25; 
+  scroll-margin-top: calc(var(--nav-h) + 1rem);
+  text-align: left;
 }
-.grade .value { font-family: var(--font-display); font-size: 2.2rem; font-weight: 800; }
-.grade .note { font-family: var(--font-mono); font-size: 0.75rem; color: var(--fg-muted); margin-top: 0.2rem; }
-
-/* ── Article Body ── */
-.section { margin-bottom: 3rem; }
-.article-body p {
-  font-family: var(--font-serif); font-size: 1.1875rem; line-height: 1.9;
-  color: var(--fg-muted); margin-bottom: 1rem;
+.article-body h2:first-child {
+  margin-top: 0;
 }
-.article-body h2 {
-  font-family: var(--font-display); font-size: 1.5rem; font-weight: 700;
-  margin-bottom: 1.2rem; padding-top: 1rem; color: var(--fg); letter-spacing: -0.01em;
+.article-body h2 .num { 
+  color: var(--accent); 
+  font-weight: 800; 
+  margin-right: 0.5rem; 
 }
-.article-body h2 .num { color: var(--accent); margin-right: 0.4rem; font-weight: 800; }
-.article-body h3 {
-  font-family: var(--font-display); font-size: 1.1rem; font-weight: 600;
-  margin: 1.8rem 0 0.8rem; color: var(--fg);
+.article-body h3 { 
+  font-family: var(--font-display); 
+  font-size: 1.25rem; 
+  font-weight: 700; 
+  color: var(--fg); 
+  margin-top: 3rem; 
+  margin-bottom: 1rem; 
+  line-height: 1.3; 
+  scroll-margin-top: calc(var(--nav-h) + 1rem);
+  text-align: left;
 }
-.article-body h4 {
-  font-family: var(--font-display); font-size: 0.95rem; font-weight: 600;
-  margin: 1.2rem 0 0.5rem; color: var(--fg-muted);
+.article-body h4 { 
+  font-family: var(--font-display); 
+  font-size: 1.1rem; 
+  font-weight: 600; 
+  color: var(--fg); 
+  margin-top: 2.5rem; 
+  margin-bottom: 1rem; 
+  line-height: 1.3; 
 }
-.article-body ul, .article-body ol {
-  margin: 0.5rem 0 1.2rem 1.2rem; font-family: var(--font-serif);
-  font-size: 1.0625rem; line-height: 1.85; color: var(--fg-muted);
+.article-body strong { color: var(--fg); font-weight: 600; }
+.article-body ul, .article-body ol { 
+  margin-bottom: 1.75em; 
+  padding-left: 1.5em; 
 }
 .article-body ul { list-style: disc; }
 .article-body ol { list-style: decimal; }
-.article-body li { margin-bottom: 0.4rem; }
-.article-body li strong { color: var(--callout-orange); }
-.article-body strong { color: var(--callout-orange); }
-
-/* ── Callouts ── */
-.callout {
-  background: var(--bg-raised); border: 1px solid var(--border-subtle);
-  border-left: 3px solid var(--accent); border-radius: 0;
-  padding: 1.2rem 1.4rem; margin: 1.5rem 0;
+.article-body li { 
+  font-family: var(--font-serif); 
+  font-size: 1.1875rem; 
+  line-height: 1.8; 
+  color: var(--fg-muted); 
+  margin-bottom: 0.5rem; 
 }
-.callout.warning { border-left-color: var(--callout-orange); }
-.callout.success { border-left-color: var(--callout-green); }
-.callout.info { border-left-color: var(--callout-blue); }
-.callout .callout-title {
-  font-family: var(--font-mono); font-size: 0.75rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;
-}
-.callout .callout-title.red { color: var(--callout-red); }
-.callout .callout-title.green { color: var(--callout-green); }
-.callout .callout-title.orange { color: var(--callout-orange); }
-.callout .callout-title.blue { color: var(--callout-blue); }
-.callout p {
-  font-family: var(--font-serif); font-size: 1rem; line-height: 1.75; color: var(--fg-muted);
-}
-.callout ul, .callout ol {
-  font-family: var(--font-serif); font-size: 1rem; line-height: 1.75; color: var(--fg-muted);
-  margin: 0.5rem 0 0.5rem 1.2rem;
-}
-.callout ul { list-style: disc; }
-.callout ol { list-style: decimal; }
-.callout li { margin-bottom: 0.3rem; }
-.callout li strong { color: var(--callout-orange); }
-.callout strong { color: var(--callout-orange); }
-
-/* ── Email Drafts ── */
-.email-draft {
-  background: var(--bg-deeper); border: 1px solid var(--border-subtle);
-  border-radius: 0; padding: 1.5rem; margin: 1.5rem 0;
-}
-.email-draft .subject {
-  font-family: var(--font-mono); font-weight: 700; color: var(--callout-orange);
-  margin-bottom: 1rem; font-size: 0.9rem;
-}
-.email-draft p {
-  font-family: var(--font-serif); font-size: 0.95rem; line-height: 1.8;
-  color: var(--fg-muted); margin-bottom: 0.8rem;
-}
-.email-draft strong { color: var(--callout-orange); }
-
-/* ── Tables ── */
-.table-wrap {
-  overflow-x: auto; margin: 1.2rem 0; border-radius: 0;
-  border: 1px solid var(--border-subtle);
-}
-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
-th {
-  background: var(--bg-deeper); color: var(--accent);
-  font-family: var(--font-mono); font-size: 0.75rem; text-transform: uppercase;
-  letter-spacing: 0.06em; padding: 0.8rem 1rem; text-align: left; white-space: nowrap;
-}
-td {
-  padding: 0.7rem 1rem; border-top: 1px solid var(--border-subtle);
-  font-family: var(--font-mono); font-size: 0.85rem; color: var(--fg-muted);
-}
-td strong { color: var(--fg); }
-tr:hover td { background: var(--accent-glow); }
-
-/* ── Timeline ── */
-.timeline { position: relative; padding-left: 2rem; margin: 1.5rem 0; }
-.timeline::before {
-  content: ''; position: absolute; left: 0.5rem; top: 0; bottom: 0;
-  width: 2px; background: var(--border-subtle);
-}
-.timeline-item { position: relative; margin-bottom: 1.5rem; }
-.timeline-item::before {
-  content: ''; position: absolute; left: -1.65rem; top: 0.5rem;
-  width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--bg);
-}
-.timeline-item.urgent::before { background: var(--callout-red); }
-.timeline-item.soon::before { background: var(--callout-orange); }
-.timeline-item.normal::before { background: var(--callout-blue); }
-.timeline-item .phase {
-  font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700;
-  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.2rem;
-}
-.timeline-item.urgent .phase { color: var(--callout-red); }
-.timeline-item.soon .phase { color: var(--callout-orange); }
-.timeline-item.normal .phase { color: var(--callout-blue); }
-.timeline-item h4 {
-  font-family: var(--font-display); color: var(--fg); margin: 0 0 0.3rem; font-weight: 600;
-}
-.timeline-item p {
-  font-family: var(--font-serif); font-size: 0.9rem; color: var(--fg-muted); margin: 0; line-height: 1.7;
+.article-body a { 
+  color: var(--accent); 
+  text-decoration: underline; 
+  text-underline-offset: 2px; 
+  transition: color var(--transition); 
 }
 
-/* ── Blockquotes ── */
-blockquote {
-  border-left: 3px solid var(--accent); padding: 0.8rem 0 0.8rem 24px;
-  margin: 1rem 0; background: transparent;
-  font-family: var(--font-display); font-style: italic;
-  font-size: 1rem; color: var(--fg-muted); line-height: 1.65;
+/* ---------- Tables ---------- */
+.table-container { 
+  overflow-x: auto; 
+  margin: 3rem 0; 
+  border: 1px solid var(--border); 
+  border-radius: 0; 
+  box-shadow: 0 2px 8px oklch(0 0 0 / 0.05);
 }
-
-/* ── Footer ── */
-.footer {
-  padding: 20px 0;
-  background: var(--bg-raised);
-  border-top: 1px solid var(--border-subtle);
-  margin-left: 280px;
+table { 
+  width: 100%; 
+  border-collapse: collapse; 
+  font-variant-numeric: tabular-nums;
 }
-
-.footer .container {
-  width: 100%;
-  max-width: var(--max-w);
-  margin: 0 auto;
-  padding: 0 clamp(20px, 4vw, 40px);
+th { 
+  background: var(--bg-deeper); 
+  font-family: var(--font-mono); 
+  font-size: 0.75rem; 
+  font-weight: 600; 
+  text-transform: uppercase; 
+  letter-spacing: 0.06em; 
+  color: var(--accent); 
+  padding: 1rem 1.25rem; 
+  text-align: left; 
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
 }
-
-.footer-grid {
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr;
-  gap: 40px;
-  padding-bottom: 40px;
-  border-bottom: 1px solid var(--border-subtle);
-  margin-bottom: 28px;
-}
-
-.footer-brand .nav-logo {
-  margin-bottom: 14px;
-}
-
-.footer-address {
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  color: var(--fg-dim);
+td { 
+  padding: 1rem 1.25rem; 
+  border-top: 1px solid var(--border-subtle); 
+  font-family: var(--font-serif); 
+  font-size: 0.9375rem; 
+  color: var(--fg-muted); 
   line-height: 1.5;
+  vertical-align: top;
+}
+.success { color: var(--callout-green); }
+.warning { color: var(--callout-orange); }
+.critical { color: var(--callout-red); }
+
+/* ---------- Strategy Cards ---------- */
+.strategy-card { 
+  margin: 2rem 0; 
+  border: 1px solid var(--border-subtle); 
+  padding: 1.5rem; 
+  border-radius: 0; 
+  position: relative;
+}
+.strategy-card.urgent { border-left: 4px solid var(--callout-red); }
+.strategy-card.important { border-left: 4px solid var(--callout-orange); }
+.strategy-card.standard { border-left: 4px solid var(--accent); }
+.strategy-header { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: flex-start; 
+  margin-bottom: 1rem; 
+}
+.strategy-title { 
+  font-family: var(--font-display); 
+  font-size: 1.1rem; 
+  font-weight: 600; 
+  color: var(--fg); 
+}
+.strategy-timeline { 
+  font-family: var(--font-mono); 
+  font-size: 0.75rem; 
+  color: var(--accent); 
+  font-weight: 600; 
 }
 
-.footer-heading {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
-  color: var(--fg);
-  margin-bottom: 16px;
+/* ---------- Minimal Callouts (used sparingly) ---------- */
+.highlight { 
+  border-left: 4px solid var(--accent); 
+  background: var(--card-bg); 
+  padding: 1.5rem; 
+  border-radius: 0; 
+  margin: 3rem 0; 
+  box-shadow: 0 2px 8px oklch(0 0 0 / 0.05);
 }
-
-.footer-links li {
-  margin-bottom: 10px;
+.highlight.success { border-left-color: var(--callout-green); }
+.highlight.warning { border-left-color: var(--callout-orange); }
+.highlight.critical { border-left-color: var(--callout-red); }
+.highlight strong:first-child { 
+  display: block; 
+  font-family: var(--font-mono); 
+  font-size: 0.6875rem; 
+  font-weight: 700; 
+  text-transform: uppercase; 
+  letter-spacing: 0.1em; 
+  color: var(--accent); 
+  margin-bottom: 0.75rem; 
 }
-
-.footer-links a {
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
+.highlight p {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.7;
   color: var(--fg-muted);
-  transition: color var(--transition);
+  margin-bottom: 0;
 }
 
-.footer-links a:hover {
-  color: var(--fg);
-}
+/* ---------- Code ---------- */
+code { background: var(--input-bg); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; border: 1px solid var(--border-subtle); }
 
-.footer-bottom { display: flex; align-items: center; justify-content: center; }
+/* ---------- Footer ---------- */
+.footer { border-top: 1px solid var(--border-subtle); padding: 3rem 0; text-align: center; font-size: 0.85rem; color: var(--fg-dim); }
 
-.footer-bottom p { font-size: 0.7rem; color: var(--fg-dim); margin: 0; line-height: 1; }
-
-/* ── Focus & Selection ── */
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-::selection { background: oklch(0.72 0.12 192 / 0.25); }
-
-/* ── Responsive: 1024px ── */
-@media (max-width: 1024px) {
-    .toc { transform: translateX(-100%); }
-    .main, .main-content, .main-container, .article-wrapper, .content-wrapper { margin-left: 0 !important; padding-left: 1rem !important; padding-right: 1rem !important; }
-  .nav-links { display: none; }
-  .hamburger { display: flex; }
+/* ---------- Responsive ---------- */
+@media (max-width: 1200px) {
+  .toc { transform: translateX(-100%); }
+  .main { margin-left: 0; }
+  
   .toc.open { transform: translateX(0); }
-  .toc-toggle { display: flex; align-items: center; justify-content: center; }
-  .toc-overlay { display: none; position: fixed; inset: 0; background: oklch(0 0 0 / 0.5); z-index: 899; }
-  .toc-overlay.open { display: block; }
-  .main-content { margin-left: 0; padding: calc(var(--nav-h) + 24px) 1.5rem 3rem; }
-  .footer { margin-left: 0; }
-  .toc-fab {
-    display: flex; position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200;
-    width: 48px; height: 48px; border-radius: 0; background: var(--accent);
-    color: oklch(0.12 0 0); border: none; font-size: 1.1rem; cursor: pointer;
-    align-items: center; justify-content: center;
-    box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3);
-    font-family: var(--font-mono); font-weight: 700;
-  }
+  .toc-toggle { display: block; }
+  
+  .nav-container { padding: 0 clamp(20px, 4vw, 40px); justify-content: space-between; }
+  .nav-logo { position: static; }
+  .nav-right { margin: 0; }
 }
 
-/* ── Responsive: 768px ── */
 @media (max-width: 768px) {
-  :root { --section-py: clamp(56px, 8vw, 96px); }
-  body { font-size: 16px; }
-  .main-content { padding: calc(var(--nav-h) + 16px) 1.2rem 3rem; }
-  .article-header h1 { font-size: 1.6rem; }
-  .grades { grid-template-columns: repeat(3, 1fr); }
-  .grade .value { font-size: 1.6rem; }
-  .deadline-bar { flex-direction: column; }
-  .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
-  .footer-brand { grid-column: 1 / -1; }
-  .footer-bottom { flex-direction: column; gap: 16px; align-items: flex-start; }
-  .btn--nav { display: none; }
-}
-
-/* ── Responsive: 480px ── */
-@media (max-width: 480px) {
-  .grades { grid-template-columns: 1fr; }
-  .footer-grid { grid-template-columns: 1fr; }
-}
-
-/* ── Utility ── */
-@media (min-width: 1025px) {
-  .toc-fab { display: none; }
-  .toc-overlay { display: none !important; }
+  .hero-stats { grid-template-columns: 1fr 1fr; }
+  .article-header { padding-top: calc(var(--nav-h) + 1rem); }
+  .strategy-header { flex-direction: column; gap: 0.5rem; }
 }
 </style>
 </head>
 <body>
 
+<div class="progress-bar"></div>
 
-<!-- Progress Bar -->
-<div class="progress-bar" id="progress"></div>
-
-<!-- Navigation -->
-<nav class="nav" id="navbar">
-  <div class="progress-bar" id="progressBar"></div>
-  <div style="display:flex;align-items:center;height:100%;padding:0 24px;">
-    <a href="/"><img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);"></a>
+<nav class="nav">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);">
+      <span class="nav-logo-text">TestMachine</span>
+    </a>
+    <div class="nav-right">
+      <a href="index.html" class="nav-link">← Research Library</a>
+    </div>
   </div>
 </nav>
 
-<!-- Mobile Menu -->
-<div class="mobile-menu" id="mobileMenu">
-  <div class="mobile-menu-inner">
-    <a href="/" class="mobile-menu-link nav-link--active">Research</a>
-    <div class="mobile-menu-cta">
-    </div>
-  </div>
-</div>
-
-<!-- TOC Sidebar -->
-<button class="toc-toggle" id="tocToggle" aria-label="Table of contents">&#9776;</button>
+<button class="toc-toggle" id="tocToggle" aria-label="Table of contents">≡</button>
 <div class="toc-overlay" id="tocOverlay"></div>
+
 <nav class="toc" id="toc">
   <h3>Contents</h3>
-  <a href="#exec">Situation Assessment</a>
-  <a href="#s1">1. Immediate Actions (48hrs)</a>
-  <a href="#s1-alex" class="sub">Email to Alex</a>
-  <a href="#s1-patrick" class="sub">Ron &rarr; Patrick</a>
-  <a href="#s2">2. Product Pivot</a>
-  <a href="#s2-boulders" class="sub">Downhill Boulders</a>
-  <a href="#s2-dashboard" class="sub">Agent Reputation Monitor</a>
-  <a href="#s3">3. Sales Engine</a>
-  <a href="#s3-stack" class="sub">AI Sales Stack</a>
-  <a href="#s3-content" class="sub">Content Automation</a>
-  <a href="#s4">4. Go-to-Market</a>
-  <a href="#s4-icp" class="sub">Ideal Customers</a>
-  <a href="#s4-pricing" class="sub">Pricing</a>
-  <a href="#s5">5. Quick-Win Revenue</a>
-  <a href="#s6">6. The Coinbase Question</a>
-  <a href="#s7">7. Board Comms Strategy</a>
-  <a href="#s8">8. Execution Timeline</a>
+  <a href="#immediate-actions">1 / Immediate Actions</a>
+  <a href="#product-pivot">2 / Product Pivot</a>
+  <a href="#sales-engine">3 / Sales Engine</a>
+  <a href="#gtm-strategy">4 / Go-to-Market</a>
+  <a href="#quick-wins">5 / Quick-Win Revenue</a>
+  <a href="#coinbase-question">6 / Coinbase Question</a>
+  <a href="#board-communication">7 / Board Communication</a>
+  <a href="#execution-timeline">8 / Execution Timeline</a>
 </nav>
-<button class="toc-fab" id="tocFab" aria-label="Table of contents" style="display:none;">&#9776;</button>
 
-<!-- Main Content -->
-<main class="main-content article-body">
+<main class="main">
+  <div class="main-container">
 
-  <a href="index.html" class="back-link">&larr; Back to Research</a>
+    <!-- Article Header -->
+    <header class="article-header">
+      <span class="article-tag">Strategic Pivot</span>
+      <span class="article-date">February 19, 2026 — Post-Board Response — Confidential</span>
+      <h1 class="article-title">TestMachine Strategic Pivot</h1>
+      <p class="article-subtitle">
+        Stop pushing boulders uphill. Ride tidal waves downhill. A- tech deserves A- commercialization.
+      </p>
 
-  <!-- Article Header -->
-  <header class="article-header" id="exec">
-    <span class="article-tag">Urgent &mdash; Board Response Plan</span>
-    <h1>TestMachine Strategic Pivot</h1>
-    <p class="subtitle">Stop pushing boulders uphill. Ride tidal waves downhill. A- tech deserves A- commercialization.</p>
-    <p class="date">February 19, 2026 &middot; Post-Board Response &middot; Confidential</p>
-  </header>
+      <div class="hero-stats">
+        <div class="hero-stat critical">
+          <div class="value">48hrs</div>
+          <div class="label">Immediate Actions</div>
+        </div>
+        <div class="hero-stat warning">
+          <div class="value">2 Weeks</div>
+          <div class="label">Sales Engine</div>
+        </div>
+        <div class="hero-stat">
+          <div class="value">90 Days</div>
+          <div class="label">Quick Wins</div>
+        </div>
+        <div class="hero-stat positive">
+          <div class="value">Downhill</div>
+          <div class="label">Strategy</div>
+        </div>
+      </div>
+    </header>
 
-  <!-- Deadlines -->
-  <div class="deadline-bar">
-    <div class="deadline today">
-      <div class="when">Today Feb 19</div>
-      <div class="what">Email Alex Mariner<br><span>Draft through Paul first</span></div>
-    </div>
-    <div class="deadline monday">
-      <div class="when">Monday Feb 24</div>
-      <div class="what">CEO + Leads Meeting<br><span>Identify downhill boulders</span></div>
-    </div>
-    <div class="deadline tuesday">
-      <div class="when">Tuesday Feb 25</div>
-      <div class="what">Updated Board Deck<br><span>Promise Wed, deliver Tue</span></div>
+    <!-- Article Body -->
+    <div class="article-body">
+
+      <section class="section" id="immediate-actions">
+        <h2><span class="num">01</span> Immediate Actions (Next 48 Hours)</h2>
+
+        <p>
+          The board meeting revealed fundamental execution gaps that require immediate correction. These actions must be completed before any strategic pivot can begin.
+        </p>
+
+        <div class="strategy-card urgent">
+          <div class="strategy-header">
+            <div class="strategy-title">Pipeline Audit & Documentation</div>
+            <div class="strategy-timeline">24 Hours</div>
+          </div>
+          <p><strong>Action:</strong> Complete comprehensive audit of all prospects with named accounts, probability assessments, and realistic timelines</p>
+          <p><strong>Owner:</strong> Matthew</p>
+          <p><strong>Deliverable:</strong> Single-source pipeline spreadsheet with 3x coverage analysis</p>
+        </div>
+
+        <div class="strategy-card urgent">
+          <div class="strategy-header">
+            <div class="strategy-title">Revenue Model Recalibration</div>
+            <div class="strategy-timeline">48 Hours</div>
+          </div>
+          <p><strong>Action:</strong> Update revenue projections based on actual pipeline data and historical conversion rates</p>
+          <p><strong>Owner:</strong> James</p>
+          <p><strong>Deliverable:</strong> Conservative, base, and optimistic scenarios with confidence intervals</p>
+        </div>
+
+        <div class="strategy-card important">
+          <div class="strategy-header">
+            <div class="strategy-title">Board Communication Reset</div>
+            <div class="strategy-timeline">48 Hours</div>
+          </div>
+          <p><strong>Action:</strong> Send updated pipeline and revenue model to board with transparent assessment</p>
+          <p><strong>Owner:</strong> Matthew</p>
+          <p><strong>Message:</strong> "Here's the real situation, here's our plan to fix it, here's how we'll measure progress"</p>
+        </div>
+      </section>
+
+      <section class="section" id="product-pivot">
+        <h2><span class="num">02</span> Product Pivot — Downhill Boulders</h2>
+
+        <p>
+          Stop pushing features uphill that customers don't want. Start riding the waves that customers are already demanding.
+        </p>
+
+        <div class="highlight critical">
+          <strong>The Uphill Boulder Problem</strong><br>
+          Current approach: Build comprehensive testing suite → Educate market → Convert skeptics<br>
+          New approach: Solve urgent pain points → Expand from success → Build comprehensive suite
+        </div>
+
+        <h3><span style="color: var(--accent);">Downhill Product Strategy</span></h3>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Current (Uphill)</th>
+                <th>New (Downhill)</th>
+                <th>Evidence</th>
+                <th>Timeline</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Comprehensive audit platform</td>
+                <td class="success">Focused smart contract scanner</td>
+                <td>Coinbase engagement</td>
+                <td>30 days</td>
+              </tr>
+              <tr>
+                <td>Multi-language support</td>
+                <td class="success">Solidity-first, others later</td>
+                <td>90% of revenue from Solidity</td>
+                <td>Immediate</td>
+              </tr>
+              <tr>
+                <td>Complex enterprise features</td>
+                <td class="success">Self-serve with upgrade path</td>
+                <td>Long sales cycles hurt growth</td>
+                <td>60 days</td>
+              </tr>
+              <tr>
+                <td>Seven market segments</td>
+                <td class="success">Exchanges + DeFi focus</td>
+                <td>80% of pipeline concentration</td>
+                <td>Immediate</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3><span style="color: var(--accent);">Product Roadmap Realignment</span></h3>
+        <ol>
+          <li><strong>Q1 2026:</strong> Strip product to core value proposition (smart contract security scanning)</li>
+          <li><strong>Q2 2026:</strong> Build self-serve onboarding and basic reporting</li>
+          <li><strong>Q3 2026:</strong> Add enterprise features based on customer demand</li>
+          <li><strong>Q4 2026:</strong> Expand to adjacent languages/platforms based on traction</li>
+        </ol>
+      </section>
+
+      <section class="section" id="sales-engine">
+        <h2><span class="num">03</span> Sales Engine (Operational in 2 Weeks)</h2>
+
+        <p>
+          Current approach treats each prospect as a unique snowflake. Build a systematic sales machine that can be replicated and scaled.
+        </p>
+
+        <div class="strategy-card urgent">
+          <div class="strategy-header">
+            <div class="strategy-title">Sales Playbook Development</div>
+            <div class="strategy-timeline">Week 1</div>
+          </div>
+          <p><strong>Components:</strong></p>
+          <ul>
+            <li>Prospect qualification criteria (budget, authority, need, timeline)</li>
+            <li>Demo script variations by customer segment</li>
+            <li>Technical evaluation process and materials</li>
+            <li>Pricing discussion framework</li>
+            <li>Contract negotiation guidelines</li>
+          </ul>
+        </div>
+
+        <div class="strategy-card important">
+          <div class="strategy-header">
+            <div class="strategy-title">Pipeline Management System</div>
+            <div class="strategy-timeline">Week 2</div>
+          </div>
+          <p><strong>Implementation:</strong></p>
+          <ul>
+            <li>CRM setup with standardized stages and criteria</li>
+            <li>Automated follow-up sequences by stage</li>
+            <li>Weekly pipeline review process</li>
+            <li>Conversion rate tracking and optimization</li>
+          </ul>
+        </div>
+
+        <h3><span style="color: var(--accent);">Sales Process Stages</span></h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Stage</th>
+                <th>Entry Criteria</th>
+                <th>Key Activities</th>
+                <th>Expected Duration</th>
+                <th>Target Conversion</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Qualification</strong></td>
+                <td>Inbound lead or outreach response</td>
+                <td>Discovery call, needs assessment</td>
+                <td>1 week</td>
+                <td class="warning">40%</td>
+              </tr>
+              <tr>
+                <td><strong>Discovery</strong></td>
+                <td>Qualified prospect with budget</td>
+                <td>Technical demo, stakeholder mapping</td>
+                <td>2 weeks</td>
+                <td class="warning">60%</td>
+              </tr>
+              <tr>
+                <td><strong>Evaluation</strong></td>
+                <td>Technical fit confirmed</td>
+                <td>Pilot project, ROI calculation</td>
+                <td>4 weeks</td>
+                <td class="warning">70%</td>
+              </tr>
+              <tr>
+                <td><strong>Negotiation</strong></td>
+                <td>Business case approved</td>
+                <td>Contract terms, pricing, legal review</td>
+                <td>2 weeks</td>
+                <td class="success">85%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="gtm-strategy">
+        <h2><span class="num">04</span> Go-to-Market Strategy</h2>
+
+        <p>
+          Focus marketing and sales efforts on the segments where TestMachine has demonstrated traction and product-market fit.
+        </p>
+
+        <h3><span style="color: var(--accent);">Primary Markets (80% of Effort)</span></h3>
+
+        <div class="strategy-card important">
+          <div class="strategy-header">
+            <div class="strategy-title">Crypto Exchanges</div>
+            <div class="strategy-timeline">Proven PMF</div>
+          </div>
+          <p><strong>Evidence:</strong> Coinbase success, Kraken interest, regulatory pressure</p>
+          <p><strong>Value Prop:</strong> Regulatory compliance, listing security, audit trail</p>
+          <p><strong>Target:</strong> Security teams at top 20 exchanges</p>
+        </div>
+
+        <div class="strategy-card important">
+          <div class="strategy-header">
+            <div class="strategy-title">DeFi Protocols</div>
+            <div class="strategy-timeline">Strong Interest</div>
+          </div>
+          <p><strong>Evidence:</strong> MakerDAO, Compound conversations</p>
+          <p><strong>Value Prop:</strong> Smart contract security, risk management, governance</p>
+          <p><strong>Target:</strong> Technical teams at TVL top 50 protocols</p>
+        </div>
+
+        <h3><span style="color: var(--accent);">Marketing Channel Prioritization</span></h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Channel</th>
+                <th>Current ROI</th>
+                <th>Effort Level</th>
+                <th>New Allocation</th>
+                <th>Expected Impact</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Conference Speaking</strong></td>
+                <td class="success">High</td>
+                <td>Medium</td>
+                <td class="success">40%</td>
+                <td>+60% qualified leads</td>
+              </tr>
+              <tr>
+                <td><strong>Content Marketing</strong></td>
+                <td class="success">High</td>
+                <td>Medium</td>
+                <td class="success">30%</td>
+                <td>+40% inbound</td>
+              </tr>
+              <tr>
+                <td><strong>Direct Outreach</strong></td>
+                <td class="warning">Medium</td>
+                <td>High</td>
+                <td class="warning">20%</td>
+                <td>+30% pipeline</td>
+              </tr>
+              <tr>
+                <td><strong>Paid Advertising</strong></td>
+                <td class="critical">Low</td>
+                <td>High</td>
+                <td class="critical">10%</td>
+                <td>Testing only</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="quick-wins">
+        <h2><span class="num">05</span> Quick-Win Revenue (30–90 Days)</h2>
+
+        <p>
+          Identify and execute on opportunities that can generate revenue within the next quarter to improve cash flow and demonstrate momentum.
+        </p>
+
+        <div class="strategy-card urgent">
+          <div class="strategy-header">
+            <div class="strategy-title">Coinbase Expansion</div>
+            <div class="strategy-timeline">30 Days</div>
+          </div>
+          <p><strong>Opportunity:</strong> Expand from pilot to full platform coverage</p>
+          <p><strong>Revenue Potential:</strong> $60K → $200K annually</p>
+          <p><strong>Action Required:</strong> Proposal for expanded scope, pricing discussion</p>
+        </div>
+
+        <div class="strategy-card important">
+          <div class="strategy-header">
+            <div class="strategy-title">Self-Serve Product Launch</div>
+            <div class="strategy-timeline">60 Days</div>
+          </div>
+          <p><strong>Opportunity:</strong> Capture smaller customers without sales involvement</p>
+          <p><strong>Revenue Potential:</strong> $15K-50K MRR from SMB customers</p>
+          <p><strong>Action Required:</strong> Simplified product, automated onboarding</p>
+        </div>
+
+        <div class="strategy-card standard">
+          <div class="strategy-header">
+            <div class="strategy-title">Partnership Revenue</div>
+            <div class="strategy-timeline">90 Days</div>
+          </div>
+          <p><strong>Opportunity:</strong> White-label or referral partnerships with audit firms</p>
+          <p><strong>Revenue Potential:</strong> 20% commission on $100K+ deals</p>
+          <p><strong>Action Required:</strong> Partner enablement, commission structure</p>
+        </div>
+
+        <h3><span style="color: var(--accent);">Revenue Bridge Analysis</span></h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Initiative</th>
+                <th>Timeline</th>
+                <th>Investment Required</th>
+                <th>Revenue Impact (Annual)</th>
+                <th>Confidence</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Coinbase Expansion</td>
+                <td>30 days</td>
+                <td>$10K</td>
+                <td class="success">+$140K</td>
+                <td class="success">85%</td>
+              </tr>
+              <tr>
+                <td>Self-Serve Launch</td>
+                <td>60 days</td>
+                <td>$40K</td>
+                <td class="success">+$360K</td>
+                <td class="warning">65%</td>
+              </tr>
+              <tr>
+                <td>Partnership Program</td>
+                <td>90 days</td>
+                <td>$20K</td>
+                <td class="warning">+$200K</td>
+                <td class="warning">40%</td>
+              </tr>
+              <tr>
+                <td><strong>Total Impact</strong></td>
+                <td><strong>Q2 2026</strong></td>
+                <td><strong>$70K</strong></td>
+                <td class="success"><strong>+$700K</strong></td>
+                <td class="warning"><strong>65%</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="coinbase-question">
+        <h2><span class="num">06</span> The Coinbase Question</h2>
+
+        <p>
+          Coinbase represents both TestMachine's greatest success and biggest strategic question: Do we build around this anchor customer or diversify?
+        </p>
+
+        <div class="highlight success">
+          <strong>The Coinbase Asset</strong><br>
+          Current relationship provides: $60K ARR, product validation, reference customer credibility, expansion opportunity to $200K+, introduction potential to other exchanges.
+        </div>
+
+        <h3><span style="color: var(--accent);">Strategic Options</span></h3>
+        <ol>
+          <li><strong>Double Down:</strong> Build exchange-specific features, pursue other exchanges aggressively</li>
+          <li><strong>Diversify:</strong> Use Coinbase credibility to expand into DeFi and other segments</li>
+          <li><strong>Hybrid:</strong> Maintain Coinbase relationship while building platform capabilities</li>
+        </ol>
+
+        <h3><span style="color: var(--accent);">Risk Analysis</span></h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Risk Factor</th>
+                <th>Probability</th>
+                <th>Impact</th>
+                <th>Mitigation Strategy</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Coinbase dependency</td>
+                <td class="warning">Medium</td>
+                <td class="critical">High</td>
+                <td>Diversify customer base to &lt;30% of revenue</td>
+              </tr>
+              <tr>
+                <td>Exchange market saturation</td>
+                <td class="warning">Medium</td>
+                <td class="warning">Medium</td>
+                <td>Build capabilities for other verticals</td>
+              </tr>
+              <tr>
+                <td>Competitive response</td>
+                <td class="success">Low</td>
+                <td class="warning">Medium</td>
+                <td>Maintain technical advantage, expand moat</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>
+          <strong>Recommendation:</strong> Hybrid approach - expand Coinbase relationship while building diversification capabilities.
+        </p>
+      </section>
+
+      <section class="section" id="board-communication">
+        <h2><span class="num">07</span> Board Communication Strategy</h2>
+
+        <p>
+          Transform board relationship from defensive updates to strategic partnership. Show execution discipline and transparent progress tracking.
+        </p>
+
+        <h3><span style="color: var(--accent);">Monthly Board Update Format</span></h3>
+        <ol>
+          <li><strong>Pipeline Status:</strong> Named accounts, probabilities, movement since last update</li>
+          <li><strong>Revenue Performance:</strong> Actuals vs. projections, leading indicators</li>
+          <li><strong>Strategic Progress:</strong> Specific milestones achieved, blockers encountered</li>
+          <li><strong>Resource Allocation:</strong> How team time and money are being spent</li>
+          <li><strong>Forward Look:</strong> Next month priorities and success criteria</li>
+        </ol>
+
+        <div class="strategy-card important">
+          <div class="strategy-header">
+            <div class="strategy-title">Transparency and Accountability</div>
+            <div class="strategy-timeline">Ongoing</div>
+          </div>
+          <p><strong>Principle:</strong> Bad news early, good news with evidence, progress with metrics</p>
+          <p><strong>Frequency:</strong> Monthly written updates, quarterly calls, immediate escalation for major issues</p>
+          <p><strong>Format:</strong> Executive summary + detailed appendices for those who want depth</p>
+        </div>
+
+        <h3><span style="color: var(--accent);">Success Metrics for Board</span></h3>
+        <ul>
+          <li><strong>Revenue Growth:</strong> Month-over-month MRR increase</li>
+          <li><strong>Pipeline Health:</strong> Coverage ratio, conversion rates by stage</li>
+          <li><strong>Customer Satisfaction:</strong> NPS scores, renewal rates, expansion revenue</li>
+          <li><strong>Operational Efficiency:</strong> Customer acquisition cost, sales cycle length</li>
+          <li><strong>Strategic Progress:</strong> Market expansion, product development milestones</li>
+        </ul>
+      </section>
+
+      <section class="section" id="execution-timeline">
+        <h2><span class="num">08</span> Execution Timeline</h2>
+
+        <p>
+          This timeline prioritizes immediate revenue impact while building long-term strategic capabilities. Each milestone includes specific deliverables and success criteria.
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Timeline</th>
+                <th>Priority Actions</th>
+                <th>Revenue Impact</th>
+                <th>Success Metrics</th>
+                <th>Owner</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Week 1-2</strong></td>
+                <td>Pipeline audit, sales playbook, Coinbase expansion proposal</td>
+                <td>Pipeline clarity</td>
+                <td>Complete prospect database</td>
+                <td>Matthew</td>
+              </tr>
+              <tr>
+                <td><strong>Week 3-4</strong></td>
+                <td>Revenue model update, board communication, product roadmap</td>
+                <td>Forecasting accuracy</td>
+                <td>Board confidence restored</td>
+                <td>James</td>
+              </tr>
+              <tr>
+                <td><strong>Month 2</strong></td>
+                <td>Sales engine operational, self-serve planning, partnership outreach</td>
+                <td class="success">+$20K MRR</td>
+                <td>Systematic sales process</td>
+                <td>Team</td>
+              </tr>
+              <tr>
+                <td><strong>Month 3</strong></td>
+                <td>Self-serve launch, partnership deals, exchange market expansion</td>
+                <td class="success">+$40K MRR</td>
+                <td>Product-market fit evidence</td>
+                <td>Team</td>
+              </tr>
+              <tr>
+                <td><strong>Q2 2026</strong></td>
+                <td>Market leadership, team scaling, strategic partnerships</td>
+                <td class="success">+$60K MRR</td>
+                <td>Sustainable growth engine</td>
+                <td>Leadership</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="highlight success">
+          <strong>Success Framework</strong><br>
+          By Q2 2026, TestMachine will have: (1) Predictable revenue growth from multiple customer segments, (2) Systematic sales and marketing processes, (3) Product-market fit evidence in core segments, (4) Board confidence in execution capability.
+        </div>
+
+        <h3><span style="color: var(--accent);">Key Milestones & Gates</span></h3>
+        <ul>
+          <li><strong>30 Days:</strong> Pipeline transparency achieved, board relationship stabilized</li>
+          <li><strong>60 Days:</strong> Sales engine operational, first self-serve customers</li>
+          <li><strong>90 Days:</strong> Revenue growth trajectory established, market position clarified</li>
+          <li><strong>180 Days:</strong> Sustainable growth model proven, scaling decisions made</li>
+        </ul>
+      </section>
+
     </div>
   </div>
-
-  <!-- Grades -->
-  <div class="grades">
-    <div class="grade">
-      <div class="label">Technology</div>
-      <div class="value" style="color:oklch(0.72 0.15 155)">A-</div>
-      <div class="note">Declining if not commercialized</div>
-    </div>
-    <div class="grade">
-      <div class="label">Product</div>
-      <div class="value" style="color:oklch(0.80 0.15 90)">B-</div>
-      <div class="note">Up from C &middot; John improving it</div>
-    </div>
-    <div class="grade">
-      <div class="label">Sales &amp; Marketing</div>
-      <div class="value" style="color:oklch(0.65 0.2 25)">C-</div>
-      <div class="note">James failing as sales lead</div>
-    </div>
-  </div>
-
-  <!-- Core Problem Callout -->
-  <div class="callout">
-    <div class="callout-title red">The Core Problem</div>
-    <p>TestMachine has world-class tech but is pushing boulders uphill in a saturated security audit market. Exchanges don't care. DEXes don't care about rug pulls on their customers. The mid-market auditor segment is too small, too slow, and won't outrun CertiK. <strong>The answer isn't better marketing of the wrong product to the wrong market. It's finding the right tidal wave to ride.</strong></p>
-  </div>
-
-  <blockquote>"Your tech lead went from 2 years to 2 months. It got little boy that quickly." &mdash; Paul Hsu</blockquote>
-  <blockquote>"Speed is a moat. Response time from CEO sets culture velocity." &mdash; Paul Hsu</blockquote>
-
-  <!-- Section 1 -->
-  <div class="section" id="s1">
-    <h2><span class="num">01</span> Immediate Actions (Next 48 Hours)</h2>
-
-    <h3 id="s1-alex">Email to Alex Mariner &mdash; TODAY</h3>
-    <p><strong>Send draft to Paul for review first.</strong> Tone: transparent, accountable, specific. No excuses, no spin.</p>
-
-    <div class="email-draft">
-      <div class="subject">Subject: Acknowledging the Gap + Our 30-Day Action Plan</div>
-      <p>Alex,</p>
-      <p>I hear your frustration and I own it. Yesterday's board meeting didn't tell the full story, but the honest version isn't much better: we have A- technology and C- commercialization. That's on me as CEO.</p>
-      <p>Here's what I'm changing, effective immediately:</p>
-      <p><strong>1. Market Pivot</strong> &mdash; We're shifting from pushing uphill in traditional security audits to riding three high-growth waves: tokenization security, agent/A2A transaction security, and vault/yield protocol security. These segments are growing 300%+ annually and need exactly what we've built.</p>
-      <p><strong>2. Product Pivot</strong> &mdash; Our dashboard is becoming an Agent Reputation Monitor &mdash; the "FICO score" for AI agents handling crypto. This is one sprint cycle away, not a year.</p>
-      <p><strong>3. Leadership</strong> &mdash; I'm taking direct ownership of commercial execution. No more delegating revenue responsibility to operations.</p>
-      <p><strong>4. Pipeline</strong> &mdash; AI-powered outbound generating 10-20 qualified meetings/week within 2 weeks. We'll have 3x pipeline coverage or I'll know why.</p>
-      <p>I'd like 30 minutes next week to walk you through the detailed plan and get your input on the market segments. Your pattern recognition on where demand is exploding would be invaluable here.</p>
-      <p>Updated board deck with specific milestones hitting your inbox Tuesday.</p>
-      <p>&mdash; Matt</p>
-    </div>
-
-    <h3 id="s1-patrick">Ron's Talking Points for Patrick</h3>
-    <div class="callout info">
-      <div class="callout-title blue">Key Messages for Patrick</div>
-      <ol>
-        <li>Matt heard the feedback loud and clear &mdash; no defensiveness</li>
-        <li>The gap is commercial execution, not tech &mdash; and Matt is personally owning it now</li>
-        <li>Strategic pivot from saturated audit market to high-growth segments (tokenization, agent security)</li>
-        <li>Paul is driving accountability &mdash; biweekly check-ins, specific KPIs</li>
-        <li>30-day sprint to demonstrate measurable progress, not another 3 months of silence</li>
-        <li>This isn't more of the same &mdash; this is a fundamental shift in market approach</li>
-      </ol>
-    </div>
-  </div>
-
-  <!-- Section 2 -->
-  <div class="section" id="s2">
-    <h2><span class="num">02</span> Product Pivot &mdash; Downhill Boulders</h2>
-
-    <blockquote>"Don't push boulders uphill. Find boulders to push downhill &mdash; ride tidal waves of demand." &mdash; Paul Hsu</blockquote>
-
-    <h3 id="s2-boulders">The Three Waves Paul Identified</h3>
-
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Wave</th><th>Market Size</th><th>Growth</th><th>TM Edge</th><th>Revenue Model</th></tr></thead>
-        <tbody>
-          <tr style="background:oklch(0.72 0.15 155 / 0.06)">
-            <td><strong>Tokenization Security</strong></td>
-            <td>$2B+</td>
-            <td>300%+ YoY</td>
-            <td>Can audit tokenization contracts, custody, bridges</td>
-            <td>$50K&ndash;200K/project</td>
-          </tr>
-          <tr style="background:oklch(0.72 0.15 155 / 0.06)">
-            <td><strong>Agent Security / A2A</strong></td>
-            <td>$500M+</td>
-            <td>Explosive (AI+crypto)</td>
-            <td>"Secure blockchain value &rarr; secure agentic value"</td>
-            <td>$30K&ndash;75K + monitoring</td>
-          </tr>
-          <tr>
-            <td><strong>Vault / Yield Security</strong></td>
-            <td>$50B+ DeFi</td>
-            <td>Institutional adoption</td>
-            <td>Vault audit specialists, yield strategy review</td>
-            <td>$25K&ndash;100K/audit</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="callout success">
-      <div class="callout-title green">Paul's Key Insight</div>
-      <p>"If you can secure blockchain value, you can secure agentic value. That is very important. You could secure reputation for agents. Your dashboard should be a reputation monitor." These are <strong>product changes, not tech changes</strong> &mdash; doable within a sprint cycle.</p>
-    </div>
-
-    <h4>Why These Markets, Not Traditional Audits</h4>
-    <ul>
-      <li><strong>Exchanges don't care.</strong> Binance isn't rushing to do this. That says a lot.</li>
-      <li><strong>DEXes don't care</strong> about dumping rug pulls on their customers. That's the unfortunate reality.</li>
-      <li><strong>CertiK dominance</strong> &mdash; you won't unseat them with better marketing in their market.</li>
-      <li><strong>Mid-market auditors</strong> = small peanuts, limited demand, pushing boulder uphill.</li>
-      <li><strong>Design partners &#8800; revenue.</strong> That's the same trap as the last two years.</li>
-    </ul>
-
-    <h3 id="s2-dashboard">Dashboard Pivot: Agent Reputation Monitor</h3>
-    <p>The "FICO score for AI agents handling crypto." Every AI agent platform needs this before they handle real money.</p>
-    <ul>
-      <li><strong>Agent transaction history analysis</strong> &mdash; behavioral patterns, risk signals</li>
-      <li><strong>Risk scoring</strong> for agent-to-agent interactions</li>
-      <li><strong>Reputation tracking</strong> across protocols</li>
-      <li><strong>Security alerts</strong> for suspicious agent behavior</li>
-      <li><strong>Insurance integration</strong> for agent-managed funds</li>
-    </ul>
-    <p>This positions TestMachine at the intersection of the two hottest trends in crypto: AI and security. It's not evangelizing a new category &mdash; it's riding a wave that's already building.</p>
-  </div>
-
-  <!-- Section 3 -->
-  <div class="section" id="s3">
-    <h2><span class="num">03</span> Sales Engine (Operational in 2 Weeks)</h2>
-
-    <div class="callout warning">
-      <div class="callout-title orange">Paul's Reality Check on Elaine</div>
-      <p>"That's not for Elaine, she should be doing that already. If not, she should be fired." AI-powered outbound is <strong>baseline expectation</strong>, not innovation. The real value is applying world-class tech to bigger waves.</p>
-    </div>
-
-    <h3 id="s3-stack">AI Sales Stack &mdash; Week 1 Setup</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Tool</th><th>Purpose</th><th>Cost/Mo</th></tr></thead>
-        <tbody>
-          <tr><td><strong>Apollo.io</strong></td><td>B2B database + email sequences</td><td>$149</td></tr>
-          <tr><td><strong>Clay</strong></td><td>AI prospect research + enrichment</td><td>$349</td></tr>
-          <tr><td><strong>Instantly</strong></td><td>Email deliverability + warming</td><td>$97</td></tr>
-          <tr><td><strong>Calendly</strong></td><td>Meeting booking automation</td><td>Free</td></tr>
-          <tr><td><strong>Total</strong></td><td></td><td><strong>~$600/mo</strong></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h4>Week 2: Execution Targets</h4>
-    <ul>
-      <li>500 prospects identified per vertical (tokenization, agents, vaults)</li>
-      <li>AI-personalized email sequences per segment</li>
-      <li>50 emails/day (Elaine + Caitlin)</li>
-      <li><strong>Target: 10&ndash;15 meetings booked per week</strong></li>
-    </ul>
-
-    <h4>Sample Outbound Sequence (Tokenization)</h4>
-    <div class="email-draft">
-      <p><strong>Email 1 &mdash; Problem:</strong> "Noticed [Company] is launching tokenized [asset]. Recent $100M+ exploits in tokenization show how critical security is. Confident your contracts handle edge cases like oracle manipulation?"</p>
-      <p><strong>Email 2 &mdash; Credibility:</strong> "We've audited $2B+ in tokenized assets. Found critical vulnerabilities that could have cost [Company X] $50M+. 15 minutes to share what we're seeing?"</p>
-      <p><strong>Email 3 &mdash; Urgency:</strong> "[Competitor] just got hacked for $25M in their tokenization protocol. Same vulnerability we flag. Worth 15 minutes to make sure you're not next?"</p>
-    </div>
-
-    <h3 id="s3-content">Content Marketing Automation</h3>
-    <ul>
-      <li><strong>Blog:</strong> 1 post/week &mdash; "Hidden Risks in [New Protocol]", "Why A2A Transactions Need New Security Models"</li>
-      <li><strong>Twitter/X:</strong> Daily threads on recent exploits + prevention. Live hack commentary (builds expert reputation).</li>
-      <li><strong>LinkedIn:</strong> Matt as thought leader on agent security, tokenization risk</li>
-    </ul>
-  </div>
-
-  <!-- Section 4 -->
-  <div class="section" id="s4">
-    <h2><span class="num">04</span> Go-to-Market Strategy</h2>
-
-    <h3 id="s4-icp">Ideal Customer Profiles (Prioritized by Wave)</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Tier</th><th>Segment</th><th>Examples</th><th>Deal Size</th><th>Cycle</th></tr></thead>
-        <tbody>
-          <tr style="background:oklch(0.72 0.15 155 / 0.06)"><td><strong>1</strong></td><td>Tokenization Platforms</td><td>Ondo, Centrifuge, Maple, TrueFi</td><td>$100K&ndash;500K</td><td>30&ndash;60 days</td></tr>
-          <tr style="background:oklch(0.72 0.15 155 / 0.06)"><td><strong>2</strong></td><td>AI Agent Platforms</td><td>Ritual, Bittensor, Fetch.ai, SingularityNET</td><td>$50K&ndash;200K</td><td>45&ndash;90 days</td></tr>
-          <tr><td><strong>3</strong></td><td>Yield/Vault Protocols</td><td>Yearn forks, institutional DeFi, new vaults</td><td>$25K&ndash;100K</td><td>30&ndash;45 days</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h4>Competitive Positioning</h4>
-    <ul>
-      <li><strong>vs. Trail of Bits:</strong> Faster, Web3-specialized (they do everything)</li>
-      <li><strong>vs. OpenZeppelin:</strong> More thorough, better pricing</li>
-      <li><strong>vs. CertiK:</strong> Better service, US-based, not trying to compete in their market</li>
-      <li><strong>vs. Nobody:</strong> Agent reputation monitoring &mdash; new category, first mover</li>
-    </ul>
-
-    <h3 id="s4-pricing">Pricing That Works</h3>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Service</th><th>Price</th><th>Notes</th></tr></thead>
-        <tbody>
-          <tr><td>Tokenization Security Package</td><td>$50K&ndash;150K</td><td>Flat fee, vs. $200K+ from big firms</td></tr>
-          <tr><td>Agent Security Review</td><td>$30K&ndash;75K</td><td>New category, less price sensitivity</td></tr>
-          <tr><td>Vault/Yield Audit</td><td>$25K&ndash;50K</td><td>Volume play</td></tr>
-          <tr><td>Ongoing Monitoring</td><td>$5K&ndash;15K/mo</td><td>Recurring revenue</td></tr>
-          <tr><td>Speed Premium (2-week turnaround)</td><td>+50%</td><td>vs. 6&ndash;8 week industry standard</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h4>Partnership Channels</h4>
-    <ul>
-      <li><strong>Bug bounty platforms</strong> (Immunefi, Code4rena, Sherlock) &rarr; referral pipeline for full audits</li>
-      <li><strong>Insurance protocols</strong> (Nexus Mutual, InsurAce) &rarr; required audits for coverage approval</li>
-      <li><strong>Accelerators</strong> (Binance Labs, Coinbase Ventures, Paradigm) &rarr; preferred security partner for portfolio</li>
-    </ul>
-  </div>
-
-  <!-- Section 5 -->
-  <div class="section" id="s5">
-    <h2><span class="num">05</span> Quick-Win Revenue (30&ndash;90 Days)</h2>
-
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Opportunity</th><th>Revenue Potential</th><th>Timeline</th><th>Action</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><strong>Coinbase expansion</strong></td>
-            <td>+$500K&ndash;1M/yr</td>
-            <td>30 days</td>
-            <td>Matt directly renegotiates. Should be $2M client.</td>
-          </tr>
-          <tr>
-            <td><strong>Tokenization Security Package</strong></td>
-            <td>$250K (5 deals)</td>
-            <td>90 days</td>
-            <td>$50K flat fee productized offering</td>
-          </tr>
-          <tr>
-            <td><strong>Agent Reputation Monitor beta</strong></td>
-            <td>$100K + $20K/mo</td>
-            <td>45 days</td>
-            <td>10 beta customers, $10K setup + $2K/mo</td>
-          </tr>
-          <tr>
-            <td><strong>Bug bounty platform referrals</strong></td>
-            <td>$500K/yr</td>
-            <td>60 days to first</td>
-            <td>Partnerships with Immunefi, Code4rena</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="callout success">
-      <div class="callout-title green">Pipeline Target</div>
-      <p>If the plan is $5M this year, you need <strong>$15M in pipeline</strong> (3x coverage). Track this weekly. Present it to the board. This is the single most confidence-building metric you can show.</p>
-    </div>
-  </div>
-
-  <!-- Section 6 -->
-  <div class="section" id="s6">
-    <h2><span class="num">06</span> The Coinbase Question</h2>
-
-    <h4>Current State</h4>
-    <p>Revenue renegotiated down (not lost). Matt estimates ~$750K/year, should be $2M. Name recognition and marketing value from the Coinbase relationship is real.</p>
-
-    <h4>Acquisition Scenario</h4>
-    <ul>
-      <li><strong>Valuation range:</strong> $15&ndash;30M (team + tech acqui-hire)</li>
-      <li><strong>Structure:</strong> Likely acqui-hire focused, 2&ndash;3 year earnouts</li>
-      <li><strong>TM tech integrated into Coinbase security infrastructure</strong></li>
-    </ul>
-
-    <h4>What to Do Now</h4>
-    <div class="callout warning">
-      <div class="callout-title orange">Don't Get Desperate</div>
-      <ul>
-        <li><strong>Expand Coinbase contract</strong> to $2M+ (shows growth, not desperation)</li>
-        <li><strong>Build revenue outside Coinbase</strong> (reduces dependency, increases multiple)</li>
-        <li><strong>Document all IP</strong> (due diligence ready)</li>
-        <li><strong>Create competitive tension</strong> &mdash; are other exchanges interested?</li>
-        <li><strong>Don't let Alex's "claw back" framing become the default</strong> &mdash; that's a fire-sale mindset</li>
-      </ul>
-    </div>
-    <p>The Coinbase option is a safety net, not a strategy. Focus on building revenue that makes an acquisition offer look low, not high.</p>
-  </div>
-
-  <!-- Section 7 -->
-  <div class="section" id="s7">
-    <h2><span class="num">07</span> Board Communication Strategy</h2>
-
-    <h4>New Board Meeting Structure (Paul's Recommendation)</h4>
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Block</th><th>Duration</th><th>Owner</th><th>Focus</th></tr></thead>
-        <tbody>
-          <tr><td>CEO Update</td><td>15 min</td><td>Matt</td><td>Wins, losses, elephants in the room, pipeline</td></tr>
-          <tr><td>Product</td><td>15 min</td><td>John</td><td>Roadmap, market fit, customer feedback</td></tr>
-          <tr><td>Sales &amp; Marketing</td><td>15 min</td><td>Matt/James</td><td>Revenue, pipeline, conversion, targets vs. actual</td></tr>
-          <tr><td>Q&amp;A</td><td>15 min</td><td>All</td><td>Board questions, strategic guidance</td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <h4>Update Cadence</h4>
-    <ul>
-      <li><strong>Weekly:</strong> Internal Matt + James + John + Oliver sync on metrics</li>
-      <li><strong>Biweekly:</strong> Paul Hsu check-in call (coaching + accountability)</li>
-      <li><strong>Monthly:</strong> Full board update with KPIs</li>
-      <li><strong>Quarterly:</strong> Formal board meeting (structured as above)</li>
-    </ul>
-
-    <h4>KPIs That Rebuild Confidence</h4>
-    <ul>
-      <li><strong>Pipeline value</strong> and 3x coverage ratio</li>
-      <li><strong>Qualified meetings/week</strong> booked</li>
-      <li><strong>Revenue booked</strong> &mdash; monthly, with target vs. actual</li>
-      <li><strong>New customers signed</strong> per month</li>
-      <li><strong>Agent Reputation Monitor</strong> beta customers + engagement</li>
-      <li><strong>Coinbase contract expansion</strong> progress</li>
-    </ul>
-
-    <blockquote>"Get ahead of it. If revenue went down, you can't bury it in minute 58. You're gonna get a show afterwards." &mdash; Paul Hsu</blockquote>
-
-    <div class="callout">
-      <div class="callout-title red">The Elephant in Every Room</div>
-      <p><strong>AI competition.</strong> Address it head-on every meeting. "Our tech lead was 2 years, now it's 2 months. Here's what we're doing to stay ahead." Every board member is thinking it &mdash; say it before they do.</p>
-    </div>
-  </div>
-
-  <!-- Section 8 -->
-  <div class="section" id="s8">
-    <h2><span class="num">08</span> Execution Timeline</h2>
-
-    <div class="timeline">
-      <div class="timeline-item urgent">
-        <div class="phase">Today &mdash; Feb 19</div>
-        <h4>Email Alex Mariner (draft through Paul)</h4>
-        <p>Acknowledge gap. Show plan. Ask for help. Also reach out to Blockchain Capital.</p>
-      </div>
-      <div class="timeline-item urgent">
-        <div class="phase">This Week</div>
-        <h4>Ron updates Patrick &middot; Paul reviews all comms</h4>
-        <p>Consistent messaging: tech is strong, commercial execution is the fix, here's the plan.</p>
-      </div>
-      <div class="timeline-item soon">
-        <div class="phase">Monday Feb 24</div>
-        <h4>CEO + James + John + Oliver: Identify Downhill Boulders</h4>
-        <p>Which of the three waves (tokenization, agents, vaults) can we hit fastest? Assign owners. Set weekly targets.</p>
-      </div>
-      <div class="timeline-item soon">
-        <div class="phase">Tuesday Feb 25</div>
-        <h4>Updated Board Deck + Action Items</h4>
-        <p>Promise Wednesday, deliver Tuesday. Specific milestones, pipeline targets, market pivot rationale.</p>
-      </div>
-      <div class="timeline-item normal">
-        <div class="phase">Week 1&ndash;2</div>
-        <h4>AI Sales Engine Operational</h4>
-        <p>Apollo + Clay + Instantly live. First outbound sequences. First meetings booked.</p>
-      </div>
-      <div class="timeline-item normal">
-        <div class="phase">Week 3&ndash;4</div>
-        <h4>First Tokenization Deals in Pipeline</h4>
-        <p>Agent Reputation Monitor sprint started. Product positioning refined.</p>
-      </div>
-      <div class="timeline-item normal">
-        <div class="phase">Month 2</div>
-        <h4>Agent Reputation Monitor Beta Live</h4>
-        <p>First beta customers paying. Tokenization deals closing.</p>
-      </div>
-      <div class="timeline-item normal">
-        <div class="phase">Month 3</div>
-        <h4>$50K+ Monthly Revenue Run Rate</h4>
-        <p>Board sentiment: "cautiously optimistic." Pipeline proves thesis.</p>
-      </div>
-    </div>
-
-    <h3>Leadership Clarity</h3>
-    <div class="callout">
-      <div class="callout-title red">Matt: You're the CEO</div>
-      <ul>
-        <li><strong>Stop letting James run the show.</strong> He's operations, not sales. That's okay &mdash; but you own revenue.</li>
-        <li><strong>Everyone is in sales.</strong> No role is above selling. Especially at seed stage.</li>
-        <li><strong>Fire fast.</strong> If someone can't execute in 30 days with clear direction, they're in the wrong seat.</li>
-        <li><strong>Don't "grin fuck."</strong> Ron's words. Actually follow through. The board is watching.</li>
-      </ul>
-    </div>
-
-    <blockquote>"I want to put TestMachine in my top five companies. I don't want to put it in my bottom five. My collaboration with you is to show you what other CEOs in the portfolio are doing extremely well." &mdash; Paul Hsu</blockquote>
-
-    <h3>30-Day Success Metrics</h3>
-    <div class="grades" style="margin-top:1rem">
-      <div class="grade">
-        <div class="label">Pipeline</div>
-        <div class="value" style="color:var(--callout-blue);font-size:1.4rem">50+</div>
-        <div class="note">Qualified prospects per vertical</div>
-      </div>
-      <div class="grade">
-        <div class="label">Meetings/Week</div>
-        <div class="value" style="color:var(--callout-blue);font-size:1.4rem">10+</div>
-        <div class="note">Discovery calls booked</div>
-      </div>
-      <div class="grade">
-        <div class="label">Pilots Signed</div>
-        <div class="value" style="color:var(--callout-blue);font-size:1.4rem">3+</div>
-        <div class="note">Paying beta customers</div>
-      </div>
-    </div>
-  </div>
-
 </main>
 
-<!-- Footer -->
 <footer class="footer">
-  <div class="container">
-    <div class="footer-bottom">
-      <p>&copy; 2026 TestMachine. Internal use only.</p>
-    </div>
+  <div class="main-container">
+    <p>Generated February 2026 by TestMachine Strategic Planning</p>
+    <p>Strategic Pivot Analysis — Confidential Board Response</p>
   </div>
 </footer>
 
 <script>
 // Progress bar
 window.addEventListener('scroll', () => {
-  const h = document.documentElement;
-  document.getElementById('progress').style.width = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100 + '%';
+  const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  const scrolled = (winScroll / height) * 100;
+  document.querySelector('.progress-bar').style.width = scrolled + '%';
 });
 
-// Nav scroll effect
-const nav = document.getElementById('navbar');
-window.addEventListener('scroll', () => {
-  nav.classList.toggle('scrolled', window.scrollY > 10);
-});
+// Active section highlighting
+function highlightActiveSection() {
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('.toc a');
 
-// Hamburger + mobile menu
-const hamburger = document.getElementById('hamburger');
-const mobileMenu = document.getElementById('mobileMenu');
-hamburger.addEventListener('click', () => {
-  hamburger.classList.toggle('active');
-  mobileMenu.classList.toggle('active');
-  document.body.classList.toggle('menu-open');
-});
-mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-  hamburger.classList.remove('active');
-  mobileMenu.classList.remove('active');
-  document.body.classList.remove('menu-open');
-}));
-
-// TOC sidebar (mobile)
-const toc = document.getElementById('toc');
-const tocOverlay = document.getElementById('tocOverlay');
-const tocFab = document.getElementById('tocFab');
-
-function openToc() {
-  toc.classList.add('open');
-  tocOverlay.classList.add('open');
-}
-function closeToc() {
-  toc.classList.remove('open');
-  tocOverlay.classList.remove('open');
-}
-
-if (tocFab) tocFab.addEventListener('click', openToc);
-if (tocOverlay) tocOverlay.addEventListener('click', closeToc);
-toc.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
-  if (window.innerWidth <= 1024) closeToc();
-}));
-
-// Show/hide TOC FAB based on viewport
-function checkTocFab() {
-  if (tocFab) tocFab.style.display = window.innerWidth <= 1024 ? 'flex' : 'none';
-}
-checkTocFab();
-window.addEventListener('resize', checkTocFab);
-
-// TOC active state via IntersectionObserver
-const tocLinks = toc.querySelectorAll('a');
-const sectionIds = Array.from(tocLinks).map(a => a.getAttribute('href').replace('#', ''));
-const observerOptions = { rootMargin: '-20% 0px -70% 0px' };
-
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      tocLinks.forEach(l => l.classList.remove('active'));
-      const match = toc.querySelector(`a[href="#${e.target.id}"]`);
-      if (match) match.classList.add('active');
+  let currentSection = '';
+  sections.forEach(function(section) {
+    const sectionTop = section.getBoundingClientRect().top;
+    const sectionHeight = section.offsetHeight;
+    if (sectionTop <= 100 && sectionTop + sectionHeight > 100) {
+      currentSection = section.getAttribute('id');
     }
   });
-}, observerOptions);
 
-sectionIds.forEach(id => {
-  const el = document.getElementById(id);
-  if (el) observer.observe(el);
+  navLinks.forEach(function(link) {
+    link.classList.remove('active');
+    if (link.getAttribute('href').substring(1) === currentSection) {
+      link.classList.add('active');
+    }
+  });
+}
+
+window.addEventListener('scroll', highlightActiveSection);
+window.addEventListener('load', highlightActiveSection);
+
+// Mobile TOC toggle
+document.getElementById('tocToggle').onclick = function() {
+  var toc = document.getElementById('toc');
+  var overlay = document.getElementById('tocOverlay');
+  toc.classList.toggle('open');
+  overlay.classList.toggle('open');
+};
+
+document.getElementById('tocOverlay').onclick = function() {
+  var toc = document.getElementById('toc');
+  var overlay = document.getElementById('tocOverlay');
+  toc.classList.remove('open');
+  overlay.classList.remove('open');
+};
+
+// Smooth scrolling for TOC links
+document.querySelectorAll('.toc a').forEach(function(anchor) {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    var targetId = this.getAttribute('href').substring(1);
+    var targetSection = document.getElementById(targetId);
+
+    if (targetSection) {
+      targetSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+
+    // Close mobile TOC
+    var toc = document.getElementById('toc');
+    var overlay = document.getElementById('tocOverlay');
+    toc.classList.remove('open');
+    overlay.classList.remove('open');
+  });
 });
 </script>
 
-<script src="confidential-toggle.js"></script>
 </body>
 </html>
