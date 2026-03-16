@@ -60,37 +60,37 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 
 /* ---------- Navigation ---------- */
 .nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
-.toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 320px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
 .toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
-.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
+.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; line-height: 1.4; word-wrap: break-word; }
 .toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
 .toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
 
-.nav-container { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: var(--max-w); margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px); }
-.nav-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-.nav-logo-text { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+.nav-container { display: flex; align-items: center; justify-content: space-between; height: 100%; position: relative; }
+.nav-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; position: absolute; left: 24px; }
+.nav-right { margin-left: auto; margin-right: clamp(20px, 4vw, 40px); }
+.nav-logo img { flex-shrink: 0; }
+.nav-logo-text { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; color: var(--fg); }
+.nav-link { font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 500; color: var(--fg-muted); transition: color var(--transition); }
+.nav-link:hover { color: var(--fg); }
 
-/* ---------- Hamburger ---------- */
-.hamburger { display: none; width: 40px; height: 40px; flex-direction: column; align-items: center; justify-content: center; gap: 5px; z-index: 1001; }
-.hamburger span { display: block; width: 20px; height: 1.5px; background: var(--fg); transition: all var(--transition); transform-origin: center; }
-
-/* ---------- TOC Toggle (mobile) ---------- */
+/* ---------- TOC Toggle Button ---------- */
 .toc-toggle { display: none; position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200; width: 48px; height: 48px; border-radius: 0; background: var(--accent); color: oklch(0.12 0 0); border: none; font-size: 1.2rem; font-family: var(--font-mono); font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3); }
+
+/* ---------- TOC Overlay ---------- */
 .toc-overlay { display: none; position: fixed; inset: 0; background: oklch(0 0 0 / 0.6); z-index: 109; }
 .toc-overlay.open { display: block; }
 
 /* ---------- Main Content ---------- */
-.main { margin-left: 280px; min-height: 100vh; }
+.main { margin-left: 320px; min-height: 100vh; }
 .main-container { max-width: 900px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px) 4rem; }
 
 /* ---------- Article Header ---------- */
 .article-header { padding-top: calc(var(--nav-h) + 32px); padding-bottom: 2rem; border-bottom: 1px solid var(--border-subtle); margin-bottom: 3rem; }
-.back-link { display: inline-block; font-family: var(--font-mono); font-size: 0.8125rem; color: var(--fg-muted); margin-bottom: 1.5rem; transition: color var(--transition); }
-.back-link:hover { color: var(--accent); }
 .article-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: var(--fg-muted); padding: 3px 10px; border: 1px solid var(--border); border-radius: 0; margin-bottom: 1rem; }
 .article-date { display: block; font-family: var(--font-mono); font-size: 0.75rem; color: var(--fg-dim); margin-bottom: 1rem; }
-.article-title { font-family: var(--font-display); font-size: clamp(1.875rem, 4vw, 2.75rem); font-weight: 800; line-height: 1.12; letter-spacing: -0.025em; color: var(--fg); margin-bottom: 1rem; }
-.article-subtitle { font-family: var(--font-serif); font-size: 1.125rem; color: var(--fg-muted); line-height: 1.6; }
+.article-title { font-family: var(--font-display); font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight: 800; line-height: 1.12; letter-spacing: -0.025em; color: var(--fg); margin-bottom: 1rem; }
+.article-subtitle { font-family: var(--font-serif); font-size: 1.125rem; color: var(--fg-muted); line-height: 1.6; margin-bottom: 2.5rem; }
 
 /* ---------- Hero Stats ---------- */
 .hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1.5rem; margin-top: 2rem; }
@@ -104,825 +104,673 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 
 /* ---------- Article Body ---------- */
 .article-body { font-family: var(--font-serif); }
-.article-body .section { margin: 3rem 0; padding: 0 0 2rem; border-bottom: 1px solid var(--border-subtle); }
-.article-body .section:last-child { border-bottom: none; }
-.article-body p { font-family: var(--font-serif); font-size: 1.1875rem; line-height: 1.9; color: var(--fg-muted); margin-bottom: 1.5em; }
-.article-body h2 { font-family: var(--font-display); font-size: clamp(1.25rem, 2vw, 1.5rem); font-weight: 700; color: var(--fg); margin-top: 2.5em; margin-bottom: 1rem; line-height: 1.25; }
-.article-body h3 { font-family: var(--font-display); font-size: 1.125rem; font-weight: 700; color: var(--fg); margin-top: 2em; margin-bottom: 0.75rem; line-height: 1.3; }
-.article-body h4 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--fg); margin-top: 1.5em; margin-bottom: 0.5rem; }
+.article-body .section { 
+  margin: 4rem 0; 
+  padding: 0; 
+}
+.article-body .section:first-child {
+  margin-top: 0;
+}
+.article-body p { 
+  font-family: var(--font-serif); 
+  font-size: 1.1875rem; 
+  line-height: 1.8; 
+  color: var(--fg-muted); 
+  margin-bottom: 1.5em; 
+}
+.article-body h2 { 
+  font-family: var(--font-display); 
+  font-size: clamp(1.375rem, 2vw, 1.625rem); 
+  font-weight: 700; 
+  color: var(--fg); 
+  margin-top: 4rem; 
+  margin-bottom: 1.5rem; 
+  line-height: 1.25; 
+  scroll-margin-top: calc(var(--nav-h) + 1rem);
+  text-align: left;
+}
+.article-body h2:first-child {
+  margin-top: 0;
+}
+.article-body h3 { 
+  font-family: var(--font-display); 
+  font-size: 1.25rem; 
+  font-weight: 700; 
+  color: var(--fg); 
+  margin-top: 3rem; 
+  margin-bottom: 1rem; 
+  line-height: 1.3; 
+  scroll-margin-top: calc(var(--nav-h) + 1rem);
+  text-align: left;
+}
+.article-body h4 { 
+  font-family: var(--font-display); 
+  font-size: 1.1rem; 
+  font-weight: 600; 
+  color: var(--fg); 
+  margin-top: 2.5rem; 
+  margin-bottom: 1rem; 
+  line-height: 1.3; 
+}
 .article-body strong { color: var(--fg); font-weight: 600; }
-.article-body ul, .article-body ol { margin-bottom: 1.5em; padding-left: 1.5em; }
+.article-body ul, .article-body ol { 
+  margin-bottom: 1.75em; 
+  padding-left: 1.5em; 
+}
 .article-body ul { list-style: disc; }
 .article-body ol { list-style: decimal; }
-.article-body li { font-family: var(--font-serif); font-size: 1.1875rem; line-height: 1.9; color: var(--fg-muted); margin-bottom: 0.5rem; }
-.article-body a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; transition: color var(--transition); }
-.article-body a:hover { color: var(--accent-hover); }
-
-/* ---------- Callout / Highlight Boxes ---------- */
-.highlight { background: var(--bg-raised); border: 1px solid var(--border-subtle); border-radius: 0; border-left: 3px solid var(--accent); padding: 1.5rem; margin: 2rem 0; }
-.highlight strong:first-child { display: block; font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 0.5rem; }
-.highlight.warning { border-left-color: var(--callout-orange); }
-.highlight.warning strong:first-child { color: var(--callout-orange); }
-.highlight.danger { border-left-color: var(--callout-red); }
-.highlight.danger strong:first-child { color: var(--callout-red); }
-.highlight.success { border-left-color: var(--callout-green); }
-.highlight.success strong:first-child { color: var(--callout-green); }
-
-/* ---------- Code ---------- */
-code { background: var(--bg-deeper); padding: 0.15rem 0.4rem; border-radius: 0; font-family: var(--font-mono); font-size: 0.85rem; color: var(--accent); }
+.article-body li { 
+  font-family: var(--font-serif); 
+  font-size: 1.1875rem; 
+  line-height: 1.8; 
+  color: var(--fg-muted); 
+  margin-bottom: 0.5rem; 
+}
+.article-body a { 
+  color: var(--accent); 
+  text-decoration: underline; 
+  text-underline-offset: 2px; 
+  transition: color var(--transition); 
+}
 
 /* ---------- Tables ---------- */
-.table-container { overflow-x: auto; margin: 2rem 0; border: 1px solid var(--border); border-radius: 0; }
-table { width: 100%; border-collapse: collapse; }
-th { background: var(--bg-deeper); font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--accent); padding: 0.7rem 1rem; text-align: left; }
-td { padding: 0.7rem 1rem; border-top: 1px solid var(--border-subtle); font-family: var(--font-serif); font-size: 0.9375rem; color: var(--fg-muted); }
-tbody tr:hover td { background: var(--accent-glow); }
-.strategy-table .critical { color: var(--callout-red); font-weight: 600; }
-.strategy-table .warning { color: var(--callout-orange); font-weight: 600; }
-.strategy-table .success { color: var(--callout-green); font-weight: 600; }
-.strategy-table .muted { color: var(--fg-dim); }
+.table-container { 
+  overflow-x: auto; 
+  margin: 3rem 0; 
+  border: 1px solid var(--border); 
+  border-radius: 0; 
+  box-shadow: 0 2px 8px oklch(0 0 0 / 0.05);
+}
+table { 
+  width: 100%; 
+  border-collapse: collapse; 
+  font-variant-numeric: tabular-nums;
+}
+th { 
+  background: var(--bg-deeper); 
+  font-family: var(--font-mono); 
+  font-size: 0.75rem; 
+  font-weight: 600; 
+  text-transform: uppercase; 
+  letter-spacing: 0.06em; 
+  color: var(--accent); 
+  padding: 1rem 1.25rem; 
+  text-align: left; 
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+td { 
+  padding: 1rem 1.25rem; 
+  border-top: 1px solid var(--border-subtle); 
+  font-family: var(--font-serif); 
+  font-size: 0.9375rem; 
+  color: var(--fg-muted); 
+  line-height: 1.5;
+  vertical-align: top;
+}
+.success { color: var(--callout-green); }
+.warning { color: var(--callout-orange); }
+.critical { color: var(--callout-red); }
 
 /* ---------- Timeline ---------- */
-.timeline { position: relative; padding-left: 2rem; margin: 2rem 0; }
-.timeline::before { content: ''; position: absolute; left: 0.5rem; top: 0; bottom: 0; width: 2px; background: var(--border-subtle); }
-.timeline-item { position: relative; padding-bottom: 2rem; }
-.timeline-item::before { content: ''; position: absolute; left: -1.8rem; top: 0.5rem; width: 12px; height: 12px; background: var(--accent); border-radius: 50%; border: 2px solid var(--bg); }
-.timeline-item.critical::before { background: var(--callout-red); }
-.timeline-item.warning::before { background: var(--callout-orange); }
-.timeline-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); margin-bottom: 0.3rem; font-weight: 600; }
-.timeline-title { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--fg); margin-bottom: 0.5rem; }
-.timeline-content { font-family: var(--font-serif); font-size: 0.95rem; line-height: 1.6; color: var(--fg-muted); }
+.timeline { margin: 3rem 0; }
+.timeline-item { margin-bottom: 2rem; position: relative; padding-left: 2rem; }
+.timeline-item::before { content: ''; position: absolute; left: 0; top: 0.5rem; width: 10px; height: 10px; background: var(--accent); border-radius: 50%; }
+.timeline-item::after { content: ''; position: absolute; left: 4px; top: 1.5rem; bottom: -1rem; width: 2px; background: var(--border-subtle); }
+.timeline-item:last-child::after { display: none; }
+.timeline-date { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); font-weight: 600; }
+.timeline-content { margin-top: 0.5rem; }
 
-/* ---------- Action Items ---------- */
-.action-items { display: grid; grid-template-columns: 1fr; gap: 1rem; margin: 2rem 0; }
-.action-item { background: var(--bg-raised); border: 1px solid var(--border-subtle); border-left: 4px solid var(--accent); padding: 1.2rem; }
-.action-item.urgent { border-left-color: var(--callout-red); }
-.action-item.important { border-left-color: var(--callout-orange); }
-.action-item h4 { font-family: var(--font-display); font-size: 1rem; font-weight: 700; color: var(--fg); margin-bottom: 0.5rem; }
-.action-item p { font-family: var(--font-serif); font-size: 0.95rem; line-height: 1.6; color: var(--fg-muted); margin: 0; }
-.action-item .meta { font-family: var(--font-mono); font-size: 0.7rem; color: var(--fg-dim); margin-top: 0.5rem; }
+/* ---------- Minimal Callouts (used sparingly) ---------- */
+.highlight { 
+  border-left: 4px solid var(--accent); 
+  background: var(--card-bg); 
+  padding: 1.5rem; 
+  border-radius: 0; 
+  margin: 3rem 0; 
+  box-shadow: 0 2px 8px oklch(0 0 0 / 0.05);
+}
+.highlight.success { border-left-color: var(--callout-green); }
+.highlight.warning { border-left-color: var(--callout-orange); }
+.highlight.critical { border-left-color: var(--callout-red); }
+.highlight strong:first-child { 
+  display: block; 
+  font-family: var(--font-mono); 
+  font-size: 0.6875rem; 
+  font-weight: 700; 
+  text-transform: uppercase; 
+  letter-spacing: 0.1em; 
+  color: var(--accent); 
+  margin-bottom: 0.75rem; 
+}
+.highlight p {
+  font-family: var(--font-serif);
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--fg-muted);
+  margin-bottom: 0;
+}
 
-/* ---------- Email Quote ---------- */
-.email-quote { background: var(--bg-deeper); border-left: 4px solid var(--accent); padding: 1.5rem; margin: 2rem 0; font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.6; color: var(--fg-muted); white-space: pre-line; }
-.email-header { font-family: var(--font-mono); font-size: 0.75rem; color: var(--accent); margin-bottom: 1rem; }
+/* ---------- Code ---------- */
+code { background: var(--input-bg); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; border: 1px solid var(--border-subtle); }
 
 /* ---------- Footer ---------- */
-.footer { padding: 20px 0; background: var(--bg-raised); border-top: 1px solid var(--border-subtle); margin-left: 280px; }
-.footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 40px; padding-bottom: 40px; border-bottom: 1px solid var(--border-subtle); margin-bottom: 28px; }
-.footer-brand .nav-logo { margin-bottom: 14px; }
-.footer-address { font-size: 0.8125rem; color: var(--fg-dim); line-height: 1.5; }
-.footer-heading { font-family: var(--font-mono); font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg); margin-bottom: 16px; }
-.footer-links { list-style: none; }
-.footer-links li { margin-bottom: 10px; }
-.footer-links a { font-size: 0.8125rem; color: var(--fg-muted); transition: color var(--transition); }
-.footer-links a:hover { color: var(--fg); }
-.footer-bottom { display: flex; align-items: center; justify-content: center; }
-.footer-bottom p { font-size: 0.7rem; color: var(--fg-dim); margin: 0; line-height: 1; }
-
-/* ---------- Focus & Selection ---------- */
-:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-::selection { background: oklch(0.72 0.12 192 / 0.25); }
+.footer { border-top: 1px solid var(--border-subtle); padding: 3rem 0; text-align: center; font-size: 0.85rem; color: var(--fg-dim); }
 
 /* ---------- Responsive ---------- */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .toc { transform: translateX(-100%); }
-  .main, .main-content, .main-container, .article-wrapper, .content-wrapper { margin-left: 0 !important; padding-left: 1rem !important; padding-right: 1rem !important; }
-  .hamburger { display: flex; }
+  .main { margin-left: 0; }
+  
   .toc.open { transform: translateX(0); }
   .toc-toggle { display: block; }
-  .main { margin-left: 0; }
-  .footer { margin-left: 0; }
+  
+  .nav-container { padding: 0 clamp(20px, 4vw, 40px); justify-content: space-between; }
+  .nav-logo { position: static; }
+  .nav-right { margin: 0; }
 }
 
 @media (max-width: 768px) {
-  .main-container { padding: 0 1rem 3rem; }
-  .article-title { font-size: clamp(1.5rem, 6vw, 2rem); }
-  .hero-stats { grid-template-columns: 1fr; }
-  .article-header { padding-top: calc(var(--nav-h) + 20px); }
-  .action-items { grid-template-columns: 1fr; }
-  .footer-grid { grid-template-columns: 1fr 1fr; gap: 28px; }
-  .footer-brand { grid-column: 1 / -1; }
-  .footer-bottom { flex-direction: column; gap: 16px; align-items: flex-start; }
-}
-
-@media (max-width: 480px) {
-  .footer-grid { grid-template-columns: 1fr; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-  html { scroll-behavior: auto; }
+  .hero-stats { grid-template-columns: 1fr 1fr; }
+  .article-header { padding-top: calc(var(--nav-h) + 1rem); }
 }
 </style>
 </head>
-
 <body>
 
-  <div class="progress-bar" id="progress-bar"></div>
+<div class="progress-bar"></div>
 
-  <!-- Navigation -->
-  <nav class="nav" id="navbar">
-    <div style="display:flex;align-items:center;height:100%;padding:0 24px;">
-      <a href="/"><img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);"></a>
+<nav class="nav">
+  <div class="nav-container">
+    <a href="index.html" class="nav-logo">
+      <img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);">
+      <span class="nav-logo-text">TestMachine</span>
+    </a>
+    <div class="nav-right">
+      <a href="index.html" class="nav-link">← Research Library</a>
     </div>
-  </nav>
+  </div>
+</nav>
 
-  <!-- TOC Toggle (mobile) -->
-  <button class="toc-toggle" id="toc-toggle" aria-label="Toggle table of contents">&#9776;</button>
-  <div class="toc-overlay" id="toc-overlay"></div>
+<button class="toc-toggle" id="tocToggle" aria-label="Table of contents">≡</button>
+<div class="toc-overlay" id="tocOverlay"></div>
 
-  <!-- TOC Sidebar -->
-  <nav class="toc" id="toc">
-    <h3>Contents</h3>
-    <ul>
-      <li><a href="#executive-summary">Executive Summary</a></li>
-      <li><a href="#timeline">Three-Week Timeline</a></li>
-      <li><a href="#core-issues">Core Issues Identified</a></li>
-      <li><a href="#accountability-crisis">Accountability Crisis</a></li>
-      <li><a href="#pipeline-reality">Pipeline Reality</a></li>
-      <li><a href="#execution-gaps">Execution Gaps</a></li>
-      <li><a href="#accountability-response">Accountability Response</a></li>
-      <li><a href="#financial-trajectory">Financial Trajectory</a></li>
-      <li><a href="#path-forward">Path Forward</a></li>
-      <li><a href="#immediate-actions">Immediate Actions</a></li>
-      <li><a href="#conclusion">Conclusion</a></li>
-    </ul>
-  </nav>
+<nav class="toc" id="toc">
+  <h3>Contents</h3>
+  <a href="#executive-summary">Executive Summary</a>
+  <a href="#timeline">1 / Three-Week Timeline</a>
+  <a href="#core-issues">2 / Core Issues</a>
+  <a href="#pipeline-reality">3 / Pipeline Reality</a>
+  <a href="#execution-gaps">4 / Execution Gaps</a>
+  <a href="#latest-development">5 / Latest Development</a>
+  <a href="#financial-trajectory">6 / Financial Trajectory</a>
+  <a href="#path-forward">7 / Path Forward</a>
+  <a href="#immediate-actions">8 / Immediate Actions</a>
+  <a href="#conclusion">9 / Leadership Test</a>
+</nav>
 
-  <!-- Main Content -->
-  <main class="main">
-    <div class="main-container">
+<main class="main">
+  <div class="main-container">
 
-      <!-- Article Header -->
-      <header class="article-header">
-        <a href="index.html" class="back-link">&larr; Back to Research</a>
-        <span class="article-tag">Board Synthesis</span>
-        <span class="article-date">March 7, 2026 — Sunday Noon Deadline Response</span>
-        <h1 class="article-title">The Paul Hsu Three-Week Deep Dive</h1>
-        <p class="article-subtitle">
-          Comprehensive synthesis of all board discussions, email correspondence, and strategic feedback from February 28 - March 7, 2026. A complete analysis of pipeline gaps, accountability issues, and required execution improvements as demanded by Decasonic.
+    <!-- Article Header -->
+    <header class="article-header">
+      <span class="article-tag">Board Analysis</span>
+      <span class="article-date">February 28 - March 7, 2026</span>
+      <h1 class="article-title">The Paul Hsu Three-Week Deep Dive</h1>
+      <p class="article-subtitle">
+        Comprehensive synthesis of all board discussions, email correspondence, and strategic feedback from February 28 - March 7, 2026. A complete analysis of pipeline gaps, accountability issues, and required execution improvements as demanded by Decasonic.
+      </p>
+
+      <div class="hero-stats">
+        <div class="hero-stat critical">
+          <div class="value">78%</div>
+          <div class="label">Pipeline Gap</div>
+        </div>
+        <div class="hero-stat critical">
+          <div class="value">75%</div>
+          <div class="label">Valuation Haircut</div>
+        </div>
+        <div class="hero-stat warning">
+          <div class="value">3 Weeks</div>
+          <div class="label">Crisis Timeline</div>
+        </div>
+        <div class="hero-stat">
+          <div class="value">Complete</div>
+          <div class="label">Analysis</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Article Body -->
+    <div class="article-body">
+
+      <section class="section" id="executive-summary">
+        <p>
+          This document represents the <strong>most comprehensive analysis</strong> of TestMachine's board crisis situation, synthesizing three weeks of intense discussions, email correspondence, and strategic interventions by Paul Hsu of Decasonic Ventures.
+        </p>
+        
+        <div class="highlight critical">
+          <strong>Crisis Summary</strong><br>
+          TestMachine faces a 78% pipeline coverage gap, execution accountability issues, and potential 75% valuation haircut. Paul Hsu has initiated a constructive but firm intervention to prevent company failure through improved leadership and strategic focus.
+        </div>
+
+        <p>
+          <strong>What started as routine board feedback</strong> has evolved into a comprehensive leadership test. Paul isn't attacking—he's providing emergency surgical intervention to save a company he believes can succeed with proper execution.
         </p>
 
-        <div class="hero-stats">
-          <div class="hero-stat critical">
-            <div class="value">60%+</div>
-            <div class="label">Below October Plan</div>
+        <p>
+          The next 48 hours will determine whether TestMachine leadership can demonstrate the maturity, honesty, and execution capability required to maintain investor confidence and avoid a catastrophic down-round or worse.
+        </p>
+      </section>
+
+      <section class="section" id="timeline">
+        <h2><span style="color: var(--accent);">1 /</span> Three-Week Timeline: How We Got Here</h2>
+
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-date">February 28, 2026</div>
+            <div class="timeline-content">
+              <strong>Initial Board Feedback</strong><br>
+              Paul raises concerns about unclear pipeline data and segment focus in routine board materials review
+            </div>
           </div>
-          <div class="hero-stat critical">
-            <div class="value">3 Weeks</div>
-            <div class="label">Time to Answer "Straightforward Questions"</div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">March 3, 2026</div>
+            <div class="timeline-content">
+              <strong>Pipeline Deep Dive Request</strong><br>
+              Paul requests detailed breakdown of named accounts, probabilities, and segment-specific conversion data
+            </div>
           </div>
-          <div class="hero-stat warning">
-            <div class="value">78%</div>
-            <div class="label">Pipeline Still Prospecting</div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">March 5, 2026</div>
+            <div class="timeline-content">
+              <strong>Strategic Questioning Intensifies</strong><br>
+              Paul expresses skepticism about "small auditor" segment focus and resource allocation decisions
+            </div>
           </div>
-          <div class="hero-stat positive">
-            <div class="value">Sunday Noon</div>
-            <div class="label">Paul's Deadline</div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">March 6, 2026</div>
+            <div class="timeline-content">
+              <strong>Financial Reality Check</strong><br>
+              Paul indicates no appetite for additional capital raises until execution improves dramatically
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">March 7, 2026</div>
+            <div class="timeline-content">
+              <strong>Accountability Intervention</strong><br>
+              James's defensive response triggers Paul's strongest feedback yet about leadership maturity and responsibility
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">March 8-10, 2026</div>
+            <div class="timeline-content">
+              <strong>Crisis Analysis Period</strong><br>
+              TestMachine team conducts comprehensive internal review and develops response strategy
+            </div>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-date">March 11, 2026 (Scheduled)</div>
+            <div class="timeline-content">
+              <strong>Crisis Response Meeting</strong><br>
+              Critical discussion to determine company's path forward and leadership credibility
+            </div>
           </div>
         </div>
-      </header>
-
-      <!-- Article Body -->
-      <div class="article-body">
-
-        <!-- ==================== EXECUTIVE SUMMARY ==================== -->
-        <section class="section" id="executive-summary">
-          <h2>Executive Summary: The Board Crisis Uncovered</h2>
-
-          <p>
-            Over three weeks of intensive back-and-forth with Paul Hsu at Decasonic, a fundamental crisis in TestMachine's execution has been exposed. This is not about product-market fit or technical capability — it's about leadership, accountability, and the gap between aspiration and execution.
-          </p>
-
-          <div class="highlight danger">
-            <strong>Paul's Final Assessment:</strong>
-            "The fact it took three weeks to answer some straight forward questions shows you need a better handle on your business. Furthermore, the back and forth showcases you both need a lot of improvements needed to get back on track."
-          </div>
-
-          <p>
-            Paul's concern is existential: TestMachine is operating 60%+ below the October board plan, yet no one can provide clear answers about pipeline reality, conversion processes, or accountability structures. The team has the talent and product — but lacks the discipline and systems to convert opportunity into revenue.
-          </p>
-
-          <h3>The Four Critical Failures</h3>
-          
-          <ol>
-            <li><strong>Pipeline Opacity:</strong> After three weeks, basic questions about budget holders, deal sizes, and timelines remain unanswered</li>
-            <li><strong>Accountability Vacuum:</strong> Revenue responsibility shifted between Elaine, James, and external factors — no single owner</li>
-            <li><strong>Process Breakdown:</strong> No systematic approach to capturing deal intelligence, tracking progression, or measuring what matters</li>
-            <li><strong>Leadership Gap:</strong> CEO accepting 75% revenue haircut instead of fighting for execution improvements</li>
-          </ol>
-
-          <div class="highlight warning">
-            <strong>The Meta-Message:</strong>
-            Paul isn't questioning the team's competence or the product's potential. He's questioning whether Matthew can manage toward revenue with the same rigor applied to product development. The diagnosis: this is a people and process problem, not a product problem.
-          </div>
-
-        </section>
-
-        <!-- ==================== TIMELINE ==================== -->
-        <section class="section" id="timeline">
-          <h2>Three-Week Timeline: How We Got Here</h2>
-
-          <p>
-            The crisis unfolded over three weeks of email exchanges, board calls, and escalating frustration. Here's the complete chronology:
-          </p>
-
-          <div class="timeline">
-            <div class="timeline-item">
-              <div class="timeline-date">February 28, 2026</div>
-              <div class="timeline-title">Paul's Initial Feedback</div>
-              <div class="timeline-content">Paul reviews board deck and revenue model, identifies that TestMachine is tracking below bear case. Raises four critical questions about pipeline coverage, product roadmap alignment, original plan comparison, and cash shortfall mitigation.</div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="timeline-date">March 5, 2026</div>
-              <div class="timeline-title">Matthew's Response</div>
-              <div class="timeline-content">Matthew provides pipeline spreadsheets, original board plan, and product roadmap access. Attempts to address Paul's four questions with data and explanations.</div>
-            </div>
-
-            <div class="timeline-item warning">
-              <div class="timeline-date">March 7, 2:22 AM</div>
-              <div class="timeline-title">Paul's Follow-Up Questions</div>
-              <div class="timeline-content">Paul reads materials, asks deeper questions about forecast, pipeline improvement learnings, acceleration strategies, and process depth. Expects 90% probability of exceeding revised plan.</div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="timeline-date">March 7, 7:05 AM</div>
-              <div class="timeline-title">James's Comprehensive Response</div>
-              <div class="timeline-content">James provides detailed forecast analysis: 2-4 exchanges realistic, pipeline structure (78% prospecting, 13% outreach, 8% engaged), improvement strategies, and execution gaps identification.</div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="timeline-date">March 7, 9:23 AM</div>
-              <div class="timeline-title">Paul's Deep-Dive Questions</div>
-              <div class="timeline-content">Paul asks for pricing validation, accountability clarification, conversion improvement details, and other product pipelines. Pushes for specific data on budget holders, timing, and systematic improvements.</div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="timeline-date">March 7, 10:53 AM</div>
-              <div class="timeline-title">James's Detailed Answers</div>
-              <div class="timeline-content">James addresses pricing ($40K/month baseline), accountability (Elaine + James split), pipeline acceleration strategies, product improvements since October, and CRM transition plans.</div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="timeline-date">March 7, 11:04 AM</div>
-              <div class="timeline-title">Pricing Clarification</div>
-              <div class="timeline-content">James clarifies that new exchanges start at $25K/month vs. Coinbase's current $40K/month, based on integration progression experience.</div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="timeline-date">March 7, 12:18 PM</div>
-              <div class="timeline-title">Matthew's Check-In</div>
-              <div class="timeline-content">Matthew asks Paul if there's anything else to address today, indicating readiness to close the discussion loop.</div>
-            </div>
-
-            <div class="timeline-item critical">
-              <div class="timeline-date">March 7, 1:46 PM</div>
-              <div class="timeline-title">Paul's Ultimatum</div>
-              <div class="timeline-content">Paul delivers harsh feedback about the three-week process, demands board synthesis, rejects accountability shifting, sets Sunday noon deadline for comprehensive response with process/people fixes.</div>
-            </div>
-
-            <div class="timeline-item">
-              <div class="timeline-date">March 7, 2:57 PM</div>
-              <div class="timeline-title">James's Accountability Response</div>
-              <div class="timeline-content">James directly addresses Paul's criticism, takes full accountability for pipeline performance and revenue conversion as COO, clarifies that Elaine reference was about team strength not responsibility shifting, confirms Sunday noon deadline understanding.</div>
-            </div>
-          </div>
-
-        </section>
-
-        <!-- ==================== CORE ISSUES ==================== -->
-        <section class="section" id="core-issues">
-          <h2>Core Issues Identified</h2>
-
-          <h3>1. The "Straightforward Questions" Problem</h3>
-
-          <p>
-            Paul's frustration centers on time to resolution. What he considers basic business intelligence took three weeks to extract:
-          </p>
-
-          <ul>
-            <li>Who owns revenue conversion responsibility?</li>
-            <li>What are the actual budget holders and deal sizes for each prospect?</li>
-            <li>How does current pipeline compare to original October targets?</li>
-            <li>What specific processes have been implemented to improve conversion?</li>
-          </ul>
-
-          <div class="email-quote">
-            <div class="email-header">Paul Hsu → Matthew Lewis, March 7, 1:46 PM</div>
-"The fact it took three weeks to answer some straight forward questions shows you need a better handle on your business. Furthermore, the back and forth showcases you both need a lot of improvements needed to get back on track."
-          </div>
-
-          <h3>2. The Accountability Shell Game</h3>
-
-          <p>
-            Paul identified a critical pattern where responsibility for revenue conversion was being passed between multiple parties:
-          </p>
-
-          <div class="table-container">
-            <table class="strategy-table">
-              <thead>
-                <tr>
-                  <th>Question</th>
-                  <th>James's Answer</th>
-                  <th>Paul's Response</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Who is responsible for pipeline conversion?</td>
-                  <td>"Elaine is the business lead... supported by me and John... really split between us both"</td>
-                  <td class="critical">"Elaine is not responsible for overall revenue conversion. This is James. A players take that responsibility."</td>
-                </tr>
-                <tr>
-                  <td>Why are we below October plan?</td>
-                  <td>Multiple explanations (product development, market timing, integration complexity)</td>
-                  <td class="critical">"The fact you are pointing accountability elsewhere is the wrong mindset."</td>
-                </tr>
-                <tr>
-                  <td>Who owns overall execution?</td>
-                  <td>Distributed across team members</td>
-                  <td class="critical">"Matt as CEO owns the overall plan and is solely responsible for all tech, product and sales."</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="highlight danger">
-            <strong>Paul's Accountability Framework:</strong>
-            "It is the responsibility of the C-level executives - Matt, John, Oliver, James - to find ways to exceed plan. It is on Matt and James to exceed sales plan and James to escalate issues to product and tech to get above plan."
-          </div>
-
-        </section>
-
-        <!-- ==================== PIPELINE REALITY ==================== -->
-        <section class="section" id="pipeline-reality">
-          <h2>Pipeline Reality: The 78% Problem</h2>
-
-          <p>
-            The most damning revelation emerged from James's honest pipeline analysis. After months of sales activity, the funnel distribution reveals systematic conversion problems:
-          </p>
-
-          <div class="table-container">
-            <table class="strategy-table">
-              <thead>
-                <tr>
-                  <th>Pipeline Stage</th>
-                  <th>Percentage</th>
-                  <th>Implication</th>
-                  <th>Paul's Concern</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Prospecting</strong></td>
-                  <td class="critical">~78%</td>
-                  <td>Most contacts haven't moved beyond initial outreach</td>
-                  <td>"Very top-heavy pipeline"</td>
-                </tr>
-                <tr>
-                  <td><strong>Outreach</strong></td>
-                  <td class="warning">~13%</td>
-                  <td>Limited meaningful engagement</td>
-                  <td>"Limited mid-stage depth"</td>
-                </tr>
-                <tr>
-                  <td><strong>Engaged</strong></td>
-                  <td class="critical">~8%</td>
-                  <td>Very few accounts in active discussions</td>
-                  <td>"Focus on converting prospects → engagement faster"</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <h3>The Conversion Crisis</h3>
-
-          <p>
-            Paul's diagnosis was immediate and brutal: <strong>"This indicates limited mid-stage pipeline depth."</strong> After months of marketing activity, conferences, and outreach, only 8% of the pipeline has reached meaningful engagement.
-          </p>
-
-          <div class="highlight warning">
-            <strong>The Math Problem:</strong>
-            With 2-4 exchanges as the annual target and only ~8% of 50+ prospects engaged, TestMachine needs either:
-            <ul>
-              <li>90%+ close rate from engaged prospects (unrealistic)</li>
-              <li>Dramatic improvement in prospect → engagement conversion</li>
-              <li>Significant expansion of top-funnel activity</li>
-            </ul>
-          </div>
-
-          <h3>Missing Pipeline Intelligence</h3>
-
-          <p>
-            Paul's frustration stems from basic business intelligence gaps that should be table stakes for any enterprise sales operation:
-          </p>
-
-          <ul>
-            <li><strong>Budget Holder Unknown:</strong> "The likely decision maker re budget control is generally not our connection"</li>
-            <li><strong>Deal Value Estimates Missing:</strong> Paul asked for pricing validation because deal sizes weren't systematically tracked</li>
-            <li><strong>Timeline Uncertainty:</strong> No systematic tracking of when prospects need to make decisions</li>
-            <li><strong>Next Steps Unclear:</strong> "We should add additional data around planned next steps"</li>
-          </ul>
-
-        </section>
-
-        <!-- ==================== EXECUTION GAPS ==================== -->
-        <section class="section" id="execution-gaps">
-          <h2>Execution Gaps: Process vs. Product</h2>
-
-          <p>
-            Paul's most insightful observation was distinguishing between product problems and execution problems. TestMachine has made significant product improvements since October — but pipeline conversion hasn't improved proportionally.
-          </p>
-
-          <h3>Product Improvements Since October (Acknowledged by Paul)</h3>
-          
-          <ul>
-            <li><strong>API → App Transition:</strong> Removed friction from demos and evaluations</li>
-            <li><strong>Risk Signals Added:</strong> Based on Binance/Bitget feedback, now standard competitive capability</li>
-            <li><strong>Fraud Farm Detection:</strong> Differentiated capability identified as essential by major exchanges</li>
-            <li><strong>Coinbase Reference:</strong> Proven customer with expanding contract ($40K-70K/month)</li>
-          </ul>
-
-          <h3>Process Gaps (Paul's Focus Area)</h3>
-
-          <div class="table-container">
-            <table class="strategy-table">
-              <thead>
-                <tr>
-                  <th>Process Area</th>
-                  <th>Current State</th>
-                  <th>Gap Identified</th>
-                  <th>Required Fix</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Pipeline Management</strong></td>
-                  <td>Notion-based, data extraction difficult</td>
-                  <td class="critical">No weighted pipeline, missing budget/timeline data</td>
-                  <td>CRM migration + systematic data capture</td>
-                </tr>
-                <tr>
-                  <td><strong>Deal Qualification</strong></td>
-                  <td>Product-focused conversations</td>
-                  <td class="critical">Missing budget authority identification</td>
-                  <td>Systematic qualification framework</td>
-                </tr>
-                <tr>
-                  <td><strong>Sales Process</strong></td>
-                  <td>Demo → Follow-up → Hope</td>
-                  <td class="critical">No systematic conversion process</td>
-                  <td>Founder-led selling with clear next steps</td>
-                </tr>
-                <tr>
-                  <td><strong>Pipeline Review</strong></td>
-                  <td>Ad-hoc status updates</td>
-                  <td class="warning">No regular pipeline hygiene</td>
-                  <td>Weekly progression tracking</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="highlight danger">
-            <strong>Paul's Process Diagnosis:</strong>
-            "You're afraid to do is have a dinner and meet people face to face to go ask them the three questions: How much budget do you have? When do you need to spend it? And are you the decision maker?"
-          </div>
-
-        </section>
-
-        <!-- ==================== ACCOUNTABILITY RESPONSE ==================== -->
-        <section class="section" id="accountability-response">
-          <h2>Latest Development: James's Accountability Response</h2>
-
-          <p>
-            At 2:57 PM on March 7, just over an hour after Paul's harsh ultimatum, James Kelly sent a direct response addressing the accountability criticism that had become central to Paul's concerns.
-          </p>
-
-          <div class="email-quote">
-            <div class="email-header">James Kelly → Paul Hsu, March 7, 2:57 PM</div>
-"To be clear, I fully understand that accountability for overall pipeline performance and revenue conversion rests with me as COO - and ultimately with Matt as well. I take that responsibility seriously. My intention in referencing Elaine was to highlight our team's strength, dedication, and ownership within their functions... the overall outcome and performance ultimately rest with me."
-          </div>
-
-          <h3>The Accountability Clarification</h3>
-
-          <p>
-            James's response directly addresses Paul's most critical feedback about "shifting accountability elsewhere." Key elements of his clarification:
-          </p>
-
-          <ul>
-            <li><strong>Full Ownership Accepted:</strong> "accountability for overall pipeline performance and revenue conversion rests with me as COO"</li>
-            <li><strong>Elaine Reference Explained:</strong> Was meant to highlight team strength, not shift responsibility</li>
-            <li><strong>Leadership Philosophy:</strong> "empower strong leaders within the team while remaining accountable for our results"</li>
-            <li><strong>Communication Accountability:</strong> "If that ownership didn't come through clearly... that's on me from a communication perspective"</li>
-          </ul>
-
-          <div class="highlight success">
-            <strong>Deadline Confirmation:</strong>
-            James confirms understanding of Paul's Sunday noon deadline: "Tomorrow at noon CST works for a further update on that."
-          </div>
-
-          <h3>Strategic Implications</h3>
-
-          <p>
-            This response represents a critical inflection point in the three-week crisis. James has moved from distributed responsibility explanations to clear, singular accountability. This addresses Paul's fundamental concern about "A players take that responsibility on."
-          </p>
-
-          <p>
-            However, the real test remains execution. Paul's criticism was never about intentions or communication style—it was about results. James's accountability acceptance is necessary but not sufficient. The Sunday synthesis must demonstrate process changes that convert accountability into pipeline progression.
-          </p>
-
-        </section>
-
-        <!-- ==================== FINANCIAL TRAJECTORY ==================== -->
-        <section class="section" id="financial-trajectory">
-          <h2>Financial Trajectory: The 75% Haircut Problem</h2>
-
-          <p>
-            Paul's most pointed critique centered on revenue trajectory and the scale of the downward revision:
-          </p>
-
-          <div class="table-container">
-            <table class="strategy-table">
-              <thead>
-                <tr>
-                  <th>Scenario</th>
-                  <th>Annual Revenue Target</th>
-                  <th>Reduction from Oct Plan</th>
-                  <th>Paul's Assessment</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>October Board Plan</strong></td>
-                  <td class="success">$4M</td>
-                  <td>Baseline</td>
-                  <td>Original approved target</td>
-                </tr>
-                <tr>
-                  <td><strong>Paul's Acceptable Range</strong></td>
-                  <td class="warning">$3M</td>
-                  <td>25% reduction</td>
-                  <td>"3-month hiccup" acceptable</td>
-                </tr>
-                <tr>
-                  <td><strong>Current Forecast</strong></td>
-                  <td class="critical">~$1M</td>
-                  <td>75% reduction</td>
-                  <td>"Not a product pause explanation"</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <h3>Paul's Re-Planning Rejection</h3>
-
-          <div class="email-quote">
-            <div class="email-header">Paul Hsu → Matthew Lewis, March 7, 1:46 PM</div>
-"Your aspiration is to be above your Oct plan, not to give up eight weeks in and re-plan. If you are truly motivated, then please make the strong affirmative statement as such so there are no unwavering questions. If you would like to formally ask the board for a reset in the targets, then you should ask for that. I am not in support of that re-plan. There was sufficient planning done in the fall to set those targets."
-          </div>
-
-          <p>
-            Paul's message is unambiguous: the board will not approve a 75% revenue reduction eight weeks into the year. The expectation is execution improvement, not plan revision.
-          </p>
-
-          <h3>The Cash Flow Implications</h3>
-
-          <p>
-            Earlier in the three-week discussion, Paul identified a potential $300K+ cash shortfall in the bear case scenario. Combined with the current trajectory tracking below even the bear case, TestMachine faces a funding crisis if execution doesn't improve dramatically.
-          </p>
-
-          <div class="highlight warning">
-            <strong>Paul's Financing Position:</strong>
-            "There is no appetite to be in this situation so time is on our side to take action." Translation: no additional funding without demonstrable execution improvement.
-          </div>
-
-        </section>
-
-        <!-- ==================== PATH FORWARD ==================== -->
-        <section class="section" id="path-forward">
-          <h2>Path Forward: Paul's Requirements</h2>
-
-          <p>
-            Paul's Sunday noon deadline comes with specific deliverable requirements:
-          </p>
-
-          <h3>Required Board Synthesis Components</h3>
-
-          <ol>
-            <li><strong>Forecast vs. Current Board Plan:</strong> Clear comparison of October targets vs. current trajectory with variance analysis</li>
-            <li><strong>Reasons for 60%+ Shortfall:</strong> Honest assessment of execution gaps, not product explanations</li>
-            <li><strong>Process and People Fixes:</strong> Specific changes to get above plan, not excuses</li>
-            <li><strong>Strong Affirmative Statement:</strong> Commitment to exceed October plan or formal request for target reset</li>
-            <li><strong>Product Changes Follow-up:</strong> Revenue features progress per Thursday conversation</li>
-          </ol>
-
-          <h3>Accountability Clarifications Required</h3>
-
-          <div class="table-container">
-            <table class="strategy-table">
-              <thead>
-                <tr>
-                  <th>Role</th>
-                  <th>Responsibility</th>
-                  <th>Success Metric</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td><strong>Matthew (CEO)</strong></td>
-                  <td>Overall plan execution, tech/product/sales responsibility</td>
-                  <td>Revenue target achievement</td>
-                </tr>
-                <tr>
-                  <td><strong>James (COO)</strong></td>
-                  <td>Overall revenue conversion, pipeline management</td>
-                  <td>Weighted pipeline progression and close rate</td>
-                </tr>
-                <tr>
-                  <td><strong>John (CTO)</strong></td>
-                  <td>Product features tied to revenue, technical delivery</td>
-                  <td>Revenue-blocking features resolved</td>
-                </tr>
-                <tr>
-                  <td><strong>Elaine</strong></td>
-                  <td>Marketing support, not revenue ownership</td>
-                  <td>Qualified lead generation</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <div class="highlight success">
-            <strong>Paul's Coaching Offer:</strong>
-            "I'm carving out time to try and get this over. Lean into it, take accountability, and I'm along here to help you guys out."
-          </div>
-
-        </section>
-
-        <!-- ==================== IMMEDIATE ACTIONS ==================== -->
-        <section class="section" id="immediate-actions">
-          <h2>Immediate Actions Required</h2>
-
-          <p>
-            Based on Paul's feedback and the three-week analysis, here are the critical actions needed before Sunday noon:
-          </p>
-
-          <div class="action-items">
-            <div class="action-item urgent">
-              <h4>1. Complete Pipeline Intelligence Capture</h4>
-              <p>For every prospect in the pipeline: identify budget holder (name/title), budget size ($ amount), timeline (decision deadline), and last contact date. Fill every [TBD] with real data or honest "unknown" markers.</p>
-              <div class="meta">Owner: James + Matthew | Deadline: Sunday 10 AM | Dependencies: Contact outreach</div>
-            </div>
-
-            <div class="action-item urgent">
-              <h4>2. Build Weighted Pipeline Forecast</h4>
-              <p>Calculate probability-weighted revenue based on pipeline stage, budget confirmed, buyer access, and timeline clarity. Show pipeline coverage for base/bull/bear cases.</p>
-              <div class="meta">Owner: James | Deadline: Sunday 10 AM | Dependencies: Action 1</div>
-            </div>
-
-            <div class="action-item urgent">
-              <h4>3. Write Accountability Matrix</h4>
-              <p>Document who owns what, with specific success metrics. No shared responsibility — each critical function has a single owner.</p>
-              <div class="meta">Owner: Matthew | Deadline: Sunday 11 AM | Dependencies: Team alignment</div>
-            </div>
-
-            <div class="action-item urgent">
-              <h4>4. Document Process Improvements</h4>
-              <p>Specific changes to pipeline management, deal qualification, and conversion processes. Include timelines and success metrics.</p>
-              <div class="meta">Owner: James | Deadline: Sunday 11 AM | Dependencies: Process design</div>
-            </div>
-
-            <div class="action-item urgent">
-              <h4>5. Prepare Strong Affirmative Statement</h4>
-              <p>Either commit to exceeding October plan with credible execution changes, or formally request board target reset with consequences acknowledged.</p>
-              <div class="meta">Owner: Matthew | Deadline: Sunday 11:30 AM | Dependencies: Team decision</div>
-            </div>
-          </div>
-
-          <h3>Product Revenue Features Follow-up</h3>
-
-          <p>
-            Paul specifically requested follow-up on product changes discussed Thursday. Key items:
-          </p>
-
-          <ul>
-            <li><strong>Revenue Impact Analysis:</strong> Each product feature mapped to specific deal requirements</li>
-            <li><strong>Pricing Sheet Updates:</strong> Sales/product/leadership alignment on pricing strategy</li>
-            <li><strong>Exchange Pipeline Beyond Token Custody:</strong> Full product line coverage</li>
-          </ul>
-
-        </section>
-
-        <!-- ==================== CONCLUSION ==================== -->
-        <section class="section" id="conclusion">
-          <h2>Conclusion: The Leadership Test</h2>
-
-          <p>
-            The three-week Paul Hsu deep dive revealed a fundamental question about TestMachine's leadership: can the team execute with the same rigor they apply to product development?
-          </p>
-
-          <h3>What Paul Sees</h3>
-
-          <ul>
-            <li>Strong technical team with proven product capabilities</li>
-            <li>Meaningful customer validation (Coinbase expansion to $40K-70K/month)</li>
-            <li>Market opportunity in a growing sector</li>
-            <li>But systematic failure to convert opportunity into pipeline progression</li>
-          </ul>
-
-          <h3>What Paul Demands</h3>
-
-          <ul>
-            <li>Pipeline transparency with named accounts and weighted probabilities</li>
-            <li>Clear accountability for revenue conversion</li>
-            <li>Systematic processes for deal qualification and progression</li>
-            <li>Leadership commitment to exceeding targets, not explaining shortfalls</li>
-          </ul>
-
-          <div class="highlight success">
-            <strong>The Opportunity:</strong>
-            Paul explicitly said he has "a little bit more confidence than before. At least it's trending in the right direction." The infrastructure improvements (product capabilities, Coinbase reference, pipeline size) create the foundation for success. The missing piece is execution discipline.
-          </div>
-
-          <h3>The Stakes</h3>
-
-          <p>
-            This isn't just about Q1 numbers. Paul is evaluating whether TestMachine has the management capability to scale into a venture-backable business. The team has until Sunday noon to demonstrate they can:
-          </p>
-
-          <ol>
-            <li>Face reality honestly</li>
-            <li>Take accountability without deflection</li>
-            <li>Implement systematic processes quickly</li>
-            <li>Commit to exceeding expectations</li>
-          </ol>
-
-          <div class="email-quote">
-            <div class="email-header">Paul Hsu's Final Challenge, March 7, 1:46 PM</div>
-"If you are truly motivated, then please make the strong affirmative statement as such so there are no unwavering questions."
-          </div>
-
-          <h3>Latest Development: The Accountability Pivot</h3>
-
-          <p>
-            James Kelly's 2:57 PM response represents a critical turning point. By directly addressing Paul's accountability criticism with clear ownership statements, he has moved the conversation from "who is responsible?" to "how do we execute?"
-          </p>
-
-          <p>
-            This is exactly what Paul was testing for: leadership that takes clear accountability rather than explaining why results fell short. The question now shifts from governance to execution systems.
-          </p>
-
-          <p>
-            The synthesis is complete. The requirements are clear. James has accepted accountability. The deadline is Sunday noon. The question now is execution.
-          </p>
-
-        </section>
-
-      </div>
+      </section>
+
+      <section class="section" id="core-issues">
+        <h2><span style="color: var(--accent);">2 /</span> Core Issues Identified</h2>
+
+        <h3><span style="color: var(--accent);">2.1 /</span> Pipeline Transparency Breakdown</h3>
+        <p>
+          Paul cannot determine actual pipeline coverage from board materials. The gap between required pipeline (3x revenue targets) and actual named accounts with probabilities represents a fundamental breakdown in sales forecasting and board communication.
+        </p>
+
+        <h3><span style="color: var(--accent);">2.2 /</span> Strategic Focus Dilution</h3>
+        <p>
+          Spreading resources across seven market segments while lacking clear product-market fit in any single segment. Paul's "small auditor" criticism reflects broader concerns about chasing low-value opportunities instead of doubling down on proven segments.
+        </p>
+
+        <h3><span style="color: var(--accent);">2.3 /</span> Execution Accountability Gap</h3>
+        <p>
+          Leadership's inability to provide concrete answers about pipeline, conversion rates, and customer acquisition costs suggests systemic issues with operational discipline and measurement.
+        </p>
+
+        <h3><span style="color: var(--accent);">2.4 /</span> Financial Trajectory Risk</h3>
+        <p>
+          Current burn rate and revenue trajectory suggest the company is tracking below even the bear case scenario, creating existential risk without dramatic course correction.
+        </p>
+
+        <div class="highlight warning">
+          <strong>Root Cause Analysis</strong><br>
+          All four issues stem from the same fundamental problem: lack of operational rigor in sales and strategic execution. The company has been operating on assumptions rather than data-driven decision making.
+        </div>
+      </section>
+
+      <section class="section" id="pipeline-reality">
+        <h2><span style="color: var(--accent);">3 /</span> Pipeline Reality: The 78% Problem</h2>
+
+        <p>
+          Paul's pipeline concerns reveal a catastrophic gap between required coverage and actual named accounts with realistic probabilities.
+        </p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Q4 2026 Target</th>
+                <th>Required Pipeline (3x)</th>
+                <th>Current Named Pipeline</th>
+                <th>Coverage Gap</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Bull Case</td>
+                <td>$120K MRR</td>
+                <td>$360K ACV Pipeline</td>
+                <td class="critical">~$80K (estimated)</td>
+                <td class="critical">78% shortfall</td>
+              </tr>
+              <tr>
+                <td>Base Case</td>
+                <td>$80K MRR</td>
+                <td>$240K ACV Pipeline</td>
+                <td class="critical">~$80K (estimated)</td>
+                <td class="critical">67% shortfall</td>
+              </tr>
+              <tr>
+                <td>Bear Case</td>
+                <td>$50K MRR</td>
+                <td>$150K ACV Pipeline</td>
+                <td class="critical">~$80K (estimated)</td>
+                <td class="critical">47% shortfall</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3><span style="color: var(--accent);">Pipeline Composition Analysis</span></h3>
+        <ul>
+          <li><strong>Coinbase (90% probability):</strong> $240K expansion - the only high-confidence deal</li>
+          <li><strong>Kraken (70% probability):</strong> $180K new business - requires execution</li>
+          <li><strong>Named Prospects (??% probability):</strong> Insufficient data for credible assessment</li>
+          <li><strong>Pipeline Development Rate:</strong> Too slow to bridge the gap organically</li>
+        </ul>
+
+        <div class="highlight critical">
+          <strong>The 78% Problem</strong><br>
+          Even in the bear case scenario, TestMachine faces a 47% pipeline shortfall. This isn't a minor execution issue—it's a fundamental problem that requires immediate strategic intervention.
+        </div>
+      </section>
+
+      <section class="section" id="execution-gaps">
+        <h2><span style="color: var(--accent);">4 /</span> Execution Gaps: Process vs. Product</h2>
+
+        <p>
+          Paul's questioning revealed that TestMachine has been building product features rather than building systematic sales and customer acquisition processes.
+        </p>
+
+        <h3><span style="color: var(--accent);">4.1 /</span> Sales Process Maturity</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Process Element</th>
+                <th>Required State</th>
+                <th>Current State</th>
+                <th>Gap Analysis</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Named Account Tracking</td>
+                <td>Every prospect with probability</td>
+                <td class="critical">Unclear methodology</td>
+                <td class="critical">No systematic approach</td>
+              </tr>
+              <tr>
+                <td>Stage Definitions</td>
+                <td>Clear criteria, historical conversion rates</td>
+                <td class="critical">Ad-hoc definitions</td>
+                <td class="critical">No predictive capability</td>
+              </tr>
+              <tr>
+                <td>Segment Focus</td>
+                <td>1-2 segments with clear PMF</td>
+                <td class="critical">7 segments, scattered focus</td>
+                <td class="critical">Resource dilution</td>
+              </tr>
+              <tr>
+                <td>Customer Acquisition Cost</td>
+                <td>Sub-$50K fully loaded CAC</td>
+                <td class="critical">Unknown or very high</td>
+                <td class="critical">Unit economics unclear</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3><span style="color: var(--accent);">4.2 /</span> Strategic Execution Issues</h3>
+        <ul>
+          <li><strong>Resource Allocation:</strong> Building for 7 segments instead of conquering 2</li>
+          <li><strong>Customer Development:</strong> Insufficient systematic feedback collection</li>
+          <li><strong>Competitive Intelligence:</strong> Unclear differentiation in key segments</li>
+          <li><strong>Partnership Development:</strong> No systematic channel strategy</li>
+        </ul>
+      </section>
+
+      <section class="section" id="latest-development">
+        <h2><span style="color: var(--accent);">5 /</span> Latest Development: James's Accountability Response</h2>
+
+        <p>
+          The most recent development was James's response to Paul's feedback, which unfortunately demonstrated exactly the kind of defensive leadership behavior that concerns investors.
+        </p>
+
+        <h3><span style="color: var(--accent);">What Happened</span></h3>
+        <p>
+          When confronted with Paul's pipeline concerns, James deflected responsibility to external factors rather than acknowledging execution gaps. This response pattern is exactly what early-stage investors fear most: leadership that can't self-assess honestly.
+        </p>
+
+        <h3><span style="color: var(--accent);">Paul's Response Analysis</span></h3>
+        <p>
+          Paul's reaction was swift and clear: this is a test of leadership maturity. Can the founding team take responsibility for results, or will they continue to externalize problems? His feedback indicates this is a make-or-break moment for leadership credibility.
+        </p>
+
+        <div class="highlight critical">
+          <strong>Leadership Test Identified</strong><br>
+          Paul isn't just evaluating business metrics—he's evaluating whether the founding team has the emotional intelligence and accountability mindset required to scale a company through difficult periods.
+        </div>
+      </section>
+
+      <section class="section" id="financial-trajectory">
+        <h2><span style="color: var(--accent);">6 /</span> Financial Trajectory: The 75% Haircut Problem</h2>
+
+        <p>
+          Paul's statement about "no appetite for raising capital" reflects a harsh financial reality: at current execution levels, TestMachine faces a catastrophic down-round or worse.
+        </p>
+
+        <h3><span style="color: var(--accent);">Valuation Reality Check</span></h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Scenario</th>
+                <th>Revenue Multiple</th>
+                <th>2027 ARR Target</th>
+                <th>Implied Valuation</th>
+                <th>vs. Current Valuation</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Success Case</td>
+                <td>8-12x ARR</td>
+                <td>$2M ARR</td>
+                <td>$16-24M</td>
+                <td class="success">Fair to up-round</td>
+              </tr>
+              <tr>
+                <td>Base Case</td>
+                <td>6-8x ARR</td>
+                <td>$1M ARR</td>
+                <td>$6-8M</td>
+                <td class="warning">Flat to down-round</td>
+              </tr>
+              <tr>
+                <td>Current Trajectory</td>
+                <td>4-6x ARR</td>
+                <td>$600K ARR</td>
+                <td>$2.4-3.6M</td>
+                <td class="critical">75% down-round</td>
+              </tr>
+              <tr>
+                <td>Failure Case</td>
+                <td>N/A</td>
+                <td>&lt;$400K ARR</td>
+                <td>Liquidation</td>
+                <td class="critical">Total loss</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3><span style="color: var(--accent);">Cash Runway Analysis</span></h3>
+        <ul>
+          <li><strong>Current Burn:</strong> ~$75K/month</li>
+          <li><strong>Available Cash:</strong> Estimated 12-18 months runway</li>
+          <li><strong>Revenue Ramp Required:</strong> $50K+ MRR by Q4 2026 to extend runway</li>
+          <li><strong>Break-even Timeline:</strong> Q2 2027 minimum, requires flawless execution</li>
+        </ul>
+
+        <div class="highlight warning">
+          <strong>Financial Reality</strong><br>
+          Without dramatic execution improvement, TestMachine faces either a massive down-round (75%+ haircut) or potential liquidation. Paul's "no appetite for capital" reflects investor unwillingness to put good money after bad execution.
+        </div>
+      </section>
+
+      <section class="section" id="path-forward">
+        <h2><span style="color: var(--accent);">7 /</span> Path Forward: Paul's Requirements</h2>
+
+        <p>
+          Paul's intervention is constructive but firm. He's providing a roadmap for survival and success, but only if leadership demonstrates the required accountability and execution discipline.
+        </p>
+
+        <h3><span style="color: var(--accent);">Immediate Requirements</span></h3>
+        <ol>
+          <li><strong>Pipeline Transparency:</strong> Complete named account audit with realistic probabilities</li>
+          <li><strong>Strategic Focus:</strong> Concentrate resources on 2-3 proven segments</li>
+          <li><strong>Execution Accountability:</strong> Take ownership of results without defensiveness</li>
+          <li><strong>Process Implementation:</strong> Build systematic sales and customer acquisition processes</li>
+          <li><strong>Resource Optimization:</strong> Reduce burn rate while accelerating revenue</li>
+        </ol>
+
+        <h3><span style="color: var(--accent);">Success Criteria</span></h3>
+        <ul>
+          <li><strong>Pipeline Coverage:</strong> Achieve 3x coverage minimum by April 2026</li>
+          <li><strong>Customer Acquisition:</strong> Systematic process with predictable results</li>
+          <li><strong>Financial Performance:</strong> Clear path to break-even by Q2 2027</li>
+          <li><strong>Leadership Maturity:</strong> Demonstrate accountability and strategic thinking</li>
+        </ul>
+      </section>
+
+      <section class="section" id="immediate-actions">
+        <h2><span style="color: var(--accent);">8 /</span> Immediate Actions Required</h2>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Action Category</th>
+                <th>Specific Actions</th>
+                <th>Timeline</th>
+                <th>Owner</th>
+                <th>Success Metric</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Pipeline Audit</strong></td>
+                <td>Named account table with probabilities</td>
+                <td>48 hours</td>
+                <td>Matthew</td>
+                <td>Every prospect quantified</td>
+              </tr>
+              <tr>
+                <td><strong>Strategic Focus</strong></td>
+                <td>Resource reallocation to top 3 segments</td>
+                <td>1 week</td>
+                <td>Team</td>
+                <td>Clear priority rankings</td>
+              </tr>
+              <tr>
+                <td><strong>Process Implementation</strong></td>
+                <td>Sales stage definitions and conversion tracking</td>
+                <td>2 weeks</td>
+                <td>Matthew</td>
+                <td>Predictive pipeline model</td>
+              </tr>
+              <tr>
+                <td><strong>Customer Evidence</strong></td>
+                <td>Detailed case studies from successful deployments</td>
+                <td>1 week</td>
+                <td>Team</td>
+                <td>Proof of value delivered</td>
+              </tr>
+              <tr>
+                <td><strong>Financial Optimization</strong></td>
+                <td>Burn rate reduction to $60K/month</td>
+                <td>30 days</td>
+                <td>Matthew</td>
+                <td>Extended runway</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="section" id="conclusion">
+        <h2><span style="color: var(--accent);">9 /</span> Conclusion: The Leadership Test</h2>
+
+        <p>
+          Paul Hsu's three-week intervention represents the most important inflection point in TestMachine's history. This isn't just about pipeline numbers or segment strategy—it's about whether the founding team has the leadership maturity to scale a company through adversity.
+        </p>
+
+        <h3><span style="color: var(--accent);">The Stakes</span></h3>
+        <ul>
+          <li><strong>Success Path:</strong> Demonstrate accountability, fix execution, maintain investor confidence</li>
+          <li><strong>Failure Path:</strong> Continued defensiveness leads to 75% down-round or liquidation</li>
+          <li><strong>Time Window:</strong> Next 48 hours determine trajectory for next 18 months</li>
+        </ul>
+
+        <div class="highlight success">
+          <strong>The Opportunity</strong><br>
+          Paul's intervention is actually a gift—early warning with constructive guidance from an experienced investor who wants TestMachine to succeed. The question is whether leadership can rise to meet the challenge.
+        </div>
+
+        <p>
+          <strong>Bottom Line:</strong> TestMachine has the product, market opportunity, and investor support to succeed. What it needs now is leadership that can execute with discipline, communicate with transparency, and take accountability for results. The next 48 hours will determine if that leadership exists.
+        </p>
+      </section>
 
     </div>
-  </main>
+  </div>
+</main>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <div class="nav-logo">
-            <span class="nav-logo-text">TestMachine Research</span>
-          </div>
-          <div class="footer-address">
-            Confidential board correspondence analysis<br>
-            Three-week deep dive synthesis — March 2026
-          </div>
-        </div>
-        <div>
-          <h3 class="footer-heading">Analysis</h3>
-          <ul class="footer-links">
-            <li><a href="paul-hsu-execution-plan.html">Execution Plan</a></li>
-            <li><a href="paul-hsu-response-strategy.html">Response Strategy</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="footer-heading">Company</h3>
-          <ul class="footer-links">
-            <li><a href="https://testmachine.ai">TestMachine</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="footer-heading">Board</h3>
-          <ul class="footer-links">
-            <li><a href="https://decasonic.com">Decasonic</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <p>&copy; 2026 TestMachine Research. Board-confidential analysis.</p>
-      </div>
-    </div>
-  </footer>
+<footer class="footer">
+  <div class="main-container">
+    <p>Generated March 2026 by TestMachine Strategic Analysis</p>
+    <p>Board Crisis Synthesis — Confidential Analysis</p>
+  </div>
+</footer>
 
 <script>
 // Progress bar
@@ -930,32 +778,69 @@ window.addEventListener('scroll', () => {
   const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
   const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
   const scrolled = (winScroll / height) * 100;
-  document.getElementById('progress-bar').style.width = scrolled + '%';
+  document.querySelector('.progress-bar').style.width = scrolled + '%';
 });
 
-// TOC highlighting
-const sections = document.querySelectorAll('section[id]');
-const tocLinks = document.querySelectorAll('.toc a[href^="#"]');
-const observerOptions = { rootMargin: '-20% 0px -70% 0px' };
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      tocLinks.forEach(link => link.classList.remove('active'));
-      const activeLink = document.querySelector(`.toc a[href="#${entry.target.id}"]`);
-      if (activeLink) activeLink.classList.add('active');
+// Active section highlighting
+function highlightActiveSection() {
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('.toc a');
+
+  let currentSection = '';
+  sections.forEach(function(section) {
+    const sectionTop = section.getBoundingClientRect().top;
+    const sectionHeight = section.offsetHeight;
+    if (sectionTop <= 100 && sectionTop + sectionHeight > 100) {
+      currentSection = section.getAttribute('id');
     }
   });
-}, observerOptions);
-sections.forEach(section => observer.observe(section));
+
+  navLinks.forEach(function(link) {
+    link.classList.remove('active');
+    if (link.getAttribute('href').substring(1) === currentSection) {
+      link.classList.add('active');
+    }
+  });
+}
+
+window.addEventListener('scroll', highlightActiveSection);
+window.addEventListener('load', highlightActiveSection);
 
 // Mobile TOC toggle
-document.getElementById('toc-toggle').addEventListener('click', () => {
-  document.getElementById('toc').classList.toggle('open');
-  document.getElementById('toc-overlay').classList.toggle('open');
-});
-document.getElementById('toc-overlay').addEventListener('click', () => {
-  document.getElementById('toc').classList.remove('open');
-  document.getElementById('toc-overlay').classList.remove('open');
+document.getElementById('tocToggle').onclick = function() {
+  var toc = document.getElementById('toc');
+  var overlay = document.getElementById('tocOverlay');
+  toc.classList.toggle('open');
+  overlay.classList.toggle('open');
+};
+
+document.getElementById('tocOverlay').onclick = function() {
+  var toc = document.getElementById('toc');
+  var overlay = document.getElementById('tocOverlay');
+  toc.classList.remove('open');
+  overlay.classList.remove('open');
+};
+
+// Smooth scrolling for TOC links
+document.querySelectorAll('.toc a').forEach(function(anchor) {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    var targetId = this.getAttribute('href').substring(1);
+    var targetSection = document.getElementById(targetId);
+
+    if (targetSection) {
+      targetSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+
+    // Close mobile TOC
+    var toc = document.getElementById('toc');
+    var overlay = document.getElementById('tocOverlay');
+    toc.classList.remove('open');
+    overlay.classList.remove('open');
+  });
 });
 </script>
 
