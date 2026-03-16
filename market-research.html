@@ -96,21 +96,13 @@ ul { list-style: none; }
 
 /* ---------- Navigation ---------- */
 .nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
-.toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 320px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
 .toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
 .toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
 .toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
 .toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
 
-.nav-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 100%;
-  max-width: var(--max-w);
-  margin: 0 auto;
-  padding: 0 clamp(20px, 4vw, 40px);
-}
+.nav-container { display: flex; align-items: center; justify-content: space-between; height: 100%; position: relative; }
 
 .nav-logo {
   display: flex;
@@ -313,7 +305,7 @@ ul { list-style: none; }
 
 /* ---------- Main Content ---------- */
 .main {
-  margin-left: 280px;
+  margin-left: 320px;
   max-width: 780px;
   padding: calc(var(--nav-h) + 3rem) 2.5rem 4rem;
 }
@@ -639,7 +631,7 @@ tr:hover td {
 
 /* ---------- Footer ---------- */
 .footer {
-  margin-left: 280px;
+  margin-left: 320px;
   padding: 20px 0;
   background: var(--bg-raised);
   border-top: 1px solid var(--border-subtle);
