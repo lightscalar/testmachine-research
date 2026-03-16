@@ -61,15 +61,19 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 /* ---------- Navigation ---------- */
 .nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
 .toc { position: fixed; top: var(--nav-h); left: 0; width: 320px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+
+.toc-logo { display: flex; align-items: center; gap: 10px; padding: 0 0.6rem 1.5rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); text-decoration: none; transition: opacity var(--transition); }
+.toc-logo:hover { opacity: 0.8; }
+.toc-logo img { flex-shrink: 0; }
+.toc-logo-text { font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; letter-spacing: -0.02em; color: var(--fg); }
+
 .toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
-.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; line-height: 1.4; word-wrap: break-word; }
-.toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+.toc a:not(.toc-logo) { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; line-height: 1.4; word-wrap: break-word; }
+.toc a:not(.toc-logo):hover, .toc a:not(.toc-logo).active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
 .toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
 
 .nav-container { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: var(--max-w); margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px); }
-.nav-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-.nav-logo img { flex-shrink: 0; }
-.nav-logo-text { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+.nav-spacer { flex: 1; }
 .nav-link { font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 500; color: var(--fg-muted); transition: color var(--transition); }
 .nav-link:hover { color: var(--fg); }
 
@@ -253,11 +257,17 @@ code { background: var(--input-bg); padding: 0.2rem 0.4rem; border-radius: 4px; 
   
   .toc.open { transform: translateX(0); }
   .toc-toggle { display: block; }
+  
+  .toc-logo { padding: 0 0.6rem 1rem; }
+  .toc-logo-text { font-size: 1.1rem; }
 }
 
 @media (max-width: 768px) {
   .hero-stats { grid-template-columns: 1fr 1fr; }
   .article-header { padding-top: calc(var(--nav-h) + 1rem); }
+  
+  .toc-logo img { height: 28px; }
+  .toc-logo-text { font-size: 1rem; }
 }
 </style>
 </head>
@@ -267,10 +277,7 @@ code { background: var(--input-bg); padding: 0.2rem 0.4rem; border-radius: 4px; 
 
 <nav class="nav">
   <div class="nav-container">
-    <div class="nav-logo">
-      <img src="assets/logo-icon.png" alt="TestMachine" style="height:48px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);">
-      <span class="nav-logo-text">TestMachine</span>
-    </div>
+    <div class="nav-spacer"></div>
     <a href="index.html" class="nav-link">← Research Library</a>
   </div>
 </nav>
@@ -279,6 +286,10 @@ code { background: var(--input-bg); padding: 0.2rem 0.4rem; border-radius: 4px; 
 <div class="toc-overlay" id="tocOverlay"></div>
 
 <nav class="toc" id="toc">
+  <a href="index.html" class="toc-logo">
+    <img src="assets/logo-icon.png" alt="TestMachine" style="height:32px;width:auto;filter:brightness(0) saturate(100%) invert(73%) sepia(30%) saturate(500%) hue-rotate(140deg) brightness(95%);">
+    <span class="toc-logo-text">TestMachine</span>
+  </a>
   <h3>Contents</h3>
   <a href="#executive-summary">Executive Summary</a>
   <a href="#major-incidents">1 / Major Security Incidents</a>
