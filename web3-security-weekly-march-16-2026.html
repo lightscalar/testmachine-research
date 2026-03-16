@@ -42,450 +42,125 @@
 }
 
 /* ---------- Reset ---------- */
-*, *::before, *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: var(--nav-h);
-  -webkit-text-size-adjust: 100%;
-}
-
-body {
-  font-family: var(--font-serif);
-  font-size: 17px;
-  line-height: 1.7;
-  color: var(--fg);
-  background: var(--bg);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-}
-
-body.menu-open {
-  overflow: hidden;
-}
-
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: var(--nav-h); -webkit-text-size-adjust: 100%; }
+body { font-family: var(--font); font-size: 17px; line-height: 1.7; color: var(--fg); background: var(--bg); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; overflow-x: hidden; }
+body.menu-open { overflow: hidden; }
 img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; text-decoration: none; }
-button { border: none; background: none; cursor: pointer; font-family: var(--font-mono); color: inherit; }
+button { border: none; background: none; cursor: pointer; font-family: inherit; color: inherit; }
 ul { list-style: none; }
 input, textarea, select { font-family: inherit; font-size: inherit; }
 
 /* ---------- Layout ---------- */
-.container {
-  width: 100%;
-  max-width: var(--max-w);
-  margin: 0 auto;
-  padding: 0 clamp(20px, 4vw, 40px);
-}
+.container { width: 100%; max-width: var(--max-w); margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px); }
 
 /* ---------- Progress Bar ---------- */
-.progress-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 2px;
-  background: linear-gradient(90deg, var(--accent), oklch(0.72 0.10 230));
-  z-index: 1100;
-  width: 0%;
-  transition: width 0.1s;
-}
+.progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: linear-gradient(90deg, var(--accent), oklch(0.72 0.10 230)); z-index: 1100; width: 0%; transition: width 0.1s; }
 
 /* ---------- Navigation ---------- */
 .nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
-.toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 320px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
 .toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
-.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
+.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; line-height: 1.4; word-wrap: break-word; }
 .toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
 .toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
 
-.nav-container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 100%;
-}
-
-.nav-title {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--fg);
-}
-
-.nav-back {
-  font-family: var(--font-mono);
-  font-size: 0.9rem;
-  color: var(--accent);
-  padding: 8px 16px;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  transition: var(--transition);
-}
-
-.nav-back:hover {
-  background: var(--accent-glow);
-  border-color: var(--accent);
-}
+.nav-container { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: var(--max-w); margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px); }
+.nav-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.nav-logo-text { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
+.nav-link { font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 500; color: var(--accent); transition: color var(--transition); }
 
 /* ---------- TOC Toggle Button ---------- */
-.toc-toggle {
-  display: none;
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  z-index: 200;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background: var(--accent);
-  color: white;
-  font-size: 1.2rem;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3);
-}
+.toc-toggle { display: none; position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200; width: 48px; height: 48px; border-radius: 0; background: var(--accent); color: oklch(0.12 0 0); border: none; font-size: 1.2rem; font-family: var(--font-mono); font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3); }
 
 /* ---------- TOC Overlay ---------- */
-.toc-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: oklch(0 0 0 / 0.6);
-  z-index: 109;
-}
-
-.toc-overlay.open {
-  display: block;
-}
+.toc-overlay { display: none; position: fixed; inset: 0; background: oklch(0 0 0 / 0.6); z-index: 109; }
+.toc-overlay.open { display: block; }
 
 /* ---------- Main Content ---------- */
-.main {
-  margin-left: 280px;
-  min-height: 100vh;
-}
+.main { margin-left: 320px; min-height: 100vh; }
+.main-container { max-width: 900px; margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px) 4rem; }
 
-/* ---------- Header ---------- */
-.hero {
-  padding: calc(var(--nav-h) + var(--section-py)) 0 var(--section-py);
-  text-align: left;
-}
+/* ---------- Article Header ---------- */
+.article-header { padding-top: calc(var(--nav-h) + 32px); padding-bottom: 2rem; border-bottom: 1px solid var(--border-subtle); margin-bottom: 3rem; }
+.article-tag { display: inline-block; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); background: var(--accent-glow); padding: 6px 12px; border-radius: 4px; margin-bottom: 1rem; }
+.article-date { display: block; font-family: var(--font-mono); font-size: 0.85rem; color: var(--fg-muted); margin-bottom: 1.5rem; }
+.article-title { font-family: var(--font-display); font-size: clamp(2.25rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.1; margin-bottom: 1.5rem; color: var(--fg); }
+.article-subtitle { font-size: 1.1rem; line-height: 1.6; color: var(--fg-muted); margin-bottom: 2.5rem; }
 
-.hero h1 {
-  font-family: var(--font-display);
-  font-size: clamp(2.5rem, 5vw, 4rem);
-  font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: 1.5rem;
-  color: var(--fg);
-}
+/* ---------- Hero Stats ---------- */
+.hero-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; }
+.hero-stat { background: var(--card-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem; text-align: center; }
+.hero-stat .value { font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; color: var(--accent); display: block; margin-bottom: 0.5rem; }
+.hero-stat .label { font-family: var(--font-mono); font-size: 0.75rem; color: var(--fg-dim); text-transform: uppercase; letter-spacing: 0.05em; }
 
-.hero-subtitle {
-  font-family: var(--font-mono);
-  font-size: 1.1rem;
-  color: var(--fg-muted);
-  margin-bottom: 2rem;
-}
-
-.hero-meta {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: var(--gap);
-  margin-top: 3rem;
-}
-
-.meta-card {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  text-align: center;
-}
-
-.meta-label {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: var(--fg-dim);
-  margin-bottom: 0.5rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.meta-value {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--accent);
-}
-
-/* ---------- Content ---------- */
-.content {
-  padding: 0 0 var(--section-py);
-}
-
-.section {
-  margin-bottom: 4rem;
-  padding: 0 clamp(20px, 4vw, 40px);
-}
-
-.section h2 {
-  font-family: var(--font-display);
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--fg);
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 2px solid var(--border);
-}
-
-.section h2 .num {
-  font-family: var(--font-mono);
-  color: var(--accent);
-  margin-right: 1rem;
-}
-
-.section h3 {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--fg);
-  margin: 2.5rem 0 1rem;
-}
-
-.section p {
-  margin-bottom: 1.5rem;
-}
-
-.section ul {
-  margin: 1.5rem 0;
-  padding-left: 2rem;
-}
-
-.section li {
-  list-style: disc;
-  margin-bottom: 0.5rem;
-  color: var(--fg-muted);
-}
-
-.section strong {
-  color: var(--accent);
-  font-weight: 600;
-}
+/* ---------- Article Body ---------- */
+.article-body { font-size: 1rem; }
+.section { margin-bottom: 4rem; }
+.section h2 { font-family: var(--font-display); font-size: 1.75rem; font-weight: 700; color: var(--fg); margin-bottom: 2rem; }
+.section h3 { font-family: var(--font-display); font-size: 1.4rem; font-weight: 600; color: var(--fg); margin: 2.5rem 0 1rem; }
+.section p { margin-bottom: 1.5rem; }
+.section ul { margin: 1.5rem 0; padding-left: 1.5rem; }
+.section li { list-style: disc; margin-bottom: 0.5rem; color: var(--fg-muted); }
+.section strong { color: var(--accent); font-weight: 600; }
 
 /* ---------- Incident Cards ---------- */
-.incident {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--callout-red);
-  border-radius: 8px;
-  padding: 2rem;
-  margin: 2rem 0;
-}
-
+.incident { background: var(--card-bg); border: 1px solid var(--border); border-left: 4px solid var(--callout-red); border-radius: 8px; padding: 2rem; margin: 2rem 0; }
 .incident.major { border-left-color: var(--callout-red); }
 .incident.medium { border-left-color: var(--callout-orange); }
 .incident.oracle { border-left-color: var(--accent); }
 
-.incident-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
+.incident-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
+.incident-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--fg); }
+.loss-amount { font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700; color: var(--callout-red); background: oklch(0.65 0.2 25 / 0.1); padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid var(--callout-red); }
 
-.incident-title {
-  font-family: var(--font-display);
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--fg);
-}
+.incident-details { display: grid; gap: 0.5rem; margin: 1rem 0; font-size: 0.95rem; }
+.incident-detail { display: flex; gap: 1rem; }
+.detail-label { font-weight: 600; color: var(--fg-muted); min-width: 100px; }
+.detail-value { color: var(--fg); }
 
-.loss-amount {
-  font-family: var(--font-mono);
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--callout-red);
-  background: oklch(0.65 0.2 25 / 0.1);
-  padding: 0.5rem 1rem;
-  border-radius: 20px;
-  border: 1px solid var(--callout-red);
-}
-
-.incident-details {
-  display: grid;
-  gap: 0.5rem;
-  margin: 1rem 0;
-  font-size: 0.95rem;
-}
-
-.incident-detail {
-  display: flex;
-  gap: 1rem;
-}
-
-.detail-label {
-  font-family: var(--font-mono);
-  font-weight: 600;
-  color: var(--fg-muted);
-  min-width: 100px;
-}
-
-.detail-value {
-  color: var(--fg);
-}
-
-.tags {
-  margin-top: 1rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.tag {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  padding: 0.3rem 0.8rem;
-  border-radius: 12px;
-  background: var(--accent-glow);
-  border: 1px solid var(--accent);
-  color: var(--accent);
-}
-
+.tags { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.tag { font-size: 0.75rem; padding: 0.3rem 0.8rem; border-radius: 4px; background: var(--accent-glow); border: 1px solid var(--accent); color: var(--accent); }
 .tag.oracle { background: oklch(0.72 0.12 192 / 0.1); border-color: var(--accent); color: var(--accent); }
 .tag.defi { background: oklch(0.75 0.15 55 / 0.1); border-color: var(--callout-orange); color: var(--callout-orange); }
 .tag.bridge { background: oklch(0.65 0.2 25 / 0.1); border-color: var(--callout-red); color: var(--callout-red); }
 .tag.ai { background: oklch(0.65 0.15 140 / 0.1); border-color: var(--callout-green); color: var(--callout-green); }
 
 /* ---------- Callouts ---------- */
-.callout {
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-left: 4px solid var(--accent);
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin: 2rem 0;
-}
-
-.callout.warning {
-  border-left-color: var(--callout-orange);
-  background: oklch(0.75 0.15 55 / 0.05);
-}
-
-.callout.critical {
-  border-left-color: var(--callout-red);
-  background: oklch(0.65 0.2 25 / 0.05);
-}
-
-.callout h4 {
-  font-family: var(--font-display);
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--fg);
-  margin-bottom: 1rem;
-}
+.callout { background: var(--card-bg); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 8px; padding: 1.5rem; margin: 2rem 0; }
+.callout.warning { border-left-color: var(--callout-orange); background: oklch(0.75 0.15 55 / 0.05); }
+.callout.critical { border-left-color: var(--callout-red); background: oklch(0.65 0.2 25 / 0.05); }
+.callout h4 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--fg); margin-bottom: 1rem; }
 
 /* ---------- Tables ---------- */
-.table-wrapper {
-  margin: 2rem 0;
-  overflow-x: auto;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.95rem;
-}
-
-th, td {
-  padding: 1rem;
-  text-align: left;
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-th {
-  font-family: var(--font-mono);
-  font-weight: 600;
-  color: var(--fg-muted);
-  background: var(--bg-raised);
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-tr:last-child td {
-  border-bottom: none;
-}
+.table-wrapper { margin: 2rem 0; overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+th, td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-subtle); }
+th { font-weight: 600; color: var(--fg-muted); background: var(--bg-raised); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+tr:last-child td { border-bottom: none; }
 
 /* ---------- Code ---------- */
-code {
-  font-family: var(--font-mono);
-  background: var(--input-bg);
-  padding: 0.2rem 0.4rem;
-  border-radius: 4px;
-  font-size: 0.9em;
-  border: 1px solid var(--border-subtle);
-}
-
-pre {
-  background: var(--input-bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 1.5rem;
-  overflow-x: auto;
-  margin: 1.5rem 0;
-}
-
-pre code {
-  background: none;
-  padding: 0;
-  border: none;
-}
+code { background: var(--input-bg); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; border: 1px solid var(--border-subtle); }
+pre { background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0; }
+pre code { background: none; padding: 0; border: none; }
 
 /* ---------- Footer ---------- */
-.footer {
-  border-top: 1px solid var(--border-subtle);
-  padding: 3rem 0;
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: var(--fg-dim);
-}
+.footer { border-top: 1px solid var(--border-subtle); padding: 3rem 0; text-align: center; font-size: 0.85rem; color: var(--fg-dim); }
 
 /* ---------- Responsive ---------- */
-@media (max-width: 1024px) {
+@media (max-width: 1200px) {
   .toc { transform: translateX(-100%); }
-  .main { margin-left: 0 !important; }
+  .main { margin-left: 0; }
   
-  .toc.open {
-    transform: translateX(0);
-  }
-  
-  .toc-toggle {
-    display: block;
-  }
+  .toc.open { transform: translateX(0); }
+  .toc-toggle { display: block; }
 }
 
 @media (max-width: 768px) {
-  .incident-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .hero-meta {
-    grid-template-columns: 1fr;
-  }
-  
-  .meta-card {
-    text-align: left;
-  }
+  .incident-header { flex-direction: column; align-items: flex-start; }
+  .hero-stats { grid-template-columns: 1fr 1fr; }
+  .article-header { padding-top: calc(var(--nav-h) + 1rem); }
 }
 </style>
 </head>
@@ -494,65 +169,66 @@ pre code {
 <div class="progress-bar"></div>
 
 <nav class="nav">
-  <div class="container">
-    <div class="nav-container">
-      <div class="nav-title">TestMachine Research</div>
-      <a href="index.html" class="nav-back">Back to Research</a>
+  <div class="nav-container">
+    <div class="nav-logo">
+      <div class="nav-logo-text">TestMachine Research</div>
     </div>
+    <a href="index.html" class="nav-link">← Research Library</a>
   </div>
 </nav>
 
-<button class="toc-toggle" id="tocToggle" aria-label="Table of contents">&#9776;</button>
+<button class="toc-toggle" id="tocToggle" aria-label="Table of contents">≡</button>
 <div class="toc-overlay" id="tocOverlay"></div>
 
 <nav class="toc" id="toc">
   <h3>Contents</h3>
-  <a href="#exec">Executive Summary</a>
-  <a href="#s1">1. Major Security Incidents</a>
-  <a href="#s2">2. Emerging ZK Threats</a>
-  <a href="#s3">3. AI-Enhanced Attacks</a>
-  <a href="#s4">4. Attack Vector Analysis</a>
-  <a href="#s5">5. Academic Research</a>
-  <a href="#s6">6. Strategic Implications</a>
-  <a href="#s7">7. Forward-Looking Threats</a>
-  <a href="#s8">8. Data Sources</a>
+  <a href="#executive-summary">Executive Summary</a>
+  <a href="#major-incidents">1 / Major Security Incidents</a>
+  <a href="#zk-threats">2 / Emerging ZK Threats</a>
+  <a href="#ai-attacks">3 / AI-Enhanced Attacks</a>
+  <a href="#attack-vectors">4 / Attack Vector Analysis</a>
+  <a href="#academic-research">5 / Academic Research</a>
+  <a href="#strategic-implications">6 / Strategic Implications</a>
+  <a href="#threat-assessment">7 / Forward-Looking Threats</a>
+  <a href="#methodology">8 / Data Sources</a>
 </nav>
 
 <main class="main">
-  <div class="container">
-    <header class="hero">
-      <h1>Web3 Security Intelligence Report</h1>
-      <div class="hero-subtitle">
-        Weekly Analysis · March 16, 2026 · Intelligence Summary
-      </div>
-      <p>
-        Comprehensive analysis of Web3 security landscape covering $48.89M in tracked losses across 10+ major incidents. Reveals critical shift from smart contract logic bugs to infrastructure vulnerabilities, with oracle manipulation dominating the threat landscape.
+  <div class="main-container">
+
+    <!-- Article Header -->
+    <header class="article-header">
+      <span class="article-tag">Security Intelligence</span>
+      <span class="article-date">March 16, 2026</span>
+      <h1 class="article-title">Web3 Security Intelligence Report</h1>
+      <p class="article-subtitle">
+        Comprehensive weekly analysis of Web3 security landscape covering $48.89M in tracked losses across 10+ major incidents. Reveals critical shift from smart contract logic bugs to infrastructure vulnerabilities, with oracle manipulation dominating the threat landscape.
       </p>
-      
-      <div class="hero-meta">
-        <div class="meta-card">
-          <div class="meta-label">Total Losses</div>
-          <div class="meta-value">$48.89M</div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="value">$48.89M</div>
+          <div class="label">Total Losses</div>
         </div>
-        <div class="meta-card">
-          <div class="meta-label">Major Incidents</div>
-          <div class="meta-value">10+</div>
+        <div class="hero-stat">
+          <div class="value">10+</div>
+          <div class="label">Major Incidents</div>
         </div>
-        <div class="meta-card">
-          <div class="meta-label">Oracle-Related</div>
-          <div class="meta-value">40%</div>
+        <div class="hero-stat">
+          <div class="value">40%</div>
+          <div class="label">Oracle-Related</div>
         </div>
-        <div class="meta-card">
-          <div class="meta-label">Analysis Period</div>
-          <div class="meta-value">7 days</div>
+        <div class="hero-stat">
+          <div class="value">7 Days</div>
+          <div class="label">Analysis Period</div>
         </div>
       </div>
     </header>
 
-    <div class="content">
-      
-      <section class="section" id="exec">
-        <h2>Executive Summary</h2>
+    <!-- Article Body -->
+    <div class="article-body">
+
+      <section class="section" id="executive-summary">
         <p>
           The past week reveals a fundamental shift in Web3 security threats. Traditional smart contract logic bugs are being overshadowed by infrastructure vulnerabilities, misconfigurations, and human errors. Oracle manipulations, incomplete deployments, and administrative compromises now dominate the threat landscape.
         </p>
@@ -569,8 +245,8 @@ pre code {
         </p>
       </section>
 
-      <section class="section" id="s1">
-        <h2><span class="num">01</span> Major Security Incidents</h2>
+      <section class="section" id="major-incidents">
+        <h2><span style="color: var(--accent);">1 /</span> Major Security Incidents</h2>
 
         <div class="incident major">
           <div class="incident-header">
@@ -649,10 +325,6 @@ pre code {
               <div class="detail-label">Security Model:</div>
               <div class="detail-value">Single private key was "the only lock on the door"</div>
             </div>
-            <div class="incident-detail">
-              <div class="detail-label">Additional Impact:</div>
-              <div class="detail-value">Two tokens minted, most claimed frozen by IoTeX</div>
-            </div>
           </div>
 
           <div class="tags">
@@ -673,10 +345,6 @@ pre code {
               <div class="detail-value">Oracle misconfiguration priced cbETH at $1.12 instead of $2,200</div>
             </div>
             <div class="incident-detail">
-              <div class="detail-label">Impact:</div>
-              <div class="detail-value">Liquidation bots seized 1,096 cbETH, creating bad debt</div>
-            </div>
-            <div class="incident-detail">
               <div class="detail-label">Notable:</div>
               <div class="detail-value">Commit co-authored by Claude Opus 4.6</div>
             </div>
@@ -691,8 +359,8 @@ pre code {
         </div>
       </section>
 
-      <section class="section" id="s2">
-        <h2><span class="num">02</span> Emerging Threat: ZK Proof Vulnerabilities</h2>
+      <section class="section" id="zk-threats">
+        <h2><span style="color: var(--accent);">2 /</span> Emerging Threat: ZK Proof Vulnerabilities</h2>
         
         <div class="callout warning">
           <h4>First Confirmed ZK Exploits in Production</h4>
@@ -701,40 +369,13 @@ pre code {
           </p>
         </div>
 
-        <div class="incident">
-          <div class="incident-header">
-            <div class="incident-title">FoomCash ZK Verifier Exploit</div>
-            <div class="loss-amount">$2.26M</div>
-          </div>
-          
-          <div class="incident-details">
-            <div class="incident-detail">
-              <div class="detail-label">Root Cause:</div>
-              <div class="detail-value">Skipped CLI setup step left ZK verifier broken from day one</div>
-            </div>
-            <div class="incident-detail">
-              <div class="detail-label">Attack Pattern:</div>
-              <div class="detail-value">Scaled up techniques from Veil Cash post-mortem</div>
-            </div>
-            <div class="incident-detail">
-              <div class="detail-label">Recovery:</div>
-              <div class="detail-value">$1.84M rescued by Decurity, net loss $420K</div>
-            </div>
-          </div>
-
-          <div class="tags">
-            <span class="tag">ZK Exploit</span>
-            <span class="tag">Setup Error</span>
-          </div>
-        </div>
-
         <p>
           This pattern reveals that sophisticated ZK mathematics isn't the vulnerability - incomplete operational procedures are. Multiple protocols are shipping with unfinished trusted setup ceremonies, creating exploitable gaps.
         </p>
       </section>
 
-      <section class="section" id="s3">
-        <h2><span class="num">03</span> AI-Enhanced Attack Landscape</h2>
+      <section class="section" id="ai-attacks">
+        <h2><span style="color: var(--accent);">3 /</span> AI-Enhanced Attack Landscape</h2>
 
         <div class="callout critical">
           <h4>AI Weaponization Phase Initiated</h4>
@@ -750,16 +391,10 @@ pre code {
           <li><strong>Model Identity Theft:</strong> Attackers targeting AI agents' behavioral models rather than traditional credentials</li>
           <li><strong>Banking Integration Risks:</strong> Concerns over giving AI agents bank account access amid rising threats</li>
         </ul>
-
-        <div class="callout">
-          <p>
-            <em>"Digital parasites aren't smashing in, they're clocking in - DPRK on your payroll, China in your routers, malware that plays dead and studies your mouse. The threat isn't at the perimeter anymore, it's on your org chart."</em>
-          </p>
-        </div>
       </section>
 
-      <section class="section" id="s4">
-        <h2><span class="num">04</span> Attack Vector Analysis</h2>
+      <section class="section" id="attack-vectors">
+        <h2><span style="color: var(--accent);">4 /</span> Attack Vector Analysis</h2>
 
         <div class="table-wrapper">
           <table>
@@ -805,8 +440,8 @@ pre code {
         </p>
       </section>
 
-      <section class="section" id="s5">
-        <h2><span class="num">05</span> Academic Research Activity</h2>
+      <section class="section" id="academic-research">
+        <h2><span style="color: var(--accent);">5 /</span> Academic Research Activity</h2>
         
         <p>
           ArXiv published <strong>29 new cryptography and security papers</strong> on March 16, 2026, indicating high research activity at the intersection of AI security, cryptographic protocols, and blockchain systems.
@@ -820,8 +455,8 @@ pre code {
         </ul>
       </section>
 
-      <section class="section" id="s6">
-        <h2><span class="num">06</span> Strategic Implications for TestMachine</h2>
+      <section class="section" id="strategic-implications">
+        <h2><span style="color: var(--accent);">6 /</span> Strategic Implications for TestMachine</h2>
 
         <div class="callout">
           <h4>Market Opportunities</h4>
@@ -842,8 +477,8 @@ pre code {
         </ul>
       </section>
 
-      <section class="section" id="s7">
-        <h2><span class="num">07</span> Forward-Looking Threat Assessment</h2>
+      <section class="section" id="threat-assessment">
+        <h2><span style="color: var(--accent);">7 /</span> Forward-Looking Threat Assessment</h2>
 
         <div class="callout warning">
           <h4>Next 30 Days Risk Assessment</h4>
@@ -860,8 +495,8 @@ pre code {
         </p>
       </section>
 
-      <section class="section" id="s8">
-        <h2><span class="num">08</span> Data Sources & Methodology</h2>
+      <section class="section" id="methodology">
+        <h2><span style="color: var(--accent);">8 /</span> Data Sources & Methodology</h2>
         
         <div class="table-wrapper">
           <table>
@@ -909,7 +544,7 @@ pre code {
 </main>
 
 <footer class="footer">
-  <div class="container">
+  <div class="main-container">
     <p>Generated March 16, 2026 by TestMachine Research using LunaClaw Brief v4.0.0</p>
     <p>Intelligence Analysis — Not Financial or Legal Advice — Confidential</p>
   </div>
