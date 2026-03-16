@@ -105,45 +105,32 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 .section li { list-style: disc; margin-bottom: 0.5rem; color: var(--fg-muted); }
 .section strong { color: var(--accent); font-weight: 600; }
 
-/* ---------- Incident Cards ---------- */
-.incident { background: var(--card-bg); border: 1px solid var(--border); border-left: 4px solid var(--callout-red); border-radius: 8px; padding: 2rem; margin: 2rem 0; }
-.incident.major { border-left-color: var(--callout-red); }
-.incident.medium { border-left-color: var(--callout-orange); }
-.incident.oracle { border-left-color: var(--accent); }
-
-.incident-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; flex-wrap: wrap; gap: 1rem; }
-.incident-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--fg); }
-.loss-amount { font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700; color: var(--callout-red); background: oklch(0.65 0.2 25 / 0.1); padding: 0.5rem 1rem; border-radius: 4px; border: 1px solid var(--callout-red); }
-
-.incident-details { display: grid; gap: 0.5rem; margin: 1rem 0; font-size: 0.95rem; }
-.incident-detail { display: flex; gap: 1rem; }
-.detail-label { font-weight: 600; color: var(--fg-muted); min-width: 100px; }
-.detail-value { color: var(--fg); }
-
-.tags { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.tag { font-size: 0.75rem; padding: 0.3rem 0.8rem; border-radius: 4px; background: var(--accent-glow); border: 1px solid var(--accent); color: var(--accent); }
-.tag.oracle { background: oklch(0.72 0.12 192 / 0.1); border-color: var(--accent); color: var(--accent); }
-.tag.defi { background: oklch(0.75 0.15 55 / 0.1); border-color: var(--callout-orange); color: var(--callout-orange); }
-.tag.bridge { background: oklch(0.65 0.2 25 / 0.1); border-color: var(--callout-red); color: var(--callout-red); }
-.tag.ai { background: oklch(0.65 0.15 140 / 0.1); border-color: var(--callout-green); color: var(--callout-green); }
-
-/* ---------- Callouts ---------- */
-.callout { background: var(--card-bg); border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: 8px; padding: 1.5rem; margin: 2rem 0; }
-.callout.warning { border-left-color: var(--callout-orange); background: oklch(0.75 0.15 55 / 0.05); }
-.callout.critical { border-left-color: var(--callout-red); background: oklch(0.65 0.2 25 / 0.05); }
-.callout h4 { font-family: var(--font-display); font-size: 1.1rem; font-weight: 700; color: var(--fg); margin-bottom: 1rem; }
-
 /* ---------- Tables ---------- */
-.table-wrapper { margin: 2rem 0; overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+.table-container { margin: 2rem 0; overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
 table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 th, td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-subtle); }
 th { font-weight: 600; color: var(--fg-muted); background: var(--bg-raised); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
 tr:last-child td { border-bottom: none; }
 
+/* ---------- Incident Details ---------- */
+.incident-list { margin: 2rem 0; }
+.incident { margin-bottom: 3rem; }
+.incident-title { font-family: var(--font-display); font-size: 1.3rem; font-weight: 700; color: var(--fg); margin-bottom: 1rem; }
+.incident-loss { font-family: var(--font-mono); font-weight: 700; color: var(--callout-red); }
+.incident-details { margin: 1rem 0; font-size: 0.95rem; }
+.incident-detail { margin-bottom: 0.5rem; }
+.detail-label { font-weight: 600; color: var(--fg-muted); }
+.tags { margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.tag { font-size: 0.75rem; padding: 0.3rem 0.8rem; border-radius: 4px; background: var(--accent-glow); border: 1px solid var(--accent); color: var(--accent); }
+
+/* ---------- Minimal Callouts (used sparingly) ---------- */
+.highlight { margin: 2rem 0; padding: 1.5rem; border-left: 4px solid var(--accent); background: var(--card-bg); }
+.highlight.success { border-left-color: var(--callout-green); }
+.highlight.warning { border-left-color: var(--callout-orange); }
+.highlight.critical { border-left-color: var(--callout-red); }
+
 /* ---------- Code ---------- */
 code { background: var(--input-bg); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; border: 1px solid var(--border-subtle); }
-pre { background: var(--input-bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; overflow-x: auto; margin: 1.5rem 0; }
-pre code { background: none; padding: 0; border: none; }
 
 /* ---------- Footer ---------- */
 .footer { border-top: 1px solid var(--border-subtle); padding: 3rem 0; text-align: center; font-size: 0.85rem; color: var(--fg-dim); }
@@ -158,7 +145,6 @@ pre code { background: none; padding: 0; border: none; }
 }
 
 @media (max-width: 768px) {
-  .incident-header { flex-direction: column; align-items: flex-start; }
   .hero-stats { grid-template-columns: 1fr 1fr; }
   .article-header { padding-top: calc(var(--nav-h) + 1rem); }
 }
@@ -233,128 +219,100 @@ pre code { background: none; padding: 0; border: none; }
           The past week reveals a fundamental shift in Web3 security threats. Traditional smart contract logic bugs are being overshadowed by infrastructure vulnerabilities, misconfigurations, and human errors. Oracle manipulations, incomplete deployments, and administrative compromises now dominate the threat landscape.
         </p>
         
-        <div class="callout critical">
-          <h4>Critical Trend: Infrastructure Over Logic</h4>
-          <p>
-            <strong>40% of incidents involve oracle issues</strong>, while configuration errors exceed code vulnerabilities. This indicates smart contract security practices are maturing, but the attack surface is expanding to the operational layer.
-          </p>
-        </div>
-
         <p>
-          <strong>Key Finding:</strong> Human factor has become the dominant risk vector, requiring holistic security approaches beyond traditional code audits.
+          <strong>40% of incidents involve oracle issues</strong>, while configuration errors exceed code vulnerabilities. This indicates smart contract security practices are maturing, but the attack surface is expanding to the operational layer. Human factor has become the dominant risk vector, requiring holistic security approaches beyond traditional code audits.
         </p>
       </section>
 
       <section class="section" id="major-incidents">
         <h2><span style="color: var(--accent);">1 /</span> Major Security Incidents</h2>
 
-        <div class="incident major">
-          <div class="incident-header">
-            <div class="incident-title">Aave wstETH Oracle Misconfiguration</div>
-            <div class="loss-amount">$27.78M</div>
-          </div>
-          
-          <div class="incident-details">
-            <div class="incident-detail">
-              <div class="detail-label">Date:</div>
-              <div class="detail-value">March 10, 2026</div>
+        <div class="incident-list">
+          <div class="incident">
+            <div class="incident-title">Aave wstETH Oracle Misconfiguration — <span class="incident-loss">$27.78M</span></div>
+            
+            <div class="incident-details">
+              <div class="incident-detail">
+                <span class="detail-label">Date:</span> March 10, 2026
+              </div>
+              <div class="incident-detail">
+                <span class="detail-label">Attack Vector:</span> Oracle cap misconfiguration triggered mass liquidations
+              </div>
+              <div class="incident-detail">
+                <span class="detail-label">Impact:</span> 34 healthy accounts liquidated due to configuration error
+              </div>
+              <div class="incident-detail">
+                <span class="detail-label">Response:</span> Full reimbursement planned by protocol
+              </div>
             </div>
-            <div class="incident-detail">
-              <div class="detail-label">Attack Vector:</div>
-              <div class="detail-value">Oracle cap misconfiguration triggered mass liquidations</div>
-            </div>
-            <div class="incident-detail">
-              <div class="detail-label">Impact:</div>
-              <div class="detail-value">34 healthy accounts liquidated due to configuration error</div>
-            </div>
-            <div class="incident-detail">
-              <div class="detail-label">Response:</div>
-              <div class="detail-value">Full reimbursement planned by protocol</div>
+
+            <p>No attacker involved - pure infrastructure failure affecting users who had no part in the configuration error.</p>
+
+            <div class="tags">
+              <span class="tag">Oracle Error</span>
+              <span class="tag">DeFi</span>
             </div>
           </div>
 
-          <p>No attacker involved - pure infrastructure failure affecting users who had no part in the configuration error.</p>
-
-          <div class="tags">
-            <span class="tag oracle">Oracle Error</span>
-            <span class="tag defi">DeFi</span>
-          </div>
-        </div>
-
-        <div class="incident major">
-          <div class="incident-header">
-            <div class="incident-title">YieldBlox Oracle Manipulation</div>
-            <div class="loss-amount">$10.97M</div>
-          </div>
-          
-          <div class="incident-details">
-            <div class="incident-detail">
-              <div class="detail-label">Platform:</div>
-              <div class="detail-value">Script3's YieldBlox pool on Stellar Blend V2</div>
+          <div class="incident">
+            <div class="incident-title">YieldBlox Oracle Manipulation — <span class="incident-loss">$10.97M</span></div>
+            
+            <div class="incident-details">
+              <div class="incident-detail">
+                <span class="detail-label">Platform:</span> Script3's YieldBlox pool on Stellar Blend V2
+              </div>
+              <div class="incident-detail">
+                <span class="detail-label">Attack Vector:</span> Attacker pumped illiquid collateral USTRY 100x on Stellar DEX
+              </div>
+              <div class="incident-detail">
+                <span class="detail-label">Root Cause:</span> Oracle reported manipulated price as legitimate
+              </div>
             </div>
-            <div class="incident-detail">
-              <div class="detail-label">Attack Vector:</div>
-              <div class="detail-value">Attacker pumped illiquid collateral USTRY 100x on Stellar DEX</div>
-            </div>
-            <div class="incident-detail">
-              <div class="detail-label">Root Cause:</div>
-              <div class="detail-value">Oracle reported manipulated price as legitimate</div>
+
+            <p>Classic oracle manipulation via low-liquidity market manipulation - a well-known attack pattern that continues to succeed.</p>
+
+            <div class="tags">
+              <span class="tag">Oracle Attack</span>
+              <span class="tag">DeFi</span>
             </div>
           </div>
 
-          <p>Classic oracle manipulation via low-liquidity market manipulation - a well-known attack pattern that continues to succeed.</p>
-
-          <div class="tags">
-            <span class="tag oracle">Oracle Attack</span>
-            <span class="tag defi">DeFi</span>
-          </div>
-        </div>
-
-        <div class="incident medium">
-          <div class="incident-header">
-            <div class="incident-title">IoTeX ioTube Bridge Compromise</div>
-            <div class="loss-amount">$4.40M</div>
-          </div>
-          
-          <div class="incident-details">
-            <div class="incident-detail">
-              <div class="detail-label">Attack Vector:</div>
-              <div class="detail-value">Private key compromise gave attacker full admin control</div>
+          <div class="incident">
+            <div class="incident-title">IoTeX ioTube Bridge Compromise — <span class="incident-loss">$4.40M</span></div>
+            
+            <div class="incident-details">
+              <div class="incident-detail">
+                <span class="detail-label">Attack Vector:</span> Private key compromise gave attacker full admin control
+              </div>
+              <div class="incident-detail">
+                <span class="detail-label">Security Model:</span> Single private key was "the only lock on the door"
+              </div>
             </div>
-            <div class="incident-detail">
-              <div class="detail-label">Security Model:</div>
-              <div class="detail-value">Single private key was "the only lock on the door"</div>
+
+            <div class="tags">
+              <span class="tag">Bridge</span>
+              <span class="tag">Admin Key</span>
             </div>
           </div>
 
-          <div class="tags">
-            <span class="tag bridge">Bridge</span>
-            <span class="tag">Admin Key</span>
-          </div>
-        </div>
-
-        <div class="incident oracle">
-          <div class="incident-header">
-            <div class="incident-title">Moonwell cbETH Pricing Error</div>
-            <div class="loss-amount">$1.78M</div>
-          </div>
-          
-          <div class="incident-details">
-            <div class="incident-detail">
-              <div class="detail-label">Attack Vector:</div>
-              <div class="detail-value">Oracle misconfiguration priced cbETH at $1.12 instead of $2,200</div>
+          <div class="incident">
+            <div class="incident-title">Moonwell cbETH Pricing Error — <span class="incident-loss">$1.78M</span></div>
+            
+            <div class="incident-details">
+              <div class="incident-detail">
+                <span class="detail-label">Attack Vector:</span> Oracle misconfiguration priced cbETH at $1.12 instead of $2,200
+              </div>
+              <div class="incident-detail">
+                <span class="detail-label">Notable:</span> Commit co-authored by Claude Opus 4.6
+              </div>
             </div>
-            <div class="incident-detail">
-              <div class="detail-label">Notable:</div>
-              <div class="detail-value">Commit co-authored by Claude Opus 4.6</div>
+
+            <p><strong>First major exploit involving AI-assisted code</strong> - signals new era of AI-enhanced development requiring adapted security practices.</p>
+
+            <div class="tags">
+              <span class="tag">Oracle Error</span>
+              <span class="tag">AI-Assisted</span>
             </div>
-          </div>
-
-          <p><strong>First major exploit involving AI-assisted code</strong> - signals new era of AI-enhanced development requiring adapted security practices.</p>
-
-          <div class="tags">
-            <span class="tag oracle">Oracle Error</span>
-            <span class="tag ai">AI-Assisted</span>
           </div>
         </div>
       </section>
@@ -362,12 +320,13 @@ pre code { background: none; padding: 0; border: none; }
       <section class="section" id="zk-threats">
         <h2><span style="color: var(--accent);">2 /</span> Emerging Threat: ZK Proof Vulnerabilities</h2>
         
-        <div class="callout warning">
-          <h4>First Confirmed ZK Exploits in Production</h4>
-          <p>
-            <strong>"Default settings ship faster than trust."</strong> Two protocols fell victim to incomplete ZK setup ceremonies, representing the first confirmed live exploits of ZK cryptography - not from sophisticated math attacks, but from skipped setup procedures.
-          </p>
-        </div>
+        <p>
+          <strong>"Default settings ship faster than trust."</strong> Two protocols fell victim to incomplete ZK setup ceremonies, representing the first confirmed live exploits of ZK cryptography - not from sophisticated math attacks, but from skipped setup procedures.
+        </p>
+
+        <p>
+          FoomCash suffered a $2.26M exploit due to a skipped CLI setup step that left the ZK verifier broken from day one. The attacker scaled up techniques from Veil Cash post-mortem. $1.84M was rescued by Decurity, with $320K kept under protocol bounty, resulting in a net loss of $420K.
+        </p>
 
         <p>
           This pattern reveals that sophisticated ZK mathematics isn't the vulnerability - incomplete operational procedures are. Multiple protocols are shipping with unfinished trusted setup ceremonies, creating exploitable gaps.
@@ -377,26 +336,28 @@ pre code { background: none; padding: 0; border: none; }
       <section class="section" id="ai-attacks">
         <h2><span style="color: var(--accent);">3 /</span> AI-Enhanced Attack Landscape</h2>
 
-        <div class="callout critical">
-          <h4>AI Weaponization Phase Initiated</h4>
-          <p>
-            Intelligence indicates malicious actors are no longer just stealing credentials - they're stealing AI models' understanding of user identity and behavior patterns.
-          </p>
+        <div class="highlight critical">
+          <strong>AI Weaponization Phase Initiated</strong><br>
+          Intelligence indicates malicious actors are no longer just stealing credentials - they're stealing AI models' understanding of user identity and behavior patterns.
         </div>
 
-        <h3>AI-Related Security Developments</h3>
+        <h3><span style="color: var(--accent);">3.1 /</span> AI-Related Security Developments</h3>
         <ul>
           <li><strong>OpenClaw Skill Poisoning:</strong> 20% of skills reported compromised with identity theft vectors</li>
           <li><strong>AI-Assisted Code Exploits:</strong> First major DeFi exploit involving AI co-authored smart contract (Moonwell incident)</li>
           <li><strong>Model Identity Theft:</strong> Attackers targeting AI agents' behavioral models rather than traditional credentials</li>
           <li><strong>Banking Integration Risks:</strong> Concerns over giving AI agents bank account access amid rising threats</li>
         </ul>
+
+        <p>
+          <em>"Digital parasites aren't smashing in, they're clocking in - DPRK on your payroll, China in your routers, malware that plays dead and studies your mouse. The threat isn't at the perimeter anymore, it's on your org chart."</em>
+        </p>
       </section>
 
       <section class="section" id="attack-vectors">
         <h2><span style="color: var(--accent);">4 /</span> Attack Vector Analysis</h2>
 
-        <div class="table-wrapper">
+        <div class="table-container">
           <table>
             <thead>
               <tr>
@@ -447,28 +408,23 @@ pre code { background: none; padding: 0; border: none; }
           ArXiv published <strong>29 new cryptography and security papers</strong> on March 16, 2026, indicating high research activity at the intersection of AI security, cryptographic protocols, and blockchain systems.
         </p>
 
-        <h3>Research Focus Areas</h3>
-        <ul>
-          <li><strong>AI Security Integration:</strong> Multiple cross-listed papers from machine learning examining cryptographic implications</li>
-          <li><strong>Software Engineering Security:</strong> Automated vulnerability detection and secure development practices</li>
-          <li><strong>Computer Vision Security:</strong> Adversarial attacks and defense mechanisms</li>
-        </ul>
+        <p>
+          Research focus areas include AI security integration with multiple cross-listed papers from machine learning examining cryptographic implications, software engineering security focused on automated vulnerability detection and secure development practices, and computer vision security addressing adversarial attacks and defense mechanisms.
+        </p>
       </section>
 
       <section class="section" id="strategic-implications">
         <h2><span style="color: var(--accent);">6 /</span> Strategic Implications for TestMachine</h2>
 
-        <div class="callout">
-          <h4>Market Opportunities</h4>
-          <ul>
-            <li><strong>Oracle Security Auditing:</strong> 40% of incidents create massive audit market opportunity</li>
-            <li><strong>ZK Setup Verification:</strong> Multiple protocol failures indicate specialized service need</li>
-            <li><strong>AI Code Review:</strong> First AI-assisted exploit signals need for AI-aware security practices</li>
-            <li><strong>Configuration Management:</strong> Human error dominance creates demand for automated validation</li>
-          </ul>
-        </div>
+        <h3><span style="color: var(--accent);">6.1 /</span> Market Opportunities</h3>
+        <ul>
+          <li><strong>Oracle Security Auditing:</strong> 40% of incidents create massive audit market opportunity</li>
+          <li><strong>ZK Setup Verification:</strong> Multiple protocol failures indicate specialized service need</li>
+          <li><strong>AI Code Review:</strong> First AI-assisted exploit signals need for AI-aware security practices</li>
+          <li><strong>Configuration Management:</strong> Human error dominance creates demand for automated validation</li>
+        </ul>
 
-        <h3>Defensive Priorities</h3>
+        <h3><span style="color: var(--accent);">6.2 /</span> Defensive Priorities</h3>
         <ul>
           <li><strong>Multi-Oracle Validation:</strong> Single oracle dependency is critical vulnerability</li>
           <li><strong>Administrative Key Security:</strong> Multi-sig and time-locks essential for bridge operations</li>
@@ -480,15 +436,13 @@ pre code { background: none; padding: 0; border: none; }
       <section class="section" id="threat-assessment">
         <h2><span style="color: var(--accent);">7 /</span> Forward-Looking Threat Assessment</h2>
 
-        <div class="callout warning">
-          <h4>Next 30 Days Risk Assessment</h4>
-          <ul>
-            <li><strong>High Risk:</strong> More ZK protocol exploits from incomplete setups</li>
-            <li><strong>Medium Risk:</strong> Oracle manipulation on low-liquidity chains</li>
-            <li><strong>Emerging Risk:</strong> AI agent compromise leading to automated attacks</li>
-            <li><strong>Systemic Risk:</strong> Cross-chain bridge vulnerabilities during upgrade seasons</li>
-          </ul>
-        </div>
+        <h3><span style="color: var(--accent);">7.1 /</span> Next 30 Days Risk Assessment</h3>
+        <ul>
+          <li><strong>High Risk:</strong> More ZK protocol exploits from incomplete setups</li>
+          <li><strong>Medium Risk:</strong> Oracle manipulation on low-liquidity chains</li>
+          <li><strong>Emerging Risk:</strong> AI agent compromise leading to automated attacks</li>
+          <li><strong>Systemic Risk:</strong> Cross-chain bridge vulnerabilities during upgrade seasons</li>
+        </ul>
 
         <p>
           The shift from code vulnerabilities to infrastructure failures suggests attackers are adapting to improved smart contract security by targeting operational weaknesses. Organizations must expand security focus beyond code audits to include configuration management, oracle design, and administrative controls.
@@ -498,7 +452,7 @@ pre code { background: none; padding: 0; border: none; }
       <section class="section" id="methodology">
         <h2><span style="color: var(--accent);">8 /</span> Data Sources & Methodology</h2>
         
-        <div class="table-wrapper">
+        <div class="table-container">
           <table>
             <thead>
               <tr>
@@ -533,9 +487,7 @@ pre code { background: none; padding: 0; border: none; }
         </div>
 
         <p>
-          <strong>Analysis Period:</strong> March 10-16, 2026 (primary focus), with historical context from preceding weeks.<br>
-          <strong>Tool:</strong> LunaClaw Brief v4.0.0 multi-source intelligence aggregation.<br>
-          <strong>Validation:</strong> Cross-referenced against multiple independent sources where available.
+          <strong>Analysis Period:</strong> March 10-16, 2026 (primary focus), with historical context from preceding weeks. <strong>Tool:</strong> LunaClaw Brief v4.0.0 multi-source intelligence aggregation. <strong>Validation:</strong> Cross-referenced against multiple independent sources where available.
         </p>
       </section>
 
