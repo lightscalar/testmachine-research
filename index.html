@@ -99,11 +99,8 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 .nav-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   height: 100%;
-  max-width: var(--max-w);
-  margin: 0 auto;
-  padding: 0 clamp(20px, 4vw, 40px);
+  position: relative;
 }
 
 .nav-logo {
@@ -111,6 +108,8 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
+  position: absolute;
+  left: 24px;
 }
 
 .nav-logo-text {
@@ -419,6 +418,17 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 }
 
 /* ---------- Responsive ---------- */
+@media (max-width: 1200px) {
+  .nav-container {
+    padding: 0 clamp(20px, 4vw, 40px);
+    justify-content: flex-start;
+  }
+  
+  .nav-logo {
+    position: static;
+  }
+}
+
 @media (max-width: 768px) {
   .research-grid {
     grid-template-columns: 1fr;
