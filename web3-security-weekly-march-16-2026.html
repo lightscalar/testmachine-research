@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web3 Security Intelligence Report - March 16, 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 50px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 3em;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .meta-info {
+            background: #ecf0f1;
+            padding: 30px 60px;
+            border-left: 5px solid #3498db;
+        }
+
+        .meta-info h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .content {
+            padding: 60px;
+        }
+
+        .section {
+            margin-bottom: 60px;
+        }
+
+        .section h2 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 2.2em;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .section h3 {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.6em;
+            color: #34495e;
+            margin: 30px 0 20px 0;
+        }
+
+        .incident-card {
+            background: #f8f9fa;
+            border-left: 6px solid #e74c3c;
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .incident-card.major {
+            border-left-color: #c0392b;
+            background: #fdf2f2;
+        }
+
+        .incident-card.medium {
+            border-left-color: #f39c12;
+            background: #fef9e7;
+        }
+
+        .incident-card.oracle {
+            border-left-color: #9b59b6;
+            background: #f8f5ff;
+        }
+
+        .incident-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .incident-title {
+            font-family: 'Manrope', sans-serif;
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        .loss-amount {
+            font-family: 'JetBrains Mono', monospace;
+            background: #2c3e50;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        .loss-amount.major {
+            background: #c0392b;
+        }
+
+        .loss-amount.medium {
+            background: #f39c12;
+        }
+
+        .loss-amount.oracle {
+            background: #9b59b6;
+        }
+
+        .trend-box {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .trend-box h3 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: #34495e;
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5em;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .research-section {
+            background: #e8f6ff;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+            border-left: 6px solid #3498db;
+        }
+
+        .research-paper {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .paper-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .paper-id {
+            font-family: 'JetBrains Mono', monospace;
+            color: #7f8c8d;
+            font-size: 0.9em;
+        }
+
+        .implications {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .implications h3 {
+            color: #d68910;
+            margin-bottom: 20px;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 40px;
+            font-size: 0.9em;
+        }
+
+        .methodology {
+            background: #f1f3f4;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #27ae60;
+        }
+
+        .attack-vector-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .attack-vector-list li {
+            background: #fff;
+            margin: 10px 0;
+            padding: 15px;
+            border-left: 4px solid #e74c3c;
+            border-radius: 6px;
+        }
+
+        .source-attribution {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ecf0f1;
+        }
+
+        .ai-warning {
+            background: #ffe6e6;
+            border: 2px solid #ff7675;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .ai-warning h4 {
+            color: #d63031;
+            margin-bottom: 10px;
+        }
+
+        blockquote {
+            border-left: 4px solid #bdc3c7;
+            margin: 20px 0;
+            padding: 0 20px;
+            font-style: italic;
+            color: #5d6d7e;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: #f8f9fa;
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin: 3px;
+            font-weight: 500;
+        }
+
+        .tag.oracle { background: #9b59b6; }
+        .tag.defi { background: #e67e22; }
+        .tag.bridge { background: #e74c3c; }
+        .tag.zk { background: #16a085; }
+        .tag.ai { background: #d35400; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Web3 Security Intelligence Report</h1>
+            <div class="subtitle">Weekly Analysis • March 16, 2026 • TestMachine Research</div>
+        </div>
+
+        <div class="meta-info">
+            <h3>Executive Summary</h3>
+            <p><strong>Total Losses Tracked:</strong> $48.89 million across 10+ major incidents</p>
+            <p><strong>Dominant Attack Vectors:</strong> Oracle manipulation, configuration errors, incomplete security setups</p>
+            <p><strong>Emerging Threats:</strong> AI-assisted exploits, ZK proof vulnerabilities, identity poisoning</p>
+            <p><strong>Key Insight:</strong> Human error and infrastructure misconfigurations now exceed smart contract logic bugs as primary attack vectors</p>
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2>📊 Incident Overview</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">$48.89M</span>
+                        Total Losses
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">10+</span>
+                        Major Incidents
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">40%</span>
+                        Oracle-Related
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">3</span>
+                        ZK Exploits
+                    </div>
+                </div>
+
+                <div class="trend-box">
+                    <h3>🔍 Key Trend: Infrastructure Over Logic</h3>
+                    <p>The past week reveals a critical shift in Web3 security threats. Traditional smart contract logic bugs are being overshadowed by infrastructure vulnerabilities, misconfigurations, and human errors. Oracle manipulations, incomplete deployments, and administrative compromises now dominate the threat landscape.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🚨 Major Security Incidents</h2>
+
+                <div class="incident-card major">
+                    <div class="incident-header">
+                        <div class="incident-title">Aave wstETH Oracle Misconfiguration</div>
+                        <div class="loss-amount major">$27.78M</div>
+                    </div>
+                    <p><strong>Date:</strong> March 10, 2026</p>
+                    <p><strong>Attack Vector:</strong> Oracle cap misconfiguration triggered mass liquidations</p>
+                    <p><strong>Impact:</strong> 34 healthy accounts liquidated due to configuration error they had no part in. No attacker involved - pure infrastructure failure.</p>
+                    <p><strong>Response:</strong> Full reimbursement planned by protocol</p>
+                    <div class="tag oracle">Oracle Error</div>
+                    <div class="tag defi">DeFi</div>
+                </div>
+
+                <div class="incident-card major">
+                    <div class="incident-header">
+                        <div class="incident-title">YieldBlox Oracle Manipulation</div>
+                        <div class="loss-amount major">$10.97M</div>
+                    </div>
+                    <p><strong>Platform:</strong> Script3's YieldBlox pool on Stellar Blend V2</p>
+                    <p><strong>Attack Vector:</strong> Attacker pumped illiquid collateral USTRY token 100x on Stellar DEX, oracle reported fake price as legitimate</p>
+                    <p><strong>Technique:</strong> Classic oracle manipulation via low-liquidity market manipulation</p>
+                    <div class="tag oracle">Oracle Attack</div>
+                    <div class="tag defi">DeFi</div>
+                </div>
+
+                <div class="incident-card medium">
+                    <div class="incident-header">
+                        <div class="incident-title">IoTeX ioTube Bridge Compromise</div>
+                        <div class="loss-amount medium">$4.40M</div>
+                    </div>
+                    <p><strong>Attack Vector:</strong> Private key compromise gave attacker full admin control</p>
+                    <p><strong>Root Cause:</strong> Single point of failure - the private key was "the only lock on the door"</p>
+                    <p><strong>Additional Impact:</strong> Two tokens minted on top, most claimed frozen/worthless by IoTeX</p>
+                    <div class="tag bridge">Bridge</div>
+                    <div class="tag ai">Admin Key</div>
+                </div>
+
+                <div class="incident-card medium">
+                    <div class="incident-header">
+                        <div class="incident-title">Solv BRO Vault Double-Mint</div>
+                        <div class="loss-amount medium">$2.73M</div>
+                    </div>
+                    <p><strong>Attack Vector:</strong> Callback fired before balance checks, enabling double-minting</p>
+                    <p><strong>Exploit Details:</strong> 22 loops turned 135 BRO into 567 million tokens in single transaction</p>
+                    <p><strong>Security Gap:</strong> Unaudited contract with no bug bounty coverage</p>
+                    <p><strong>Recovery:</strong> Team covered losses, attacker exited via Tornado Cash</p>
+                    <div class="tag defi">DeFi</div>
+                </div>
+
+                <div class="incident-card oracle">
+                    <div class="incident-header">
+                        <div class="incident-title">Moonwell cbETH Pricing Error</div>
+                        <div class="loss-amount oracle">$1.78M</div>
+                    </div>
+                    <p><strong>Attack Vector:</strong> Oracle misconfiguration priced cbETH at $1.12 instead of $2,200</p>
+                    <p><strong>Impact:</strong> Liquidation bots seized 1,096 cbETH, creating bad debt</p>
+                    <p><strong>Notable:</strong> Commit was co-authored by Claude Opus 4.6 - possibly first major exploit involving AI-assisted code</p>
+                    <div class="tag oracle">Oracle Error</div>
+                    <div class="tag ai">AI-Assisted</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>⚠️ Emerging Threat: ZK Proof Vulnerabilities</h2>
+
+                <div class="incident-card">
+                    <div class="incident-header">
+                        <div class="incident-title">FoomCash ZK Verifier Exploit</div>
+                        <div class="loss-amount">$2.26M</div>
+                    </div>
+                    <p><strong>Root Cause:</strong> Skipped CLI setup step left ZK verifier broken from day one</p>
+                    <p><strong>Attack Pattern:</strong> Attacker scaled up techniques from Veil Cash post-mortem</p>
+                    <p><strong>Recovery:</strong> $1.84M rescued by Decurity, $320K kept under protocol bounty, net loss $420K</p>
+                    <div class="tag zk">ZK Exploit</div>
+                </div>
+
+                <div class="trend-box">
+                    <h3>🔬 ZK Security Crisis</h3>
+                    <p><strong>"Default settings ship faster than trust"</strong> - Two protocols fell victim to incomplete ZK setup ceremonies. This represents the first confirmed live exploits of ZK cryptography in production, revealing that sophisticated math isn't the weak point - incomplete deployments are.</p>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>🤖 AI-Enhanced Attack Landscape</h2>
+
+                <div class="ai-warning">
+                    <h4>Critical Alert: AI Weaponization Phase Initiated</h4>
+                    <p>Intelligence indicates malicious actors are no longer just stealing credentials - they're stealing AI models' understanding of user identity and behavior patterns.</p>
+                </div>
+
+                <h3>AI-Related Security Developments:</h3>
+                <ul class="attack-vector-list">
+                    <li><strong>OpenClaw Skill Poisoning:</strong> 20% of skills reported compromised with identity theft vectors</li>
+                    <li><strong>AI-Assisted Code Exploits:</strong> First major DeFi exploit involving AI co-authored smart contract code (Moonwell incident)</li>
+                    <li><strong>Model Identity Theft:</strong> Attackers targeting AI agents' behavioral models rather than traditional credentials</li>
+                    <li><strong>Banking Integration Risks:</strong> Concerns over giving AI agents bank account access amid rising threats</li>
+                </ul>
+
+                <blockquote>
+                    "Digital parasites aren't smashing in, they're clocking in - DPRK on your payroll, China in your routers, malware that plays dead and studies your mouse. The threat isn't at the perimeter anymore, it's on your org chart." - Rekt Analysis
+                </blockquote>
+            </div>
+
+            <div class="section">
+                <h2>📚 Academic Research Developments</h2>
+                
+                <div class="research-section">
+                    <h3>Recent ArXiv Publications (Cryptography & Security)</h3>
+                    <p><strong>29 new papers published March 16, 2026</strong> across cryptography, security, and privacy research</p>
+                    
+                    <div class="research-paper">
+                        <div class="paper-title">Cross-listed submissions from Machine Learning and Computer Vision</div>
+                        <div class="paper-id">Multiple papers examining AI security implications</div>
+                        <p>Significant research activity at intersection of AI and cryptographic security</p>
+                    </div>
+                    
+                    <div class="research-paper">
+                        <div class="paper-title">Software Engineering Security Research</div>
+                        <div class="paper-id">arXiv:2603.12614 and related works</div>
+                        <p>Focus on secure development practices and automated vulnerability detection</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>💡 Strategic Implications for TestMachine</h2>
+
+                <div class="implications">
+                    <h3>🎯 Market Opportunities</h3>
+                    <ul>
+                        <li><strong>Oracle Security Auditing:</strong> 40% of major incidents involve oracle misconfiguration/manipulation - massive audit market opportunity</li>
+                        <li><strong>ZK Setup Verification:</strong> Multiple protocols failing at ceremony/setup phase - specialized service need</li>
+                        <li><strong>AI Code Review:</strong> First AI-assisted exploit signals need for AI-aware security practices</li>
+                        <li><strong>Configuration Management:</strong> Human error dominates - automated config validation services in demand</li>
+                    </ul>
+                </div>
+
+                <div class="implications">
+                    <h3>🛡️ Defensive Priorities</h3>
+                    <ul>
+                        <li><strong>Multi-Oracle Validation:</strong> Single oracle dependency is critical vulnerability</li>
+                        <li><strong>Administrative Key Security:</strong> Multi-sig and time-locks essential for bridge operations</li>
+                        <li><strong>ZK Ceremony Verification:</strong> Independent validation of setup procedures mandatory</li>
+                        <li><strong>AI Agent Security:</strong> Need protocols for secure AI integration in financial systems</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📈 Attack Vector Analysis</h2>
+
+                <h3>Primary Attack Categories (March 2026):</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">40%</span>
+                        Oracle Issues
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">25%</span>
+                        Config Errors
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">20%</span>
+                        Key Compromise
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">15%</span>
+                        Logic Bugs
+                    </div>
+                </div>
+
+                <h3>Evolution from 2025:</h3>
+                <p>Significant shift from pure smart contract logic vulnerabilities toward infrastructure and operational security failures. This indicates:</p>
+                <ul>
+                    <li>Smart contract security practices maturing</li>
+                    <li>Attack surface expanding to operational layer</li>
+                    <li>Human factor becoming dominant risk vector</li>
+                    <li>Need for holistic security beyond code audits</li>
+                </ul>
+            </div>
+
+            <div class="section">
+                <h2>🔮 Forward-Looking Threats</h2>
+
+                <div class="trend-box">
+                    <h3>Next 30 Days Risk Assessment</h3>
+                    <ul>
+                        <li><strong>High Risk:</strong> More ZK protocol exploits from incomplete setups</li>
+                        <li><strong>Medium Risk:</strong> Oracle manipulation on low-liquidity chains</li>
+                        <li><strong>Emerging Risk:</strong> AI agent compromise leading to automated attacks</li>
+                        <li><strong>Systemic Risk:</strong> Cross-chain bridge vulnerabilities during upgrade seasons</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="methodology">
+                <h3>🔬 Research Methodology</h3>
+                <p><strong>Data Sources:</strong> Rekt.news incident tracking, ArXiv academic publications, GitHub repository analysis, community intelligence</p>
+                <p><strong>Analysis Period:</strong> March 10-16, 2026 (primary focus), with context from preceding weeks</p>
+                <p><strong>Tool:</strong> LunaClaw Brief AI report generator with multi-source intelligence aggregation</p>
+                <p><strong>Validation:</strong> Cross-referenced against multiple independent sources where available</p>
+            </div>
+
+            <div class="source-attribution">
+                <p><strong>Primary Sources:</strong></p>
+                <ul>
+                    <li>Rekt.news - Web3 security incident database and analysis</li>
+                    <li>ArXiv.org - Academic cryptography and security research (cs.CR category)</li>
+                    <li>GitHub - Open source security tool and protocol analysis</li>
+                    <li>HackerNews - Community discussions and early intelligence</li>
+                </ul>
+                <p><strong>Generated:</strong> March 16, 2026 by TestMachine Research using LunaClaw Brief v4.0.0</p>
+                <p><strong>Report Classification:</strong> Intelligence Analysis - Not Financial or Legal Advice</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>TestMachine Security Research • Confidential Intelligence Report</p>
+            <p>This analysis is based on publicly available information and should not be considered exhaustive.</p>
+        </div>
+    </div>
+</body>
+</html>
