@@ -54,7 +54,8 @@
 .toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
 .toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
   .nav-container { display: flex; align-items: center; justify-content: space-between; height: 100%; position: relative; }
-  .nav-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; }
+  .nav-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; position: absolute; left: 24px; }
+.nav-right { margin-left: auto; margin-right: clamp(20px, 4vw, 40px); }
   .nav-logo-text { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; color: var(--fg); }
   .nav-links { display: flex; align-items: center; gap: 32px; }
   .nav-link { font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 500; color: var(--fg-muted); transition: color var(--transition); position: relative; }
