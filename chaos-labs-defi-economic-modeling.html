@@ -103,13 +103,8 @@
 
   .nav-container { display: flex; align-items: center; justify-content: space-between; height: 100%; position: relative; }
 
-  .nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-    text-decoration: none;
-  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; position: absolute; left: 24px; }
+.nav-right { margin-left: auto; margin-right: clamp(20px, 4vw, 40px); }
 
   .nav-logo-text {
     font-family: var(--font-display);
@@ -650,9 +645,8 @@
     margin-bottom: 28px;
   }
 
-  .footer-brand .nav-logo {
-    margin-bottom: 14px;
-  }
+  .footer-brand .nav-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; text-decoration: none; position: absolute; left: 24px; }
+.nav-right { margin-left: auto; margin-right: clamp(20px, 4vw, 40px); }
 
   .footer-address {
     font-size: 0.8125rem;
