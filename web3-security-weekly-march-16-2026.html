@@ -68,8 +68,10 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 
 .nav-container { display: flex; align-items: center; justify-content: space-between; height: 100%; max-width: var(--max-w); margin: 0 auto; padding: 0 clamp(20px, 4vw, 40px); }
 .nav-logo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.nav-logo img { flex-shrink: 0; }
 .nav-logo-text { font-family: var(--font-display); font-size: 1.35rem; font-weight: 700; letter-spacing: -0.02em; }
-.nav-link { font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 500; color: var(--accent); transition: color var(--transition); }
+.nav-link { font-family: var(--font-mono); font-size: 0.8125rem; font-weight: 500; color: var(--fg-muted); transition: color var(--transition); }
+.nav-link:hover { color: var(--fg); }
 
 /* ---------- TOC Toggle Button ---------- */
 .toc-toggle { display: none; position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 200; width: 48px; height: 48px; border-radius: 0; background: var(--accent); color: oklch(0.12 0 0); border: none; font-size: 1.2rem; font-family: var(--font-mono); font-weight: 700; cursor: pointer; box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3); }
