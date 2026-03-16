@@ -65,6 +65,10 @@ body {
   overflow-x: hidden;
 }
 
+body.menu-open {
+  overflow: hidden;
+}
+
 img { max-width: 100%; height: auto; display: block; }
 a { color: inherit; text-decoration: none; }
 button { border: none; background: none; cursor: pointer; font-family: var(--font-mono); color: inherit; }
@@ -79,25 +83,31 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   padding: 0 clamp(20px, 4vw, 40px);
 }
 
-/* ---------- Navigation ---------- */
-.nav {
+/* ---------- Progress Bar ---------- */
+.progress-bar {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  height: var(--nav-h);
-  z-index: 1000;
-  background: var(--nav-bg);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid var(--border-subtle);
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), oklch(0.72 0.10 230));
+  z-index: 1100;
+  width: 0%;
+  transition: width 0.1s;
 }
 
-.nav-content {
-  height: 100%;
+/* ---------- Navigation ---------- */
+.nav { position: fixed; top: 0; left: 0; right: 0; height: var(--nav-h); z-index: 1000; background: var(--nav-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-subtle); }
+.toc { position: fixed; top: var(--nav-h); left: 0; width: 280px; height: calc(100vh - var(--nav-h)); background: var(--bg-raised); border-right: 1px solid var(--border-subtle); padding: 24px 1.2rem 2rem; overflow-y: auto; z-index: 160; transition: transform 0.3s ease; }
+.toc h3 { font-family: var(--font-mono); font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.15em; color: var(--fg-muted); margin-bottom: 1rem; }
+.toc a { display: block; color: var(--fg-muted); text-decoration: none; font-family: var(--font-mono); font-size: 0.8rem; padding: 0.4rem 0.6rem; border-radius: 0; margin-bottom: 2px; transition: all 0.15s; border-left: 2px solid transparent; }
+.toc a:hover, .toc a.active { color: var(--accent); background: var(--accent-glow); border-left-color: var(--accent); }
+.toc a.sub { padding-left: 1.4rem; font-size: 0.75rem; }
+
+.nav-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  height: 100%;
 }
 
 .nav-title {
@@ -120,6 +130,43 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 .nav-back:hover {
   background: var(--accent-glow);
   border-color: var(--accent);
+}
+
+/* ---------- TOC Toggle Button ---------- */
+.toc-toggle {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 200;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 20px oklch(0.72 0.12 192 / 0.3);
+}
+
+/* ---------- TOC Overlay ---------- */
+.toc-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: oklch(0 0 0 / 0.6);
+  z-index: 109;
+}
+
+.toc-overlay.open {
+  display: block;
+}
+
+/* ---------- Main Content ---------- */
+.main {
+  margin-left: 280px;
+  min-height: 100vh;
 }
 
 /* ---------- Header ---------- */
@@ -182,6 +229,7 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 
 .section {
   margin-bottom: 4rem;
+  padding: 0 clamp(20px, 4vw, 40px);
 }
 
 .section h2 {
@@ -192,6 +240,12 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   margin-bottom: 2rem;
   padding-bottom: 1rem;
   border-bottom: 2px solid var(--border);
+}
+
+.section h2 .num {
+  font-family: var(--font-mono);
+  color: var(--accent);
+  margin-right: 1rem;
 }
 
 .section h3 {
@@ -406,6 +460,19 @@ pre code {
 }
 
 /* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .toc { transform: translateX(-100%); }
+  .main { margin-left: 0 !important; }
+  
+  .toc.open {
+    transform: translateX(0);
+  }
+  
+  .toc-toggle {
+    display: block;
+  }
+}
+
 @media (max-width: 768px) {
   .incident-header {
     flex-direction: column;
@@ -428,14 +495,30 @@ pre code {
 
 <nav class="nav">
   <div class="container">
-    <div class="nav-content">
+    <div class="nav-container">
       <div class="nav-title">TestMachine Research</div>
       <a href="index.html" class="nav-back">Back to Research</a>
     </div>
   </div>
 </nav>
 
-<main>
+<button class="toc-toggle" id="tocToggle" aria-label="Table of contents">&#9776;</button>
+<div class="toc-overlay" id="tocOverlay"></div>
+
+<nav class="toc" id="toc">
+  <h3>Contents</h3>
+  <a href="#exec">Executive Summary</a>
+  <a href="#s1">1. Major Security Incidents</a>
+  <a href="#s2">2. Emerging ZK Threats</a>
+  <a href="#s3">3. AI-Enhanced Attacks</a>
+  <a href="#s4">4. Attack Vector Analysis</a>
+  <a href="#s5">5. Academic Research</a>
+  <a href="#s6">6. Strategic Implications</a>
+  <a href="#s7">7. Forward-Looking Threats</a>
+  <a href="#s8">8. Data Sources</a>
+</nav>
+
+<main class="main">
   <div class="container">
     <header class="hero">
       <h1>Web3 Security Intelligence Report</h1>
@@ -468,8 +551,8 @@ pre code {
 
     <div class="content">
       
-      <section class="section">
-        <h2>01 Executive Summary</h2>
+      <section class="section" id="exec">
+        <h2>Executive Summary</h2>
         <p>
           The past week reveals a fundamental shift in Web3 security threats. Traditional smart contract logic bugs are being overshadowed by infrastructure vulnerabilities, misconfigurations, and human errors. Oracle manipulations, incomplete deployments, and administrative compromises now dominate the threat landscape.
         </p>
@@ -486,8 +569,8 @@ pre code {
         </p>
       </section>
 
-      <section class="section">
-        <h2>02 Major Security Incidents</h2>
+      <section class="section" id="s1">
+        <h2><span class="num">01</span> Major Security Incidents</h2>
 
         <div class="incident major">
           <div class="incident-header">
@@ -608,8 +691,8 @@ pre code {
         </div>
       </section>
 
-      <section class="section">
-        <h2>03 Emerging Threat: ZK Proof Vulnerabilities</h2>
+      <section class="section" id="s2">
+        <h2><span class="num">02</span> Emerging Threat: ZK Proof Vulnerabilities</h2>
         
         <div class="callout warning">
           <h4>First Confirmed ZK Exploits in Production</h4>
@@ -650,8 +733,8 @@ pre code {
         </p>
       </section>
 
-      <section class="section">
-        <h2>04 AI-Enhanced Attack Landscape</h2>
+      <section class="section" id="s3">
+        <h2><span class="num">03</span> AI-Enhanced Attack Landscape</h2>
 
         <div class="callout critical">
           <h4>AI Weaponization Phase Initiated</h4>
@@ -675,8 +758,8 @@ pre code {
         </div>
       </section>
 
-      <section class="section">
-        <h2>05 Attack Vector Analysis</h2>
+      <section class="section" id="s4">
+        <h2><span class="num">04</span> Attack Vector Analysis</h2>
 
         <div class="table-wrapper">
           <table>
@@ -722,8 +805,8 @@ pre code {
         </p>
       </section>
 
-      <section class="section">
-        <h2>06 Academic Research Activity</h2>
+      <section class="section" id="s5">
+        <h2><span class="num">05</span> Academic Research Activity</h2>
         
         <p>
           ArXiv published <strong>29 new cryptography and security papers</strong> on March 16, 2026, indicating high research activity at the intersection of AI security, cryptographic protocols, and blockchain systems.
@@ -737,8 +820,8 @@ pre code {
         </ul>
       </section>
 
-      <section class="section">
-        <h2>07 Strategic Implications for TestMachine</h2>
+      <section class="section" id="s6">
+        <h2><span class="num">06</span> Strategic Implications for TestMachine</h2>
 
         <div class="callout">
           <h4>Market Opportunities</h4>
@@ -759,8 +842,8 @@ pre code {
         </ul>
       </section>
 
-      <section class="section">
-        <h2>08 Forward-Looking Threat Assessment</h2>
+      <section class="section" id="s7">
+        <h2><span class="num">07</span> Forward-Looking Threat Assessment</h2>
 
         <div class="callout warning">
           <h4>Next 30 Days Risk Assessment</h4>
@@ -777,8 +860,8 @@ pre code {
         </p>
       </section>
 
-      <section class="section">
-        <h2>09 Data Sources & Methodology</h2>
+      <section class="section" id="s8">
+        <h2><span class="num">08</span> Data Sources & Methodology</h2>
         
         <div class="table-wrapper">
           <table>
@@ -839,6 +922,68 @@ window.addEventListener('scroll', () => {
   const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
   const scrolled = (winScroll / height) * 100;
   document.querySelector('.progress-bar').style.width = scrolled + '%';
+});
+
+// Active section highlighting
+function highlightActiveSection() {
+  const sections = document.querySelectorAll('.section');
+  const navLinks = document.querySelectorAll('.toc a');
+
+  let currentSection = '';
+  sections.forEach(function(section) {
+    const sectionTop = section.getBoundingClientRect().top;
+    const sectionHeight = section.offsetHeight;
+    if (sectionTop <= 100 && sectionTop + sectionHeight > 100) {
+      currentSection = section.getAttribute('id');
+    }
+  });
+
+  navLinks.forEach(function(link) {
+    link.classList.remove('active');
+    if (link.getAttribute('href').substring(1) === currentSection) {
+      link.classList.add('active');
+    }
+  });
+}
+
+window.addEventListener('scroll', highlightActiveSection);
+window.addEventListener('load', highlightActiveSection);
+
+// Mobile TOC toggle
+document.getElementById('tocToggle').onclick = function() {
+  var toc = document.getElementById('toc');
+  var overlay = document.getElementById('tocOverlay');
+  toc.classList.toggle('open');
+  overlay.classList.toggle('open');
+};
+
+document.getElementById('tocOverlay').onclick = function() {
+  var toc = document.getElementById('toc');
+  var overlay = document.getElementById('tocOverlay');
+  toc.classList.remove('open');
+  overlay.classList.remove('open');
+};
+
+// Smooth scrolling for TOC links
+document.querySelectorAll('.toc a').forEach(function(anchor) {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    var targetId = this.getAttribute('href').substring(1);
+    var targetSection = document.getElementById(targetId);
+
+    if (targetSection) {
+      targetSection.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+
+    // Close mobile TOC
+    var toc = document.getElementById('toc');
+    var overlay = document.getElementById('tocOverlay');
+    toc.classList.remove('open');
+    overlay.classList.remove('open');
+  });
 });
 </script>
 
