@@ -1,6 +1,42 @@
 {
   "reports": [
     {
+      "title": "Agentic Security Research Report 2026 — Strategic Market Analysis",
+      "file": "agentic-security-research-2026.html",
+      "date": "2026-03-19",
+      "tags": [
+        "agentic-security",
+        "web3-security",
+        "market-research",
+        "competitors",
+        "testmachine-strategy",
+        "ai-cybersecurity",
+        "autonomous-security"
+      ],
+      "category": "market",
+      "summary": "Comprehensive analysis of the agentic security ecosystem across Web2 and Web3. Covers major players (Palo Alto AgentiX, Darktrace, Forta, Chainalysis), technology trends, market dynamics, and strategic recommendations positioning TestMachine as the testing platform for autonomous security agents.",
+      "metrics": [
+        {
+          "label": "Ecosystem Categories",
+          "value": "4"
+        },
+        {
+          "label": "Response Time Reduction",
+          "value": "98%"
+        },
+        {
+          "label": "Forta Recall Rate",
+          "value": ">99%"
+        },
+        {
+          "label": "Real-Time Latency",
+          "value": "<10ms"
+        }
+      ],
+      "fileSize": 42000,
+      "readTimeMinutes": 35
+    },
+    {
       "title": "Web3 Security Intelligence Report — Weekly Analysis — March 16, 2026",
       "file": "web3-security-weekly-march-16-2026.html",
       "date": "2026-03-16",
